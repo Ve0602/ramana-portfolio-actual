@@ -1187,6 +1187,19 @@ footer {
   .hero-role { font-size: 13px; }
 }
 
+/* DESKTOP RESET — undo mobile overrides above 900px */
+@media (min-width: 901px) {
+  .hero-video-fg { width: 50% !important; opacity: 1 !important; }
+  .hero-overlay-left {
+    width: 50% !important;
+    background: linear-gradient(to right, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.4) 60%, transparent 100%) !important;
+  }
+  .hero-overlay-top { height: 30% !important; }
+  .hero-overlay-bottom { height: 40% !important; }
+  .hero-name { white-space: nowrap !important; text-shadow: none !important; }
+  .hero-role { text-shadow: none !important; }
+}
+
 /* Large monitors — cap font so name never overflows */
 @media (min-width: 1400px) { .hero-name { font-size: 56px !important; } }
 @media (min-width: 1800px) { .hero-name { font-size: 60px !important; } }
@@ -1244,7 +1257,7 @@ footer {
 <section id="hero">
   <!-- Ambient BG video (blurred) -->
   <div class="hero-video-bg">
-    <video id="vid-bg" autoplay muted playsinline preload="auto">
+    <video id="vid-bg" autoplay loop muted playsinline preload="auto">
       <source src="videos_ai/All in one.mp4" type="video/mp4">
     </video>
   </div>
@@ -1260,7 +1273,7 @@ footer {
 
   <!-- Foreground video (right side) -->
   <div class="hero-video-fg">
-    <video id="vid-main" autoplay muted playsinline preload="auto">
+    <video id="vid-main" autoplay loop muted playsinline preload="auto">
       <source src="videos_ai/All in one.mp4" type="video/mp4">
     </video>
   </div>
@@ -2034,6 +2047,18 @@ function closeMob(){ mob.classList.remove('open'); }
 const vidMain = document.getElementById('vid-main');
 const vidBg = document.getElementById('vid-bg');
 let isPlaying = true, isMuted = true;
+
+// Play once — stop at end — show replay button
+vidMain.removeAttribute('loop');
+vidBg.removeAttribute('loop');
+vidMain.addEventListener('ended', function() {
+  isPlaying = false;
+  vidBg.pause();
+  const btn = document.getElementById('btn-play');
+  btn.textContent = '↺';
+  btn.style.background = 'rgba(249,115,22,0.25)';
+  btn.style.borderColor = 'rgba(249,115,22,0.5)';
+});
 
 // Play once — pause at end — show replay button
 vidMain.addEventListener('ended', function() {
