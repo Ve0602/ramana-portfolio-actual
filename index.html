@@ -1121,40 +1121,35 @@ footer {
 .theme-toggle:hover { border-color: var(--bdo); transform: scale(1.1); }
 
 /* ═══════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — CLEAN
 ═══════════════════════════════════════════ */
+
+/* MOBILE — video as background, text on top */
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .nav-ham { display: flex; }
-  /* Keep video visible but slightly dimmed */
-  .hero-video-fg {
-    width: 100%;
-    opacity: 0.6;
-  }
-  /* Text overlays the video on mobile — full width centered */
-  .hero-content { justify-content: center; padding: 0 5%; }
-  .hero-text {
-    text-align: center;
-    max-width: 100%;
-    width: 100%;
-    position: relative;
-    z-index: 6;
-  }
-  .hero-name {
-    font-size: clamp(36px, 9vw, 64px);
-    white-space: normal;
-    letter-spacing: -1px;
-    text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.8);
-  }
-  /* Lighter overlay on mobile so video shows through clearly */
+
+  .hero-video-fg { width: 100%; opacity: 0.55; }
+
   .hero-overlay-left {
     width: 100%;
-    background: rgba(6,6,6,0.45);
+    background: rgba(6,6,6,0.42);
   }
-  .hero-role {
-    text-shadow: 0 2px 12px rgba(0,0,0,0.9);
+  .hero-overlay-top { height: 12%; }
+  .hero-overlay-bottom { height: 18%; }
+
+  .hero-content { justify-content: center; padding: 0 5%; }
+  .hero-text { text-align: center; max-width: 100%; width: 100%; position: relative; z-index: 6; }
+
+  .hero-name {
+    font-size: clamp(34px, 8vw, 58px);
+    white-space: normal;
+    letter-spacing: -1px;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.95), 0 0 48px rgba(0,0,0,0.9);
   }
+  .hero-role { text-shadow: 0 2px 12px rgba(0,0,0,0.95); }
   .hero-btns { justify-content: center; }
+
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .sk-grid { grid-template-columns: 1fr; }
   .pgrid { grid-template-columns: 1fr; }
@@ -1169,32 +1164,33 @@ footer {
   .video-controls { bottom: 80px; right: 16px; }
 }
 
-/* iPhone SE and very small phones */
+/* iPhone SE */
 @media (max-width: 400px) {
-  .hero-name {
-    font-size: 32px;
-    letter-spacing: -0.5px;
-  }
+  .hero-name { font-size: 30px; letter-spacing: -0.5px; }
   .hero-chip { font-size: 9px; padding: 6px 12px; }
-  .hero-role { font-size: 14px; }
+  .hero-role { font-size: 13px; }
 }
 
-/* Large screens — cap the name size */
-@media (min-width: 1400px) {
-  .hero-name { font-size: 56px; }
-}
-@media (min-width: 1800px) {
-  .hero-name { font-size: 60px; }
+/* DESKTOP — restore split layout, video right side only */
+@media (min-width: 901px) {
+  .hero-video-fg { width: 50%; opacity: 1; }
+  .hero-overlay-left {
+    width: 50%;
+    background: linear-gradient(to right, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.4) 60%, transparent 100%);
+  }
+  .hero-overlay-top { height: 30%; }
+  .hero-overlay-bottom { height: 40%; }
+  .hero-name { white-space: nowrap; text-shadow: none; }
+  .hero-role { text-shadow: none; }
 }
 
-@media (max-width: 900px) {
-  .hero-overlay-top { height: 15%; }
-  .hero-overlay-bottom { height: 20%; }
-}
+/* Large monitors */
+@media (min-width: 1400px) { .hero-name { font-size: 56px; } }
+@media (min-width: 1800px) { .hero-name { font-size: 60px; } }
+
+@media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
-@media (max-width: 900px) { .hero-overlay-top { height: 15%; } .hero-overlay-bottom { height: 20%; } }
-@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 </style>
 </head>
 <body>
