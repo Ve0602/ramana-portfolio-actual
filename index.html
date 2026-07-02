@@ -1238,17 +1238,72 @@ footer {
   .hero-role { font-size: 13px !important; }
 }
 
-/* DESKTOP RESET — undo mobile overrides above 900px */
+/* DESKTOP RESET — undo ALL mobile overrides above 900px */
 @media (min-width: 901px) {
-  .hero-video-fg { width: 50% !important; opacity: 1 !important; }
+  /* Restore hero to original side-by-side layout */
+  #hero { flex-direction: row !important; min-height: 100vh !important; }
+
+  /* Restore background video */
+  .hero-video-bg { display: block !important; }
+
+  /* Restore foreground video — right side, absolute position */
+  .hero-video-fg {
+    position: absolute !important;
+    right: 0 !important; top: 0 !important;
+    width: 50% !important;
+    height: 100% !important;
+    max-height: none !important;
+    opacity: 1 !important;
+  }
+  .hero-video-fg::after {
+    background: linear-gradient(
+      to right,
+      var(--bg) 0%,
+      rgba(6,6,6,0.6) 35%,
+      transparent 65%
+    ),
+    linear-gradient(
+      to bottom,
+      rgba(6,6,6,0.5) 0%,
+      transparent 20%,
+      transparent 75%,
+      var(--bg) 100%
+    ) !important;
+  }
+
+  /* Restore overlays */
+  .hero-overlay-top { display: block !important; height: 30% !important; }
+  .hero-overlay-bottom { display: block !important; height: 40% !important; }
   .hero-overlay-left {
+    display: block !important;
     width: 50% !important;
     background: linear-gradient(to right, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.4) 60%, transparent 100%) !important;
   }
-  .hero-overlay-top { height: 30% !important; }
-  .hero-overlay-bottom { height: 40% !important; }
+
+  /* Restore Three.js canvas */
+  #cinematic-canvas { display: block !important; }
+
+  /* Restore hero content — left side */
+  .hero-content {
+    position: relative !important;
+    padding: 0 6% !important;
+    background: transparent !important;
+    justify-content: flex-start !important;
+  }
+  .hero-text {
+    text-align: left !important;
+    max-width: 50% !important;
+  }
   .hero-name { white-space: nowrap !important; text-shadow: none !important; }
   .hero-role { text-shadow: none !important; }
+  .hero-chip { margin: 0 0 38px !important; }
+  .hero-btns { justify-content: flex-start !important; }
+
+  /* Restore scroll indicator */
+  .scroll-indicator { display: flex !important; }
+
+  /* Restore video controls position */
+  .video-controls { bottom: 32px !important; right: 32px !important; }
 }
 
 /* Large monitors — cap font so name never overflows */
