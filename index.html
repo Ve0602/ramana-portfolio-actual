@@ -2048,51 +2048,43 @@ const vidMain = document.getElementById('vid-main');
 const vidBg = document.getElementById('vid-bg');
 let isPlaying = true, isMuted = true;
 
-// Play once — stop at end — show replay button
+// Remove loop — play once only
 vidMain.removeAttribute('loop');
 vidBg.removeAttribute('loop');
-vidMain.addEventListener('ended', function() {
-  isPlaying = false;
-  vidBg.pause();
-  const btn = document.getElementById('btn-play');
-  btn.textContent = '↺';
-  btn.style.background = 'rgba(249,115,22,0.25)';
-  btn.style.borderColor = 'rgba(249,115,22,0.5)';
-});
 
-// Play once — pause at end — show replay button
+// When video ends — pause and show replay button
 vidMain.addEventListener('ended', function() {
   isPlaying = false;
   vidBg.pause();
   const btn = document.getElementById('btn-play');
   btn.textContent = '↺';
   btn.title = 'Replay';
-  // Show a replay hint briefly
-  btn.style.background = 'rgba(249,115,22,0.3)';
-  btn.style.borderColor = 'rgba(249,115,22,0.6)';
+  btn.style.background = 'rgba(249,115,22,0.25)';
+  btn.style.borderColor = 'rgba(249,115,22,0.5)';
 });
 
 function togglePlay(){
+  const btn = document.getElementById('btn-play');
   if(isPlaying){
     // Pause
     vidMain.pause();
     vidBg.pause();
-    document.getElementById('btn-play').textContent = '▶';
-    document.getElementById('btn-play').title = 'Play';
-    document.getElementById('btn-play').style.background = '';
-    document.getElementById('btn-play').style.borderColor = '';
+    btn.textContent = '▶';
+    btn.title = 'Play';
+    btn.style.background = '';
+    btn.style.borderColor = '';
   } else {
-    // Replay from start if ended, else resume
+    // If video ended — replay from start
     if(vidMain.ended){
       vidMain.currentTime = 0;
       vidBg.currentTime = 0;
     }
     vidMain.play();
     vidBg.play();
-    document.getElementById('btn-play').textContent = '⏸';
-    document.getElementById('btn-play').title = 'Pause';
-    document.getElementById('btn-play').style.background = '';
-    document.getElementById('btn-play').style.borderColor = '';
+    btn.textContent = '⏸';
+    btn.title = 'Pause';
+    btn.style.background = '';
+    btn.style.borderColor = '';
   }
   isPlaying = !isPlaying;
 }
