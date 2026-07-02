@@ -1126,10 +1126,10 @@ footer {
 @media (max-width: 900px) {
   .nav-links { display: none; }
   .nav-ham { display: flex; }
-  /* Keep video visible but smaller */
+  /* Keep video visible but slightly dimmed */
   .hero-video-fg {
     width: 100%;
-    opacity: 0.35;
+    opacity: 0.6;
   }
   /* Text overlays the video on mobile — full width centered */
   .hero-content { justify-content: center; padding: 0 5%; }
@@ -1144,11 +1144,15 @@ footer {
     font-size: clamp(36px, 9vw, 64px);
     white-space: normal;
     letter-spacing: -1px;
+    text-shadow: 0 2px 20px rgba(0,0,0,0.9), 0 0 40px rgba(0,0,0,0.8);
   }
-  /* Stronger dark overlay on mobile so text is readable over video */
+  /* Lighter overlay on mobile so video shows through clearly */
   .hero-overlay-left {
     width: 100%;
-    background: rgba(6,6,6,0.75);
+    background: rgba(6,6,6,0.45);
+  }
+  .hero-role {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.9);
   }
   .hero-btns { justify-content: center; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -1183,9 +1187,14 @@ footer {
   .hero-name { font-size: 60px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
+@media (max-width: 900px) {
+  .hero-overlay-top { height: 15%; }
+  .hero-overlay-bottom { height: 20%; }
+}
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+@media (max-width: 900px) { .hero-overlay-top { height: 15%; } .hero-overlay-bottom { height: 20%; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
 </style>
 </head>
 <body>
