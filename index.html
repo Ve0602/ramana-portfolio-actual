@@ -1129,41 +1129,89 @@ footer {
   .nav-links { display: none; }
   .nav-ham { display: flex; }
 
-  /* Video fills full screen as cinematic background */
+  /* ── MOBILE LAYOUT: Video top, details below ── */
+
+  /* Hero becomes a vertical flex column */
+  #hero {
+    flex-direction: column !important;
+    height: auto !important;
+    min-height: 100vh !important;
+  }
+
+  /* Video sits at TOP — full width, fixed height */
   .hero-video-fg {
+    position: relative !important;
     width: 100% !important;
-    opacity: 0.55 !important;
+    height: 55vw !important;
+    min-height: 220px !important;
+    max-height: 340px !important;
+    opacity: 1 !important;
+    z-index: 2 !important;
+    flex-shrink: 0;
+  }
+  .hero-video-fg video {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+  /* Remove side gradient on video — show full video */
+  .hero-video-fg::after {
+    background: linear-gradient(
+      to bottom,
+      transparent 60%,
+      rgba(6,6,6,0.8) 100%
+    ) !important;
   }
 
-  /* Light overlay — video visible, text readable */
-  .hero-overlay-left {
-    width: 100% !important;
-    background: rgba(6,6,6,0.42) !important;
-  }
-  .hero-overlay-top { height: 12% !important; }
-  .hero-overlay-bottom { height: 18% !important; }
+  /* Hide ambient background video — saves mobile data */
+  .hero-video-bg { display: none !important; }
 
-  /* Text centered over video */
-  .hero-content { justify-content: center; padding: 0 5%; }
+  /* Hide all overlays — not needed for stacked layout */
+  .hero-overlay-top,
+  .hero-overlay-bottom,
+  .hero-overlay-left { display: none !important; }
+
+  /* Details sit BELOW the video */
+  .hero-content {
+    position: relative !important;
+    width: 100% !important;
+    padding: 32px 6% 48px !important;
+    justify-content: flex-start !important;
+    z-index: 5 !important;
+    background: var(--bg) !important;
+  }
   .hero-text {
-    text-align: center;
-    max-width: 100%;
-    width: 100%;
-    position: relative;
-    z-index: 6;
+    text-align: center !important;
+    max-width: 100% !important;
+    width: 100% !important;
   }
 
-  /* Name with shadow so readable over video */
+  /* Name — clean, no shadow needed (dark bg below) */
   .hero-name {
-    font-size: clamp(34px, 8vw, 58px) !important;
+    font-size: clamp(36px, 9vw, 58px) !important;
     white-space: normal !important;
-    letter-spacing: -1px !important;
-    text-shadow: 0 2px 24px rgba(0,0,0,0.95), 0 0 48px rgba(0,0,0,0.9) !important;
+    letter-spacing: -1.5px !important;
+    text-shadow: none !important;
+    line-height: 1.1 !important;
   }
-  .hero-role {
-    text-shadow: 0 2px 12px rgba(0,0,0,0.95) !important;
+  .hero-role { text-shadow: none !important; }
+  .hero-chip { margin: 0 auto 28px !important; }
+  .hero-btns { justify-content: center !important; }
+
+  /* Video controls — on top of video */
+  .video-controls {
+    position: absolute !important;
+    bottom: 8px !important;
+    right: 12px !important;
+    z-index: 10 !important;
   }
-  .hero-btns { justify-content: center; }
+
+  /* Sound hint & scroll indicator */
+  .sound-hint { bottom: 8px !important; }
+  .scroll-indicator { display: none !important; }
+
+  /* Three.js canvas — hide on mobile for performance */
+  #cinematic-canvas { display: none !important; }
 
   /* Rest of page layout */
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -1177,14 +1225,17 @@ footer {
   .pd-metrics { grid-template-columns: 1fr; }
   .ann-grid { grid-template-columns: 1fr; }
   section { padding: 80px 5%; }
-  .video-controls { bottom: 80px; right: 16px; }
 }
 
-/* iPhone SE — very small */
+/* iPhone SE — very small screens */
 @media (max-width: 400px) {
+  .hero-video-fg {
+    height: 52vw !important;
+    min-height: 200px !important;
+  }
   .hero-name { font-size: 30px !important; letter-spacing: -0.5px !important; }
-  .hero-chip { font-size: 9px; padding: 6px 12px; }
-  .hero-role { font-size: 13px; }
+  .hero-chip { font-size: 9px !important; padding: 6px 12px !important; }
+  .hero-role { font-size: 13px !important; }
 }
 
 /* DESKTOP RESET — undo mobile overrides above 900px */
