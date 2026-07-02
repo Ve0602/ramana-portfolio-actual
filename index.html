@@ -239,7 +239,7 @@ nav.scrolled {
 .hero-video-fg {
   position: absolute;
   right: 0; top: 0;
-  width: 48%; height: 100%;
+  width: 50%; height: 100%;
   z-index: 1; overflow: hidden;
 }
 .hero-video-fg video {
@@ -304,7 +304,8 @@ nav.scrolled {
   display: flex; align-items: center;
 }
 .hero-text {
-  max-width: 520px;
+  max-width: 50%;
+  flex-shrink: 0;
 }
 .hero-chip {
   display: inline-flex; align-items: center; gap: 9px;
@@ -329,13 +330,15 @@ nav.scrolled {
 
 .hero-name {
   font-family: var(--fd);
-  font-size: clamp(48px, 6.5vw, 88px);
+  font-size: clamp(36px, 4.5vw, 68px);
   font-weight: 800;
-  line-height: 0.95;
-  letter-spacing: -3px;
+  line-height: 1.05;
+  letter-spacing: -2px;
   color: var(--tx);
   margin-bottom: 26px;
-  overflow: hidden;
+  overflow: visible;
+  word-break: keep-all;
+  white-space: nowrap;
 }
 .hero-name .line {
   display: block;
@@ -1125,7 +1128,15 @@ footer {
   .nav-ham { display: flex; }
   .hero-video-fg { display: none; }
   .hero-content { justify-content: center; }
-  .hero-text { text-align: center; }
+  .hero-text {
+    text-align: center;
+    max-width: 100%;
+  }
+  .hero-name {
+    font-size: clamp(36px, 8vw, 64px);
+    white-space: normal;
+    letter-spacing: -1.5px;
+  }
   .hero-btns { justify-content: center; }
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .sk-grid { grid-template-columns: 1fr; }
@@ -1140,6 +1151,20 @@ footer {
   section { padding: 80px 5%; }
   .video-controls { bottom: 80px; }
 }
+
+/* Large screens — prevent name overflow */
+@media (min-width: 1400px) {
+  .hero-name {
+    font-size: 64px;
+  }
+}
+
+@media (min-width: 1800px) {
+  .hero-name {
+    font-size: 72px;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
@@ -1194,7 +1219,7 @@ footer {
   <!-- Ambient BG video (blurred) -->
   <div class="hero-video-bg">
     <video id="vid-bg" autoplay loop muted playsinline preload="auto">
-      <source src="videos_ai/1.mp4" type="video/mp4">
+      <source src="videos_ai/All in one.mp4" type="video/mp4">
     </video>
   </div>
 
@@ -1210,7 +1235,7 @@ footer {
   <!-- Foreground video (right side) -->
   <div class="hero-video-fg">
     <video id="vid-main" autoplay loop muted playsinline preload="auto">
-      <source src="videos_ai/1.mp4" type="video/mp4">
+      <source src="videos_ai/All in one.mp4" type="video/mp4">
     </video>
   </div>
 
