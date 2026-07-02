@@ -1244,7 +1244,7 @@ footer {
 <section id="hero">
   <!-- Ambient BG video (blurred) -->
   <div class="hero-video-bg">
-    <video id="vid-bg" autoplay loop muted playsinline preload="auto">
+    <video id="vid-bg" autoplay muted playsinline preload="auto">
       <source src="videos_ai/All in one.mp4" type="video/mp4">
     </video>
   </div>
@@ -1260,7 +1260,7 @@ footer {
 
   <!-- Foreground video (right side) -->
   <div class="hero-video-fg">
-    <video id="vid-main" autoplay loop muted playsinline preload="auto">
+    <video id="vid-main" autoplay muted playsinline preload="auto">
       <source src="videos_ai/All in one.mp4" type="video/mp4">
     </video>
   </div>
@@ -1291,7 +1291,7 @@ footer {
 
   <!-- Video controls (glassmorphism) -->
   <div class="video-controls" id="vid-controls">
-    <button class="vid-btn" id="btn-play" onclick="togglePlay()" title="Play/Pause">⏸</button>
+    <button class="vid-btn" id="btn-play" onclick="togglePlay()" title="Pause">⏸</button>
     <button class="vid-btn" id="btn-mute" onclick="toggleMute()" title="Mute/Unmute">🔇</button>
   </div>
 
@@ -2035,19 +2035,47 @@ const vidMain = document.getElementById('vid-main');
 const vidBg = document.getElementById('vid-bg');
 let isPlaying = true, isMuted = true;
 
+// Play once — pause at end — show replay button
+vidMain.addEventListener('ended', function() {
+  isPlaying = false;
+  vidBg.pause();
+  const btn = document.getElementById('btn-play');
+  btn.textContent = '↺';
+  btn.title = 'Replay';
+  // Show a replay hint briefly
+  btn.style.background = 'rgba(249,115,22,0.3)';
+  btn.style.borderColor = 'rgba(249,115,22,0.6)';
+});
+
 function togglePlay(){
   if(isPlaying){
-    vidMain.pause(); vidBg.pause();
+    // Pause
+    vidMain.pause();
+    vidBg.pause();
     document.getElementById('btn-play').textContent = '▶';
+    document.getElementById('btn-play').title = 'Play';
+    document.getElementById('btn-play').style.background = '';
+    document.getElementById('btn-play').style.borderColor = '';
   } else {
-    vidMain.play(); vidBg.play();
+    // Replay from start if ended, else resume
+    if(vidMain.ended){
+      vidMain.currentTime = 0;
+      vidBg.currentTime = 0;
+    }
+    vidMain.play();
+    vidBg.play();
     document.getElementById('btn-play').textContent = '⏸';
+    document.getElementById('btn-play').title = 'Pause';
+    document.getElementById('btn-play').style.background = '';
+    document.getElementById('btn-play').style.borderColor = '';
   }
   isPlaying = !isPlaying;
 }
+
 function toggleMute(){
   isMuted = !isMuted;
   vidMain.muted = isMuted;
+  vidBg.muted = true; // bg always muted
   document.getElementById('btn-mute').textContent = isMuted ? '🔇' : '🔊';
   if(!isMuted) document.getElementById('sound-hint').classList.add('hide');
 }
