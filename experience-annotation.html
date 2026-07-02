@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Annotation Work — Experience Deep Dive · Ramana Vemunoori</title>
+<meta name="description" content="Deep dive into Ramana Vemunoori's AI Annotation Specialist work — Siri audio, OCR, Devanagari handwriting, sports video annotation for Apple and enterprise clients.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+:root{--or:#F97316;--bl:#3b82f6;--bg:#060606;--bg2:#0b0b0b;--bg3:#111;--bg4:#161616;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);--bdo:rgba(249,115,22,.3);--bdbl:rgba(59,130,246,.25);--tx:#f0f0f0;--tx2:#888;--tx3:#444;--fn:'Space Grotesk',sans-serif;--fd:'Syne',sans-serif;--r:16px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}body{font-family:var(--fn);background:var(--bg);color:var(--tx);overflow-x:hidden;cursor:none;}
+::-webkit-scrollbar{width:2px;}::-webkit-scrollbar-thumb{background:var(--bl);}
+#co,#ci{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#co{width:40px;height:40px;border:1.5px solid rgba(59,130,246,.45);transition:.2s;}
+#ci{width:6px;height:6px;background:var(--bl);}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#1d4ed8,var(--bl));z-index:1000;width:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(6,6,6,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);}
+.nav-logo{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--tx);text-decoration:none;letter-spacing:-.5px;}.nav-logo em{color:var(--or);font-style:normal;}
+.nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);text-decoration:none;padding:8px 16px;border:1px solid var(--bd);border-radius:9px;transition:all .2s;}.nav-back:hover{color:var(--bl);border-color:var(--bdbl);}
+
+.exp-hero{position:relative;min-height:82vh;display:flex;align-items:center;overflow:hidden;padding-top:64px;}
+.hero-video-wrap{position:absolute;inset:0;z-index:0;}.hero-video-wrap video{width:100%;height:100%;object-fit:cover;filter:brightness(.2) saturate(1.2) hue-rotate(180deg);}
+.hero-video-wrap::after{content:'';position:absolute;inset:0;background:linear-gradient(to right,rgba(6,6,6,.97) 0%,rgba(6,6,6,.55) 55%,transparent 100%),linear-gradient(to bottom,rgba(6,6,6,.4) 0%,transparent 25%,transparent 70%,var(--bg) 100%);}
+.hero-content{position:relative;z-index:2;padding:0 6%;max-width:1200px;margin:0 auto;width:100%;}
+.exp-chip{display:inline-flex;align-items:center;gap:8px;background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);border-radius:100px;padding:7px 18px;margin-bottom:28px;font-size:11px;font-weight:600;letter-spacing:2px;color:var(--bl);text-transform:uppercase;}
+.chip-dot{width:6px;height:6px;border-radius:50%;background:var(--bl);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+.exp-h1{font-family:var(--fd);font-size:clamp(38px,6.5vw,80px);font-weight:800;letter-spacing:-4px;line-height:.92;color:var(--tx);margin-bottom:22px;}.exp-h1 em{color:var(--bl);font-style:normal;}
+.exp-lead{font-size:17px;color:var(--tx2);line-height:1.75;max-width:540px;margin-bottom:36px;}
+.hero-meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:36px;}
+.meta-pill{background:var(--bg3);border:1px solid var(--bd);border-radius:9px;padding:8px 15px;font-size:12px;color:var(--tx2);display:flex;align-items:center;gap:7px;}.meta-pill strong{color:var(--tx);}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--bl);color:#fff;padding:13px 26px;border-radius:11px;font-size:14px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s;}.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(59,130,246,.4);}
+.btn-g{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--bd2);color:var(--tx);padding:13px 26px;border-radius:11px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s;}.btn-g:hover{border-color:var(--bdbl);}
+.hero-ctas{display:flex;gap:14px;flex-wrap:wrap;}
+
+/* METRICS */
+.metrics-strip{padding:60px 6%;background:var(--bg3);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd);}
+.metrics-strip-inner{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--bd);}
+.ms-item{background:var(--bg3);padding:32px 28px;text-align:center;}
+.ms-n{font-family:var(--fd);font-size:40px;font-weight:800;color:var(--bl);letter-spacing:-2px;}
+.ms-l{font-size:12px;color:var(--tx2);margin-top:7px;line-height:1.4;}
+
+/* VIDEO */
+.video-section{padding:80px 6%;background:var(--bg2);border-bottom:1px solid var(--bd);}
+.video-inner{max-width:1100px;margin:0 auto;}
+.sec-lbl{font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;color:var(--bl);display:block;margin-bottom:12px;}
+.sec-h2{font-family:var(--fd);font-size:clamp(26px,4vw,44px);font-weight:800;letter-spacing:-2px;color:var(--tx);margin-bottom:8px;}
+.sec-sub{font-size:15px;color:var(--tx2);margin-bottom:40px;line-height:1.7;}
+.video-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:40px;}
+.vid-card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;cursor:pointer;transition:border-color .2s,transform .2s;}
+.vid-card:hover,.vid-card.active{border-color:var(--bdbl);transform:translateY(-3px);}
+.vid-thumb{position:relative;height:160px;overflow:hidden;background:#000;}
+.vid-thumb video{width:100%;height:100%;object-fit:cover;opacity:.7;}
+.vid-play{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;}
+.vid-play-btn{width:48px;height:48px;border-radius:50%;background:rgba(59,130,246,.25);border:2px solid rgba(59,130,246,.5);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;transition:all .2s;}
+.vid-card:hover .vid-play-btn,.vid-card.active .vid-play-btn{background:rgba(59,130,246,.5);border-color:var(--bl);}
+.vid-info{padding:18px;}
+.vid-cat{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bl);margin-bottom:6px;}
+.vid-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:4px;}
+.vid-desc{font-size:12px;color:var(--tx2);line-height:1.55;}
+
+/* PROJECT CARDS */
+.projects-section{padding:80px 6%;}
+.projects-inner{max-width:1100px;margin:0 auto;}
+.ann-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:48px;}
+.ann-card2{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:border-color .3s,transform .3s;}
+.ann-card2:hover{border-color:var(--bdbl);transform:translateY(-4px);}
+.ann-visual{height:140px;display:flex;align-items:center;justify-content:center;font-size:56px;position:relative;overflow:hidden;}
+.ann-body{padding:24px;}
+.ann-project-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--bl);margin-bottom:8px;}
+.ann-project-title{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--tx);margin-bottom:10px;letter-spacing:-.3px;}
+.ann-project-desc{font-size:13px;color:var(--tx2);line-height:1.7;margin-bottom:14px;}
+.ann-specs{display:flex;flex-wrap:wrap;gap:6px;}
+.ann-spec{background:rgba(59,130,246,.07);border:1px solid rgba(59,130,246,.15);border-radius:5px;padding:3px 9px;font-size:11px;color:var(--bl);}
+
+/* SKILLS from annotation */
+.skills-section{padding:80px 6%;background:var(--bg2);border-top:1px solid var(--bd);}
+.skills-inner{max-width:1100px;margin:0 auto;}
+.skills-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:48px;}
+.skill-item{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r2);padding:20px;transition:border-color .2s;}
+.skill-item:hover{border-color:var(--bdbl);}
+.skill-icon{font-size:22px;margin-bottom:10px;}
+.skill-name{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:5px;}
+.skill-desc{font-size:12px;color:var(--tx2);line-height:1.6;}
+
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s;}.reveal.on{opacity:1;transform:none;}
+footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;}.foot-logo em{color:var(--or);font-style:normal;}
+.foot-copy{font-size:12px;color:var(--tx3);}
+@media(max-width:800px){.metrics-strip-inner,.video-grid,.ann-grid,.skills-grid{grid-template-columns:1fr 1fr;}.skills-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:500px){.metrics-strip-inner{grid-template-columns:1fr 1fr;}.video-grid,.ann-grid,.skills-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="co"></div><div id="ci"></div>
+<div id="prog"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Ramana<em>.vr</em></a>
+  <a href="index.html#experience" class="nav-back">← Experience</a>
+</nav>
+
+<div class="exp-hero">
+  <div class="hero-video-wrap">
+    <video autoplay loop muted playsinline>
+      <source src="videos_ai/4.mp4" type="video/mp4">
+      <source src="videos_ai/1.mp4" type="video/mp4">
+    </video>
+  </div>
+  <div class="hero-content">
+    <div class="exp-chip"><div class="chip-dot"></div>2024 — Present · Centific / Oneforma</div>
+    <h1 class="exp-h1">AI Annotation<br><em>Specialist</em></h1>
+    <p class="exp-lead">High-precision multi-modal annotation across 4 distinct Apple and enterprise projects — audio, OCR, handwriting, and sports video — powering AI training pipelines.</p>
+    <div class="hero-meta-row">
+      <div class="meta-pill">🎙️ <strong>Siri Audio</strong> — Apple</div>
+      <div class="meta-pill">✍️ <strong>OCR</strong> — Latin Script</div>
+      <div class="meta-pill">📝 <strong>Devanagari</strong> — Hindi/Marathi</div>
+      <div class="meta-pill">⚾ <strong>Sports Video</strong> — Baseball</div>
+    </div>
+    <div class="hero-ctas">
+      <a href="#projects" class="btn-p">🔍 See All Projects</a>
+      <a href="index.html#experience" class="btn-g">← Back</a>
+    </div>
+  </div>
+</div>
+
+<div class="metrics-strip">
+  <div class="metrics-strip-inner">
+    <div class="ms-item reveal"><div class="ms-n">4</div><div class="ms-l">Annotation projects<br>completed</div></div>
+    <div class="ms-item reveal"><div class="ms-n">4</div><div class="ms-l">Modalities mastered<br>(audio, OCR, script, video)</div></div>
+    <div class="ms-item reveal"><div class="ms-n">2</div><div class="ms-l">Clients served<br>(Apple + Enterprise)</div></div>
+    <div class="ms-item reveal"><div class="ms-n">100%</div><div class="ms-l">Accuracy target<br>consistently met</div></div>
+  </div>
+</div>
+
+<!-- VIDEO EXPLAINERS -->
+<div class="video-section" id="projects">
+  <div class="video-inner">
+    <span class="sec-lbl reveal">Video Walkthrough</span>
+    <h2 class="sec-h2 reveal">Each Project Explained</h2>
+    <p class="sec-sub reveal">Select a project to see a video walkthrough of the annotation process, tools used, and what makes it technically challenging.</p>
+    <div class="video-grid">
+      <div class="vid-card reveal active">
+        <div class="vid-thumb">
+          <video autoplay loop muted playsinline><source src="videos_ai/5.mp4" type="video/mp4"><source src="videos_ai/1.mp4" type="video/mp4"></video>
+          <div class="vid-play"><div class="vid-play-btn">▶</div></div>
+        </div>
+        <div class="vid-info">
+          <div class="vid-cat">🎙️ Apple · Audio</div>
+          <div class="vid-title">Cricket Part 2 — Siri Audio Annotation</div>
+          <div class="vid-desc">Time-series spectrogram annotation of user-Siri audio interactions. Timestamped labels: Invocation, User Turn, Siri Turn, Bystander Speech, Filler, Pause.</div>
+        </div>
+      </div>
+      <div class="vid-card reveal">
+        <div class="vid-thumb">
+          <video loop muted playsinline><source src="videos_ai/2.mp4" type="video/mp4"><source src="videos_ai/1.mp4" type="video/mp4"></video>
+          <div class="vid-play"><div class="vid-play-btn">▶</div></div>
+        </div>
+        <div class="vid-info">
+          <div class="vid-cat">✍️ OCR · Latin Script</div>
+          <div class="vid-title">Latin Script Boxing & Transcription</div>
+          <div class="vid-desc">Character-level and word-level bounding box annotation of Latin handwriting. Line segmentation, principal lines, diacritic marking, cursive handling.</div>
+        </div>
+      </div>
+      <div class="vid-card reveal">
+        <div class="vid-thumb">
+          <video loop muted playsinline><source src="videos_ai/3.mp4" type="video/mp4"><source src="videos_ai/1.mp4" type="video/mp4"></video>
+          <div class="vid-play"><div class="vid-play-btn">▶</div></div>
+        </div>
+        <div class="vid-info">
+          <div class="vid-cat">📝 Devanagari · Hindi/Marathi</div>
+          <div class="vid-title">Devanagari Handwriting Segmentation</div>
+          <div class="vid-desc">Character segmentation using Segmenter tool. Shirorekha annotation, principal line marking, cut-and-mark approach for cursive shirorekha connections.</div>
+        </div>
+      </div>
+      <div class="vid-card reveal">
+        <div class="vid-thumb">
+          <video loop muted playsinline><source src="videos_ai/4.mp4" type="video/mp4"><source src="videos_ai/1.mp4" type="video/mp4"></video>
+          <div class="vid-play"><div class="vid-play-btn">▶</div></div>
+        </div>
+        <div class="vid-info">
+          <div class="vid-cat">⚾ Sports AI · Video</div>
+          <div class="vid-title">Baseball Broadcast Annotation (KCU)</div>
+          <div class="vid-desc">Image analysis of baseball broadcast frames. Shot classification, split-screen detection, player role labeling: batter, pitcher, catcher, umpire, dugout staff.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ANNOTATION PROJECT DETAILS -->
+<div class="projects-section">
+  <div class="projects-inner">
+    <span class="sec-lbl reveal">Deep Dive</span>
+    <h2 class="sec-h2 reveal">Project Specifications</h2>
+    <div class="ann-grid">
+      <div class="ann-card2 reveal">
+        <div class="ann-visual" style="background:linear-gradient(135deg,#020808,#040f0f)">
+          <svg viewBox="0 0 320 140" style="width:100%;height:100%;position:absolute;inset:0">
+            <rect width="320" height="140" fill="#020808"/>
+            <text x="160" y="30" text-anchor="middle" font-family="monospace" font-size="9" fill="#3b82f6" font-weight="bold">AUDIO WAVEFORM — Siri Interaction</text>
+            <polyline points="10,70 30,55 45,80 60,45 75,75 90,60 105,70 120,40 135,75 150,65 165,70 180,50 195,80 210,55 220,70 240,45 255,75 270,60 290,70 310,65" fill="none" stroke="#3b82f6" stroke-width="2" opacity=".8"/>
+            <rect x="45" y="85" width="75" height="12" rx="3" fill="rgba(59,130,246,.15)" stroke="#3b82f6" stroke-width=".8"/>
+            <text x="82" y="94" font-family="monospace" font-size="7" fill="#3b82f6" text-anchor="middle">USER TURN</text>
+            <rect x="135" y="85" width="85" height="12" rx="3" fill="rgba(249,115,22,.15)" stroke="#F97316" stroke-width=".8"/>
+            <text x="177" y="94" font-family="monospace" font-size="7" fill="#F97316" text-anchor="middle">SIRI RESPONSE</text>
+            <rect x="10" y="85" width="30" height="12" rx="3" fill="rgba(34,197,94,.1)" stroke="#22c55e" stroke-width=".8"/>
+            <text x="25" y="94" font-family="monospace" font-size="7" fill="#22c55e" text-anchor="middle">INVOKE</text>
+          </svg>
+        </div>
+        <div class="ann-body">
+          <div class="ann-project-lbl">Project 01 · Apple</div>
+          <div class="ann-project-title">Cricket Part 2 — Siri Audio</div>
+          <div class="ann-project-desc">Annotated user-Siri audio using time-series spectrogram tools. Applied timestamped segment labels with start/end precision — capturing every conversational turn, interruption, and background event in real user-Siri interactions.</div>
+          <div class="ann-specs">
+            <span class="ann-spec">Invocation</span><span class="ann-spec">User Turn</span><span class="ann-spec">Siri Turn</span>
+            <span class="ann-spec">Bystander Speech</span><span class="ann-spec">Filler</span><span class="ann-spec">Pause</span>
+            <span class="ann-spec">Two-shot trigger</span><span class="ann-spec">Post-ITN transcription</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann-card2 reveal">
+        <div class="ann-visual" style="background:linear-gradient(135deg,#05050a,#08080f)">
+          <svg viewBox="0 0 320 140" style="width:100%;height:100%;position:absolute;inset:0">
+            <rect width="320" height="140" fill="#05050a"/>
+            <text x="160" y="20" text-anchor="middle" font-family="monospace" font-size="8" fill="#888">OCR Latin Script — Bounding Box Annotation</text>
+            <text x="30" y="55" font-family="Georgia,serif" font-size="22" fill="#ccc" style="font-style:italic">Hello World</text>
+            <rect x="27" y="35" width="118" height="28" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-dasharray="4"/>
+            <rect x="27" y="35" width="55" height="28" fill="none" stroke="#F97316" stroke-width="1"/>
+            <rect x="85" y="35" width="60" height="28" fill="none" stroke="#F97316" stroke-width="1"/>
+            <line x1="27" y1="63" x2="145" y2="63" stroke="#22c55e" stroke-width="1" stroke-dasharray="3" opacity=".7"/>
+            <text x="30" y="78" font-family="monospace" font-size="7" fill="#22c55e">baseline ─────────────────</text>
+            <line x1="27" y1="48" x2="145" y2="48" stroke="#f59e0b" stroke-width=".8" stroke-dasharray="2" opacity=".5"/>
+            <text x="150" y="50" font-family="monospace" font-size="6" fill="#f59e0b">median</text>
+            <text x="30" y="100" font-family="monospace" font-size="7" fill="#666">char-level box | word-level box | principal lines</text>
+          </svg>
+        </div>
+        <div class="ann-body">
+          <div class="ann-project-lbl">Project 02 · OCR</div>
+          <div class="ann-project-title">Latin Script Boxing & Transcription</div>
+          <div class="ann-project-desc">Character-level and word-level bounding box annotation of handwritten Latin text. Included line segmentation, principal line marking (ascender, median, baseline, descender), diacritic annotation, and cursive script handling.</div>
+          <div class="ann-specs">
+            <span class="ann-spec">Char-level boxes</span><span class="ann-spec">Word-level boxes</span>
+            <span class="ann-spec">Line segmentation</span><span class="ann-spec">Principal lines</span>
+            <span class="ann-spec">Diacritics</span><span class="ann-spec">Cursive handling</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann-card2 reveal">
+        <div class="ann-visual" style="background:linear-gradient(135deg,#050a05,#080f08)">
+          <svg viewBox="0 0 320 140" style="width:100%;height:100%;position:absolute;inset:0">
+            <rect width="320" height="140" fill="#050a05"/>
+            <text x="160" y="18" text-anchor="middle" font-family="monospace" font-size="8" fill="#888">Devanagari — Shirorekha Annotation</text>
+            <text x="60" y="75" font-size="36" fill="#ccc" text-anchor="middle" font-family="serif">हिंदी</text>
+            <line x1="30" y1="50" x2="90" y2="50" stroke="#3b82f6" stroke-width="2" opacity=".8"/>
+            <text x="96" y="54" font-family="monospace" font-size="7" fill="#3b82f6">Shirorekha</text>
+            <line x1="30" y1="80" x2="90" y2="80" stroke="#22c55e" stroke-width="1" stroke-dasharray="3" opacity=".7"/>
+            <text x="96" y="84" font-family="monospace" font-size="7" fill="#22c55e">Baseline</text>
+            <rect x="170" y="35" width="120" height="85" rx="6" fill="#0a150a"/>
+            <text x="230" y="55" font-family="monospace" font-size="7" fill="#666" text-anchor="middle">Segmenter Tool</text>
+            <text x="230" y="70" font-family="monospace" font-size="7" fill="#22c55e" text-anchor="middle">① Quality triage</text>
+            <text x="230" y="83" font-family="monospace" font-size="7" fill="#22c55e" text-anchor="middle">② Shirorekha mark</text>
+            <text x="230" y="96" font-family="monospace" font-size="7" fill="#22c55e" text-anchor="middle">③ Line segment</text>
+            <text x="230" y="109" font-family="monospace" font-size="7" fill="#22c55e" text-anchor="middle">④ Principal lines</text>
+          </svg>
+        </div>
+        <div class="ann-body">
+          <div class="ann-project-lbl">Project 03 · Devanagari</div>
+          <div class="ann-project-title">Hindi / Marathi Handwriting</div>
+          <div class="ann-project-desc">Character-level segmentation of Devanagari handwriting using the Segmenter tool. Full workflow: quality triage → Shirorekha annotation → line segmentation → annotation group segmentation → principal line marking. Used Line, Path, and Cutpoint tools.</div>
+          <div class="ann-specs">
+            <span class="ann-spec">Segmenter Tool</span><span class="ann-spec">Shirorekha</span>
+            <span class="ann-spec">Hindi</span><span class="ann-spec">Marathi</span>
+            <span class="ann-spec">Cutpoint method</span><span class="ann-spec">Group segmentation</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ann-card2 reveal">
+        <div class="ann-visual" style="background:linear-gradient(135deg,#060408,#0a060f)">
+          <svg viewBox="0 0 320 140" style="width:100%;height:100%;position:absolute;inset:0">
+            <rect width="320" height="140" fill="#060408"/>
+            <rect x="20" y="15" width="280" height="110" rx="6" fill="#0a0810"/>
+            <rect x="30" y="25" width="260" height="90" rx="4" fill="#080610"/>
+            <text x="160" y="50" text-anchor="middle" font-size="8" fill="#888" font-family="monospace">Baseball Broadcast Frame</text>
+            <rect x="50" y="55" width="60" height="50" rx="3" fill="rgba(59,130,246,.1)" stroke="#3b82f6" stroke-width="1"/>
+            <text x="80" y="78" text-anchor="middle" font-family="monospace" font-size="7" fill="#3b82f6">BATTER</text>
+            <rect x="140" y="60" width="50" height="40" rx="3" fill="rgba(249,115,22,.1)" stroke="#F97316" stroke-width="1"/>
+            <text x="165" y="83" text-anchor="middle" font-family="monospace" font-size="7" fill="#F97316">PITCHER</text>
+            <rect x="220" y="65" width="45" height="35" rx="3" fill="rgba(34,197,94,.1)" stroke="#22c55e" stroke-width="1"/>
+            <text x="242" y="85" text-anchor="middle" font-family="monospace" font-size="7" fill="#22c55e">CATCHER</text>
+          </svg>
+        </div>
+        <div class="ann-body">
+          <div class="ann-project-lbl">Project 04 · Sports AI (KCU)</div>
+          <div class="ann-project-title">Baseball Broadcast Annotation</div>
+          <div class="ann-project-desc">Image analysis and bounding-box annotation of baseball broadcast frames for sports AI training pipelines. Shot classification, split-screen detection, and player role labeling across all positions and broadcast camera angles.</div>
+          <div class="ann-specs">
+            <span class="ann-spec">Bounding boxes</span><span class="ann-spec">Shot classification</span>
+            <span class="ann-spec">Batter / Pitcher</span><span class="ann-spec">Catcher / Umpire</span>
+            <span class="ann-spec">Split-screen detect</span><span class="ann-spec">Dugout staff</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SKILLS BUILT -->
+<div class="skills-section">
+  <div class="skills-inner">
+    <span class="sec-lbl reveal">What This Built</span>
+    <h2 class="sec-h2 reveal">Skills Developed</h2>
+    <div class="skills-grid">
+      <div class="skill-item reveal"><div class="skill-icon">🎙️</div><div class="skill-name">Audio Annotation</div><div class="skill-desc">Time-series labeling, spectrogram reading, speaker diarization, turn-boundary precision, TTS normalisation.</div></div>
+      <div class="skill-item reveal"><div class="skill-icon">✍️</div><div class="skill-name">OCR & Handwriting</div><div class="skill-desc">Bounding box precision, multi-level annotation (char/word/line), cursive script handling across Latin scripts.</div></div>
+      <div class="skill-item reveal"><div class="skill-icon">📝</div><div class="skill-name">Devanagari Script</div><div class="skill-desc">Shirorekha annotation, character segmentation, principal line identification in Hindi and Marathi handwriting.</div></div>
+      <div class="skill-item reveal"><div class="skill-icon">⚾</div><div class="skill-name">Video/Image Labeling</div><div class="skill-desc">Broadcast frame analysis, multi-object bounding boxes, shot type classification, scene context understanding.</div></div>
+      <div class="skill-item reveal"><div class="skill-icon">🔍</div><div class="skill-name">Quality Assurance</div><div class="skill-desc">Systematic triage workflows, error pattern recognition, guideline-adherence checking, ground truth correction.</div></div>
+      <div class="skill-item reveal"><div class="skill-icon">⚡</div><div class="skill-name">High-Throughput Accuracy</div><div class="skill-desc">Maintaining precision at volume — consistently meeting accuracy targets across high-throughput annotation queues.</div></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
+  <div class="foot-copy">© 2025 Ramana Vemunoori</div>
+  <a href="index.html#experience" class="nav-back" style="text-decoration:none">← Experience</a>
+</footer>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+const co=document.getElementById('co'),ci=document.getElementById('ci');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ci.style.left=mx+'px';ci.style.top=my+'px';});
+(function a(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;co.style.left=cx+'px';co.style.top=cy+'px';requestAnimationFrame(a);})();
+window.addEventListener('scroll',()=>{const t=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('prog').style.width=(window.scrollY/t*100)+'%';});
+document.querySelectorAll('.reveal').forEach(el=>{ScrollTrigger.create({trigger:el,start:'top 88%',onEnter:()=>el.classList.add('on')});});
+// Video card click to play
+document.querySelectorAll('.vid-card').forEach(card=>{
+  card.addEventListener('click',()=>{
+    document.querySelectorAll('.vid-card').forEach(c=>c.classList.remove('active'));
+    card.classList.add('active');
+    const v=card.querySelector('video');
+    if(v){v.play();}
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blog — Ramana Vemunoori · AI Engineer · Prompt Engineer</title>
+<meta name="description" content="Insights on Prompt Engineering, LLM Fine-Tuning, ML Projects, and breaking into AI/ML in India — by Ramana Vemunoori, Prompt Engineer on Apple's LLM Project.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--or:#F97316;--bg:#060606;--bg2:#0b0b0b;--bg3:#111;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);--bdo:rgba(249,115,22,.3);--tx:#f0f0f0;--tx2:#888;--tx3:#444;--fn:'Space Grotesk',sans-serif;--fd:'Syne',sans-serif;--r:16px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}body{font-family:var(--fn);background:var(--bg);color:var(--tx);overflow-x:hidden;cursor:none;}
+::-webkit-scrollbar{width:2px;}::-webkit-scrollbar-thumb{background:var(--or);}
+#co,#ci{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#co{width:40px;height:40px;border:1.5px solid rgba(249,115,22,.45);transition:.2s;}
+#ci{width:6px;height:6px;background:var(--or);}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#ea6a0a,#ff9a52);z-index:1000;width:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(6,6,6,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);}
+.nav-logo{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--tx);text-decoration:none;letter-spacing:-.5px;}.nav-logo em{color:var(--or);font-style:normal;}
+.nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);text-decoration:none;padding:8px 16px;border:1px solid var(--bd);border-radius:9px;transition:all .2s;}.nav-back:hover{color:var(--or);border-color:var(--bdo);}
+
+/* HERO */
+.blog-hero{padding:120px 6% 80px;background:var(--bg);border-bottom:1px solid var(--bd);position:relative;overflow:hidden;}
+.blog-hero::before{content:'';position:absolute;top:-100px;right:-100px;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.06) 0%,transparent 70%);pointer-events:none;}
+.blog-hero-inner{max-width:800px;}
+.hero-lbl{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:16px;display:block;}
+.blog-hero h1{font-family:var(--fd);font-size:clamp(36px,6vw,72px);font-weight:800;letter-spacing:-3px;line-height:.95;color:var(--tx);margin-bottom:20px;}
+.blog-hero h1 em{color:var(--or);font-style:normal;}
+.blog-hero p{font-size:17px;color:var(--tx2);line-height:1.75;max-width:560px;}
+
+/* POSTS GRID */
+.posts-section{padding:80px 6%;max-width:1160px;margin:0 auto;}
+.posts-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;}
+.post-card{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;transition:border-color .3s,transform .3s;text-decoration:none;display:flex;flex-direction:column;}
+.post-card:hover{border-color:var(--bdo);transform:translateY(-5px);}
+.post-thumb{height:180px;display:flex;align-items:center;justify-content:center;font-size:64px;position:relative;overflow:hidden;}
+.post-thumb-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,var(--bg3) 100%);}
+.post-body{padding:24px;flex:1;display:flex;flex-direction:column;}
+.post-cat{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--or);margin-bottom:10px;}
+.post-title{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--tx);line-height:1.25;letter-spacing:-.3px;margin-bottom:10px;}
+.post-excerpt{font-size:13px;color:var(--tx2);line-height:1.7;flex:1;margin-bottom:18px;}
+.post-meta{display:flex;align-items:center;justify-content:space-between;}
+.post-date{font-size:11px;color:var(--tx3);}
+.post-read{font-size:11px;color:var(--or);font-weight:600;}
+.post-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px;}
+.post-tag{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.15);border-radius:5px;padding:3px 8px;font-size:10px;color:var(--or);}
+
+footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;}.foot-logo em{color:var(--or);font-style:normal;}
+.foot-copy{font-size:12px;color:var(--tx3);}
+@media(max-width:800px){.posts-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="co"></div><div id="ci"></div>
+<div id="prog"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Ramana<em>.vr</em></a>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+</nav>
+
+<div class="blog-hero">
+  <div class="blog-hero-inner">
+    <span class="hero-lbl">Writing</span>
+    <h1>Thoughts on<br><em>AI & Building</em></h1>
+    <p>Real insights from working on Apple's LLM, building ML projects from scratch, and navigating a career in AI in India — written by someone actually doing it.</p>
+  </div>
+</div>
+
+<div class="posts-section">
+  <div class="posts-grid">
+    <a href="blog-apple-llm.html" class="post-card">
+      <div class="post-thumb" style="background:linear-gradient(135deg,#0a0015,#150010)">
+        <span style="position:relative;z-index:1">🍎</span>
+        <div class="post-thumb-overlay"></div>
+      </div>
+      <div class="post-body">
+        <div class="post-cat">Prompt Engineering · Apple LLM</div>
+        <div class="post-title">What Nobody Tells You About Writing Prompts for Apple's LLM</div>
+        <p class="post-excerpt">I've been writing supervised fine-tuning data for Apple's language model for over a year. Here's what actually surprised me — safety rules, multi-turn conversations, coding prompts, and how diverse the work really is.</p>
+        <div class="post-tags"><span class="post-tag">Apple LLM</span><span class="post-tag">Prompt Engineering</span><span class="post-tag">SFT</span><span class="post-tag">LLM Fine-Tuning</span></div>
+        <div class="post-meta"><span class="post-date">June 2025 · 8 min read</span><span class="post-read">Read →</span></div>
+      </div>
+    </a>
+
+    <a href="blog-ml-projects.html" class="post-card">
+      <div class="post-thumb" style="background:linear-gradient(135deg,#0a0500,#150800)">
+        <span style="position:relative;z-index:1">🛡</span>
+        <div class="post-thumb-overlay"></div>
+      </div>
+      <div class="post-body">
+        <div class="post-cat">Machine Learning · Projects</div>
+        <div class="post-title">I Built 4 ML Projects From Scratch. Here's What Each One Taught Me.</div>
+        <p class="post-excerpt">Fraud detection, cardiac risk, forest fire prediction, and a home food marketplace — every project broke something different in my brain, and rebuilt it better. The real lessons weren't in the models.</p>
+        <div class="post-tags"><span class="post-tag">Machine Learning</span><span class="post-tag">Python</span><span class="post-tag">Flask</span><span class="post-tag">XGBoost</span></div>
+        <div class="post-meta"><span class="post-date">May 2025 · 10 min read</span><span class="post-read">Read →</span></div>
+      </div>
+    </a>
+
+    <a href="blog-ai-career.html" class="post-card">
+      <div class="post-thumb" style="background:linear-gradient(135deg,#00080a,#000f15)">
+        <span style="position:relative;z-index:1">🚀</span>
+        <div class="post-thumb-overlay"></div>
+      </div>
+      <div class="post-body">
+        <div class="post-cat">Career · AI in India</div>
+        <div class="post-title">How to Actually Break Into AI/ML in India in 2025 (Not the Version LinkedIn Tells You)</div>
+        <p class="post-excerpt">Everyone tells you to do certifications and LeetCode. Here's what actually worked — and what I wish someone had told me when I was a B.Tech fresher in Warangal trying to break into AI.</p>
+        <div class="post-tags"><span class="post-tag">Career</span><span class="post-tag">AI India</span><span class="post-tag">Fresher</span><span class="post-tag">Prompt Engineering</span></div>
+        <div class="post-meta"><span class="post-date">April 2025 · 7 min read</span><span class="post-read">Read →</span></div>
+      </div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
+  <div class="foot-copy">© 2025 Ramana Vemunoori · Hyderabad, India</div>
+  <a href="index.html" class="nav-back" style="text-decoration:none">← Portfolio</a>
+</footer>
+<script>
+const co=document.getElementById('co'),ci=document.getElementById('ci');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ci.style.left=mx+'px';ci.style.top=my+'px';});
+(function a(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;co.style.left=cx+'px';co.style.top=cy+'px';requestAnimationFrame(a);})();
+window.addEventListener('scroll',()=>{const t=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('prog').style.width=(window.scrollY/t*100)+'%';});
+</script>
+</body>
+</html>

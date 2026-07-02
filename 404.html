@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 — Page Not Found | Ramana Vemunoori</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--or:#F97316;--bg:#080808;--bg3:#111;--bd:rgba(255,255,255,.07);--tx:#f2f2f2;--tx2:#999;--tx3:#555;--fn:'Inter',sans-serif;--fd:'Syne',sans-serif}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px 20px;overflow:hidden}
+canvas{position:fixed;inset:0;pointer-events:none;opacity:.5}
+.wrap{position:relative;z-index:2;max-width:560px}
+.num{font-family:var(--fd);font-size:clamp(100px,20vw,180px);font-weight:800;line-height:1;color:transparent;-webkit-text-stroke:2px var(--or);letter-spacing:-8px;margin-bottom:8px;animation:float-num 3s ease-in-out infinite}
+@keyframes float-num{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.title{font-family:var(--fd);font-size:clamp(22px,4vw,32px);font-weight:800;color:var(--tx);margin-bottom:14px;letter-spacing:-.5px}
+.sub{font-size:16px;color:var(--tx2);line-height:1.65;margin-bottom:40px;max-width:400px;margin-left:auto;margin-right:auto}
+.links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--or);color:#000;padding:13px 26px;border-radius:10px;font-size:14px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.btn-p:hover{transform:translateY(-2px);box-shadow:0 10px 30px rgba(249,115,22,.35)}
+.btn-s{display:inline-flex;align-items:center;gap:8px;background:transparent;color:var(--tx);padding:13px 26px;border-radius:10px;font-size:14px;font-weight:500;text-decoration:none;border:1px solid rgba(255,255,255,.12);transition:all .2s}
+.btn-s:hover{border-color:rgba(255,255,255,.25);background:rgba(255,255,255,.04)}
+.suggestions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px}
+.sug{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:16px;text-decoration:none;transition:border-color .2s,transform .2s;display:block}
+.sug:hover{border-color:rgba(249,115,22,.3);transform:translateY(-3px)}
+.sug-ico{font-size:22px;display:block;margin-bottom:8px}
+.sug-name{font-size:13px;font-weight:600;color:var(--tx)}
+.sug-hint{font-size:11px;color:var(--tx3);margin-top:3px}
+.ml-tip{margin-top:32px;font-size:13px;color:var(--tx3);font-style:italic}
+.ml-tip span{color:var(--or)}
+@media(max-width:480px){.suggestions{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div class="wrap">
+  <div class="num">404</div>
+  <div class="title">This page doesn't exist yet.</div>
+  <div class="sub">The model predicted you'd find this page — but with 0% confidence. Let's get you back to something real.</div>
+  <div class="links">
+    <a href="./index.html" class="btn-p">&#8592; Back to Portfolio</a>
+    <a href="./index.html#contact" class="btn-s">Contact Me</a>
+  </div>
+  <div class="suggestions">
+    <a href="./index.html#projects" class="sug"><span class="sug-ico">&#128196;</span><div class="sug-name">Projects</div><div class="sug-hint">See my ML work</div></a>
+    <a href="./index.html#experience" class="sug"><span class="sug-ico">&#128188;</span><div class="sug-name">Experience</div><div class="sug-hint">Apple LLM & more</div></a>
+    <a href="./index.html#contact" class="sug"><span class="sug-ico">&#9993;&#65039;</span><div class="sug-name">Contact</div><div class="sug-hint">Let's work together</div></a>
+  </div>
+  <div class="ml-tip">Fun fact: a good ML model knows <span>when it doesn't know</span>. This is that moment.</div>
+</div>
+<script>
+const cv=document.getElementById('c'),ctx=cv.getContext('2d');
+cv.width=window.innerWidth;cv.height=window.innerHeight;
+window.addEventListener('resize',()=>{cv.width=window.innerWidth;cv.height=window.innerHeight});
+const pts=Array.from({length:60},()=>({x:Math.random()*cv.width,y:Math.random()*cv.height,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,r:Math.random()*1.5+.4,o:Math.random()*.3+.06}));
+(function draw(){ctx.clearRect(0,0,cv.width,cv.height);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0)p.x=cv.width;if(p.x>cv.width)p.x=0;if(p.y<0)p.y=cv.height;if(p.y>cv.height)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(249,115,22,${p.o})`;ctx.fill()});requestAnimationFrame(draw)})();
+// Auto redirect after 10s
+let countdown = 10;
+const interval = setInterval(()=>{
+  countdown--;
+  document.querySelector('.ml-tip').textContent = 'Redirecting to homepage in ' + countdown + 's...';
+  if(countdown<=0){clearInterval(interval);window.location.href='./index.html';}
+},1000);
+</script>
+</body>
+</html>

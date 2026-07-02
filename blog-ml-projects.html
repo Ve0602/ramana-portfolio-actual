@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I Built 4 ML Projects From Scratch — Ramana Vemunoori</title>
+<meta name="description" content="Lessons from building fraud detection, cardiac risk AI, forest fire prediction, and a home food marketplace from scratch — what each one taught me about real-world ML.">
+<meta name="keywords" content="Machine Learning Projects, Python Flask, XGBoost, SVM, Fraud Detection, Cardiac Risk, Forest Fire AI, Ramana Vemunoori">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--or:#F97316;--bg:#060606;--bg2:#0b0b0b;--bg3:#111;--bd:rgba(255,255,255,.07);--bdo:rgba(249,115,22,.28);--tx:#f0f0f0;--tx2:#999;--tx3:#444;--fn:'Space Grotesk',sans-serif;--fd:'Syne',sans-serif;--prose:'Lora',Georgia,serif;--r:14px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);overflow-x:hidden;cursor:none;}
+::-webkit-scrollbar{width:2px;}::-webkit-scrollbar-thumb{background:var(--or);}
+#co,#ci{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#co{width:40px;height:40px;border:1.5px solid rgba(249,115,22,.45);transition:.2s;}
+#ci{width:6px;height:6px;background:var(--or);}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#ea6a0a,#ff9a52);z-index:1000;width:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(6,6,6,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);}
+.nav-logo{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--tx);text-decoration:none;letter-spacing:-.5px;}.nav-logo em{color:var(--or);font-style:normal;}
+.nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);text-decoration:none;padding:8px 16px;border:1px solid var(--bd);border-radius:9px;transition:all .2s;}.nav-back:hover{color:var(--or);border-color:var(--bdo);}
+.art-hero{padding:120px 6% 64px;max-width:800px;margin:0 auto;}
+.art-cat{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:18px;display:block;}
+.art-h1{font-family:var(--fd);font-size:clamp(30px,5vw,56px);font-weight:800;letter-spacing:-2.5px;line-height:1.0;color:var(--tx);margin-bottom:24px;}
+.art-h1 em{color:var(--or);font-style:normal;}
+.art-lead{font-family:var(--prose);font-size:20px;color:var(--tx2);line-height:1.75;margin-bottom:32px;font-style:italic;}
+.art-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-bottom:32px;border-bottom:1px solid var(--bd);}
+.art-author{display:flex;align-items:center;gap:12px;}
+.art-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--or),#7c3aed);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
+.art-author-name{font-size:14px;font-weight:600;color:var(--tx);}
+.art-author-role{font-size:12px;color:var(--tx2);}
+.art-info{display:flex;gap:16px;font-size:12px;color:var(--tx3);}
+.art-tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;}
+.art-tag{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.15);border-radius:5px;padding:4px 10px;font-size:11px;color:var(--or);}
+.art-body{max-width:720px;margin:0 auto;padding:0 6% 100px;}
+.art-body p{font-family:var(--prose);font-size:18px;line-height:1.85;color:#ccc;margin-bottom:28px;}
+.art-body h2{font-family:var(--fd);font-size:26px;font-weight:800;letter-spacing:-1px;color:var(--tx);margin:56px 0 20px;line-height:1.15;}
+.art-body h2::before{content:'';display:block;width:32px;height:2px;background:var(--or);margin-bottom:14px;}
+.art-body h3{font-family:var(--fd);font-size:18px;font-weight:800;color:var(--tx);margin:32px 0 12px;}
+.art-body strong{color:var(--tx);font-weight:600;}
+.art-body em{color:var(--or);font-style:italic;}
+.art-body ul{margin:0 0 28px 0;padding-left:0;list-style:none;}
+.art-body ul li{font-family:var(--prose);font-size:17px;color:#ccc;line-height:1.8;padding:8px 0 8px 28px;border-bottom:1px solid rgba(255,255,255,.04);position:relative;}
+.art-body ul li::before{content:'▸';color:var(--or);position:absolute;left:0;font-size:12px;top:12px;}
+.callout{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);border-left:3px solid var(--or);border-radius:0 12px 12px 0;padding:22px 26px;margin:32px 0;}
+.callout p{margin:0;font-size:16px;color:var(--tx2);}
+.callout strong{color:var(--or);}
+.pull-quote{border-left:2px solid var(--or);padding:20px 28px;margin:40px 0;}
+.pull-quote p{font-family:var(--prose);font-size:22px;color:var(--tx);line-height:1.55;font-style:italic;margin:0;}
+.code-block{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:22px 24px;margin:28px 0;font-family:'Courier New',monospace;font-size:13px;color:#7dd3fc;line-height:1.7;overflow-x:auto;}
+.code-block .comment{color:var(--tx3);}
+.project-header{display:flex;align-items:center;gap:16px;margin-bottom:8px;}
+.project-emoji{font-size:32px;}
+.project-num{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);}
+.lesson-box{background:var(--bg3);border:1px solid rgba(249,115,22,.18);border-radius:12px;padding:20px 24px;margin:24px 0;}
+.lesson-box-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--or);margin-bottom:8px;}
+.lesson-box p{font-family:var(--fn);font-size:14px;color:var(--tx2);line-height:1.7;margin:0;}
+.section-divider{display:flex;align-items:center;gap:16px;margin:56px 0;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--bd);}
+.section-divider span{font-size:18px;}
+.next-posts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:32px;}
+.next-card{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:22px;text-decoration:none;transition:all .2s;display:block;}
+.next-card:hover{border-color:var(--bdo);transform:translateY(-3px);}
+.next-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;}
+.next-title{font-size:14px;font-weight:700;color:var(--tx);line-height:1.4;}
+.share-section{background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:32px;text-align:center;margin-bottom:32px;}
+.share-title{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--tx);margin-bottom:8px;}
+.share-desc{font-size:14px;color:var(--tx2);margin-bottom:22px;}
+.share-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.share-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:9px;font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--bd);color:var(--tx2);transition:all .2s;cursor:none;}.share-btn:hover{border-color:var(--bdo);color:var(--or);}
+footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;}.foot-logo em{color:var(--or);font-style:normal;}
+.foot-copy{font-size:12px;color:var(--tx3);}
+@media(max-width:700px){.next-posts{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="co"></div><div id="ci"></div>
+<div id="prog"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Ramana<em>.vr</em></a>
+  <a href="blog.html" class="nav-back">← Blog</a>
+</nav>
+
+<div class="art-hero">
+  <span class="art-cat">Machine Learning · Projects · Real-World AI</span>
+  <h1 class="art-h1">I Built 4 ML Projects From Scratch.<br><em>Here's What Each One Taught Me.</em></h1>
+  <p class="art-lead">Fraud detection, cardiac risk AI, forest fire prediction, and a home food marketplace — every project broke something different in my thinking, then rebuilt it better. The real lessons weren't in the models.</p>
+  <div class="art-meta">
+    <div class="art-author">
+      <div class="art-av">RV</div>
+      <div><div class="art-author-name">Ramana Vemunoori</div><div class="art-author-role">AI & Data Science Engineer · Hyderabad</div></div>
+    </div>
+    <div class="art-info"><span>May 2025</span><span>10 min read</span></div>
+  </div>
+  <div class="art-tags">
+    <span class="art-tag">Machine Learning</span><span class="art-tag">Python</span><span class="art-tag">XGBoost</span><span class="art-tag">Flask</span><span class="art-tag">SVM</span><span class="art-tag">Projects</span>
+  </div>
+</div>
+
+<div class="art-body">
+
+<p>There's a version of machine learning education that looks like this: complete a Coursera course, copy a Jupyter notebook from Kaggle, submit it as a project, put it on your LinkedIn. I've seen hundreds of portfolios built this way. They're invisible to anyone hiring for real AI roles.</p>
+
+<p>The version I chose was harder and slower. I built everything from scratch — the data pipeline, the model, the API, the deployment. I broke things, fixed them, broke them again. And I learned things you simply cannot learn from a course.</p>
+
+<p>Here's what each project actually taught me.</p>
+
+<h2>Project 1 — Guardian of Your Money 🛡</h2>
+<div class="project-header"><div class="project-emoji">🛡</div><div><div style="font-size:15px;font-weight:700;color:var(--tx)">Fraud Detection with Explainability</div><div class="project-num">Python · XGBoost · RandomForest · Flask · IBM Cloud</div></div></div>
+
+<p>This started as "I want to build a fraud detector." It ended up teaching me that <strong>the model is the least interesting part of a fraud detection system</strong>.</p>
+
+<p>The interesting parts are: feature engineering that captures human deception patterns, class imbalance handling when only 0.13% of transactions are fraud, and most importantly — <em>explainability</em>. A model that says "FRAUD: 94%" is useless to a human investigator. A system that says "Account drained in single transaction, destination balance was zero, high-value TRANSFER at 3am" is actionable.</p>
+
+<p>I built a rule-based explainability layer on top of the ensemble model. Every prediction generates 2–4 human-readable reasons drawn from 11 fraud pattern categories. That layer took longer to build than the ML model itself.</p>
+
+<div class="lesson-box">
+  <div class="lesson-box-label">The Real Lesson</div>
+  <p>In production AI, the explanation of a decision is often more valuable than the decision itself. Models get retrained. Explanations build trust with the humans who have to act on them.</p>
+</div>
+
+<p>The 6.3 million training records from the PaySim dataset also taught me something about scale: what works at 10,000 records fails at 6 million unless you've thought carefully about memory, chunking, and vectorised operations. My first training run crashed the kernel. The second one ran for four hours. The third one was clean.</p>
+
+<h2>Project 2 — For Your Good Heart ❤</h2>
+<div class="project-header"><div class="project-emoji">❤</div><div><div style="font-size:15px;font-weight:700;color:var(--tx)">Cardiac Risk Assessment — SVM Classifier</div><div class="project-num">Python · SVM · scikit-learn · Flask</div></div></div>
+
+<p>I chose this project because I wanted to work on something with real human stakes. Not to be dramatic — but writing a fraud detector feels abstract. Building something that could theoretically help someone understand their cardiac risk felt different.</p>
+
+<p>The dataset is small by ML standards: 299 patients from the Faisalabad Institute of Cardiology. <strong>299 records.</strong> That constraint forced me to understand something I'd been avoiding: the entire science of making reliable predictions from small data.</p>
+
+<p>SVM with an RBF kernel is the right choice here — not because it's the most powerful algorithm, but because it generalises well with small datasets and doesn't overfit the way tree-based methods can. GridSearchCV over C and gamma took hours but was essential. The difference between wrong hyperparameters and right ones was the difference between a model that memorised the training data and one that actually learned cardiac risk patterns.</p>
+
+<div class="pull-quote"><p>"The algorithm is a choice, not a default. Choosing SVM over XGBoost for 299 records is a deliberate decision grounded in bias-variance theory — not a guess."</p></div>
+
+<p>The advice engine was the part I'm most proud of. Risk score → clinical advice tier → personalised recommendations grounded in WHO cardiovascular guidelines. I spent two evenings just reading those guidelines to make sure the advice was medically defensible, not just plausible-sounding.</p>
+
+<div class="lesson-box">
+  <div class="lesson-box-label">The Real Lesson</div>
+  <p>Algorithm selection is domain knowledge, not preference. Small data demands different choices than big data. Knowing why you chose something is more important than knowing how to implement it.</p>
+</div>
+
+<h2>Project 3 — Before the Forest Burns 🔥</h2>
+<div class="project-header"><div class="project-emoji">🔥</div><div><div style="font-size:15px;font-weight:700;color:var(--tx)">Forest Fire Risk Intelligence — Canadian FWI</div><div class="project-num">Python · FWI Algorithm · GeoJSON · Flask</div></div></div>
+
+<p>This one was the most technically demanding, and the most humbling.</p>
+
+<p>The Canadian Forest Weather Index system isn't a machine learning model. It's a deterministic algorithm developed over decades by fire scientists — six interconnected indices (FFMC, DMC, DC, ISI, BUI, FWI) that together describe fire behaviour from four raw weather inputs. Implementing it correctly from the original mathematical specification required reading forestry research papers in a way that no ML tutorial ever prepared me for.</p>
+
+<div class="code-block"><span class="comment"># The FWI system has real mathematical teeth</span>
+<span class="comment"># FFMC = Fine Fuel Moisture Code (dead fine fuels)</span>
+<span class="comment"># DMC  = Duff Moisture Code (loosely compacted forest floor)</span>
+<span class="comment"># DC   = Drought Code (deep, compact organic layers)</span>
+<span class="comment"># ISI  = Initial Spread Index (fire spread rate)</span>
+<span class="comment"># BUI  = Buildup Index (total fuel available)</span>
+<span class="comment"># FWI  = Final fire weather index combining all above</span>
+
+def calc_fwi(isi, bui):
+    if bui &lt;= 80:
+        fd = 0.626 * (bui ** 0.809) + 2
+    else:
+        fd = 1000 / (25 + 108.64 * math.exp(-0.023 * bui))
+    return math.exp(2.72 * (0.434 * math.log(isi * fd)) ** 0.647)</div>
+
+<p>Getting this right took much longer than any ML model I've trained. But it taught me something invaluable: <strong>not every problem in AI needs a neural network</strong>. Sometimes the domain experts who spent 40 years studying wildfire behaviour have already built the best model. Your job is to implement it faithfully and deploy it usefully.</p>
+
+<div class="lesson-box">
+  <div class="lesson-box-label">The Real Lesson</div>
+  <p>Domain expertise embedded in a deterministic algorithm can outperform a neural network trained on limited data. Reading primary sources — the actual scientific papers — is a skill that distinguishes senior AI engineers from people who only know how to call model.fit().</p>
+</div>
+
+<h2>Project 4 — MANA: Taste of Home 🍱</h2>
+<div class="project-header"><div class="project-emoji">🍱</div><div><div style="font-size:15px;font-weight:700;color:var(--tx)">Home Food Marketplace — Full Stack + AI Matching</div><div class="project-num">React · Spring Boot · MongoDB · SQL · Figma</div></div></div>
+
+<p>The first three projects are pure ML. MANA is where I had to become a product engineer.</p>
+
+<p>The AI component — dietary matching using cosine similarity on nutritional vectors — took about two days to build. The product itself took weeks. Designing user flows in Figma, building React components, wiring a Spring Boot REST API, managing two databases (MongoDB for flexible documents, PostgreSQL for billing), implementing JWT authentication — each piece was a discipline unto itself.</p>
+
+<p>What MANA taught me is that <strong>AI features are only as useful as the product they live in</strong>. The matching algorithm is useless without the cook profile UI. The cook profile is useless without the order flow. The order flow is useless without the subscription management. Everything is connected, and the person who builds it all learns things that the person who only builds the model never does.</p>
+
+<div class="lesson-box">
+  <div class="lesson-box-label">The Real Lesson</div>
+  <p>The best AI engineers can go from model to product. Understanding frontend, backend, and data layers makes your AI work ship-able. Models that never ship don't help anyone.</p>
+</div>
+
+<h2>What All Four Projects Have In Common</h2>
+
+<p>Looking back across all of them, I see three patterns that appeared in every project without exception:</p>
+
+<ul>
+  <li><strong>The real work starts after the model trains.</strong> Deployment, explainability, edge cases, user experience — these take longer than training and matter more.</li>
+  <li><strong>The hardest bugs are conceptual, not technical.</strong> Wrong assumption about what the data means. Wrong choice of evaluation metric. Wrong mental model of the problem. These can't be fixed by Googling.</li>
+  <li><strong>Shipping something live changes your understanding fundamentally.</strong> A project that runs in a Jupyter notebook is a demonstration. A project that runs on IBM Cloud with a real API endpoint is a product. The gap between those two things is enormous and worth crossing.</li>
+</ul>
+
+<div class="callout"><p><strong>If you're building your portfolio now:</strong> Don't stop at the model. Build the API. Deploy it somewhere. Make it accessible to a URL. The difference between a Kaggle notebook and a deployed Flask app on IBM Cloud is the difference between "I studied ML" and "I build AI systems."</p></div>
+
+<div class="section-divider"><span>✦</span></div>
+
+<p style="font-size:15px;color:var(--tx3);font-family:var(--fn)"><em>All four projects are live — you can interact with the fraud detector, cardiac risk tool, and forest fire calculator directly on this portfolio. The code is on GitHub at github.com/Ve0602.</em></p>
+
+</div>
+
+<div style="max-width:720px;margin:0 auto;padding:0 6% 80px;">
+  <div class="share-section">
+    <div class="share-title">Was this useful?</div>
+    <div class="share-desc">Share with someone building their ML portfolio in 2025.</div>
+    <div class="share-btns">
+      <a href="https://www.linkedin.com/in/ramana-vemunoori" target="_blank" class="share-btn">💼 LinkedIn</a>
+      <a href="index.html#projects" class="share-btn">🚀 See the Projects Live</a>
+      <a href="index.html" class="share-btn">🏠 Portfolio</a>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:var(--tx3);text-align:center">Next reads</div>
+  <div class="next-posts">
+    <a href="blog-apple-llm.html" class="next-card">
+      <div class="next-lbl">Previous</div>
+      <div class="next-title">What Nobody Tells You About Writing Prompts for Apple's LLM</div>
+    </a>
+    <a href="blog-ai-career.html" class="next-card">
+      <div class="next-lbl">Next Article</div>
+      <div class="next-title">How to Actually Break Into AI/ML in India in 2025</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
+  <div class="foot-copy">© 2025 Ramana Vemunoori</div>
+  <a href="blog.html" class="nav-back" style="text-decoration:none">← Blog</a>
+</footer>
+<script>
+const co=document.getElementById('co'),ci=document.getElementById('ci');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ci.style.left=mx+'px';ci.style.top=my+'px';});
+(function a(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;co.style.left=cx+'px';co.style.top=cy+'px';requestAnimationFrame(a);})();
+window.addEventListener('scroll',()=>{const t=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('prog').style.width=(window.scrollY/t*100)+'%';});
+</script>
+</body>
+</html>

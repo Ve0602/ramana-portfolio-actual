@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Nobody Tells You About Writing Prompts for Apple's LLM — Ramana Vemunoori</title>
+<meta name="description" content="Real insights from 1+ year writing SFT data for Apple's LLM. Safety rules, multi-turn conversations, coding prompts, KaTeX math — what actually surprised a Prompt Engineer at Centific.">
+<meta name="keywords" content="Apple LLM, Prompt Engineering, SFT Data, LLM Fine-Tuning, Centific, Ramana Vemunoori, Hyderabad AI">
+<meta property="og:title" content="What Nobody Tells You About Writing Prompts for Apple's LLM">
+<meta property="og:description" content="Real insights from 1+ year writing SFT fine-tuning data for Apple's language model.">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{--or:#F97316;--bg:#060606;--bg2:#0b0b0b;--bg3:#111;--bd:rgba(255,255,255,.07);--bdo:rgba(249,115,22,.28);--tx:#f0f0f0;--tx2:#999;--tx3:#444;--fn:'Space Grotesk',sans-serif;--fd:'Syne',sans-serif;--prose:'Lora',Georgia,serif;--r:14px;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);overflow-x:hidden;cursor:none;}
+::-webkit-scrollbar{width:2px;}::-webkit-scrollbar-thumb{background:var(--or);}
+#co,#ci{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#co{width:40px;height:40px;border:1.5px solid rgba(249,115,22,.45);transition:.2s;}
+#ci{width:6px;height:6px;background:var(--or);}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#ea6a0a,#ff9a52);z-index:1000;width:0;}
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(6,6,6,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);}
+.nav-logo{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--tx);text-decoration:none;letter-spacing:-.5px;}.nav-logo em{color:var(--or);font-style:normal;}
+.nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);text-decoration:none;padding:8px 16px;border:1px solid var(--bd);border-radius:9px;transition:all .2s;}.nav-back:hover{color:var(--or);border-color:var(--bdo);}
+
+/* ARTICLE HERO */
+.art-hero{padding:120px 6% 64px;max-width:800px;margin:0 auto;}
+.art-cat{font-size:11px;font-weight:700;letter-spacing:3px;text-transform:uppercase;color:var(--or);margin-bottom:18px;display:block;}
+.art-h1{font-family:var(--fd);font-size:clamp(32px,5.5vw,58px);font-weight:800;letter-spacing:-2.5px;line-height:1.0;color:var(--tx);margin-bottom:24px;}
+.art-h1 em{color:var(--or);font-style:normal;}
+.art-lead{font-family:var(--prose);font-size:20px;color:var(--tx2);line-height:1.75;margin-bottom:32px;font-style:italic;}
+.art-meta{display:flex;align-items:center;gap:20px;flex-wrap:wrap;padding-bottom:32px;border-bottom:1px solid var(--bd);}
+.art-author{display:flex;align-items:center;gap:12px;}
+.art-av{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--or),#7c3aed);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;font-weight:800;color:#fff;flex-shrink:0;}
+.art-author-name{font-size:14px;font-weight:600;color:var(--tx);}
+.art-author-role{font-size:12px;color:var(--tx2);}
+.art-info{display:flex;gap:16px;font-size:12px;color:var(--tx3);}
+.art-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.art-tag{background:rgba(249,115,22,.07);border:1px solid rgba(249,115,22,.15);border-radius:5px;padding:4px 10px;font-size:11px;color:var(--or);}
+
+/* ARTICLE BODY */
+.art-body{max-width:720px;margin:0 auto;padding:0 6% 100px;}
+.art-body p{font-family:var(--prose);font-size:18px;line-height:1.85;color:#ccc;margin-bottom:28px;}
+.art-body h2{font-family:var(--fd);font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--tx);margin:56px 0 20px;line-height:1.15;}
+.art-body h2::before{content:'';display:block;width:32px;height:2px;background:var(--or);margin-bottom:14px;}
+.art-body h3{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--tx);margin:36px 0 14px;}
+.art-body strong{color:var(--tx);font-weight:600;}
+.art-body em{color:var(--or);font-style:italic;}
+.art-body ul,.art-body ol{margin:0 0 28px 0;padding-left:0;list-style:none;}
+.art-body ul li,.art-body ol li{font-family:var(--prose);font-size:17px;color:#ccc;line-height:1.8;padding:8px 0 8px 28px;border-bottom:1px solid rgba(255,255,255,.04);position:relative;}
+.art-body ul li::before{content:'▸';color:var(--or);position:absolute;left:0;font-size:12px;top:12px;}
+.art-body ol{counter-reset:ol;}
+.art-body ol li{counter-increment:ol;}
+.art-body ol li::before{content:counter(ol)'.';color:var(--or);position:absolute;left:0;font-size:13px;font-weight:700;font-family:var(--fn);top:10px;}
+.callout{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);border-left:3px solid var(--or);border-radius:0 12px 12px 0;padding:22px 26px;margin:32px 0;}
+.callout p{margin:0;font-size:16px;color:var(--tx2);}
+.callout strong{color:var(--or);}
+.code-block{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:22px 24px;margin:28px 0;font-family:'Courier New',monospace;font-size:13px;color:#7dd3fc;line-height:1.7;overflow-x:auto;}
+.code-block .comment{color:var(--tx3);}
+.pull-quote{border-left:2px solid var(--or);padding:20px 28px;margin:40px 0;}
+.pull-quote p{font-family:var(--prose);font-size:22px;color:var(--tx);line-height:1.55;font-style:italic;margin:0;}
+.section-divider{display:flex;align-items:center;gap:16px;margin:56px 0;}
+.section-divider::before,.section-divider::after{content:'';flex:1;height:1px;background:var(--bd);}
+.section-divider span{font-size:18px;}
+.insight-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:28px 0;}
+.insight-card{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:20px;transition:border-color .2s;}
+.insight-card:hover{border-color:var(--bdo);}
+.insight-icon{font-size:22px;margin-bottom:10px;}
+.insight-title{font-size:13px;font-weight:700;color:var(--tx);margin-bottom:6px;}
+.insight-desc{font-size:13px;color:var(--tx2);line-height:1.6;}
+.art-footer{max-width:720px;margin:0 auto;padding:0 6% 80px;}
+.share-section{background:var(--bg3);border:1px solid var(--bd);border-radius:16px;padding:32px;text-align:center;}
+.share-title{font-family:var(--fd);font-size:20px;font-weight:800;color:var(--tx);margin-bottom:8px;}
+.share-desc{font-size:14px;color:var(--tx2);margin-bottom:22px;}
+.share-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+.share-btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:9px;font-size:13px;font-weight:600;text-decoration:none;border:1px solid var(--bd);color:var(--tx2);transition:all .2s;cursor:none;}
+.share-btn:hover{border-color:var(--bdo);color:var(--or);}
+.next-posts{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:48px;}
+.next-card{background:var(--bg3);border:1px solid var(--bd);border-radius:12px;padding:22px;text-decoration:none;transition:all .2s;display:block;}
+.next-card:hover{border-color:var(--bdo);transform:translateY(-3px);}
+.next-lbl{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:8px;}
+.next-title{font-size:14px;font-weight:700;color:var(--tx);line-height:1.4;}
+footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;}.foot-logo em{color:var(--or);font-style:normal;}
+.foot-copy{font-size:12px;color:var(--tx3);}
+@media(max-width:700px){.insight-grid{grid-template-columns:1fr;}.next-posts{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div id="co"></div><div id="ci"></div>
+<div id="prog"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Ramana<em>.vr</em></a>
+  <a href="blog.html" class="nav-back">← Blog</a>
+</nav>
+
+<div class="art-hero">
+  <span class="art-cat">Prompt Engineering · Apple LLM · LLM Fine-Tuning</span>
+  <h1 class="art-h1">What Nobody Tells You About Writing Prompts for <em>Apple's LLM</em></h1>
+  <p class="art-lead">I've spent over a year writing supervised fine-tuning data for one of the most scrutinised language models on the planet. Here's what actually surprised me — and what the job descriptions never mention.</p>
+  <div class="art-meta">
+    <div class="art-author">
+      <div class="art-av">RV</div>
+      <div><div class="art-author-name">Ramana Vemunoori</div><div class="art-author-role">Prompt Engineer · Centific · Apple LLM Project</div></div>
+    </div>
+    <div class="art-info"><span>June 2025</span><span>8 min read</span></div>
+  </div>
+  <div class="art-tags" style="margin-top:18px">
+    <span class="art-tag">Apple LLM</span><span class="art-tag">Prompt Engineering</span><span class="art-tag">SFT Data</span><span class="art-tag">LLM Fine-Tuning</span><span class="art-tag">Centific</span>
+  </div>
+</div>
+
+<div class="art-body">
+
+<p>When people hear "Prompt Engineer on the Apple LLM Project," they usually picture someone typing clever instructions into ChatGPT all day. The reality is both more technical and more human than that — and it surprised me in ways I didn't expect, even after two years in AI.</p>
+
+<p>I'm going to be honest about everything that caught me off guard. Not to impress you. Just because I spent too long looking for a resource like this before I started, and it didn't exist.</p>
+
+<h2>Surprise #1 — Safety Is Not Binary. It's Deeply Contextual.</h2>
+
+<p>Before this role, I thought safety in AI was simple: some things are allowed, some things aren't. You learn the list, you apply it. That mental model lasted about two days.</p>
+
+<p>The reality is that <strong>the same information can be completely fine or completely harmful depending on framing, context, and who's asking</strong>. A prompt about medication dosages written by a concerned parent reads entirely differently from the same question phrased as a method. A chemistry question from a student looks different from one embedded in a threatening narrative.</p>
+
+<div class="callout"><p><strong>The key insight:</strong> Safety taxonomy is not a list of forbidden words. It's a framework for understanding <em>intent, context, and downstream impact</em> simultaneously. You have to hold all three in your head for every single prompt you write or evaluate.</p></div>
+
+<p>What this means in practice: I would sometimes write a perfectly valid educational prompt about a sensitive topic, then have to classify it, then realise the classification changed the moment I changed one word in the phrasing. Then change it back. Then change the response instead. Then reconsider the category.</p>
+
+<p>It's genuinely hard cognitive work. And it never gets fully automatic, because each edge case is slightly different from the last one.</p>
+
+<h2>Surprise #2 — Multi-Turn Conversations Are an Entirely Different Craft</h2>
+
+<p>Single-turn prompts — one question, one answer — feel manageable once you get the format right. Multi-turn conversations broke my brain in an entirely new way.</p>
+
+<p>The challenge isn't length. It's <strong>context maintenance across topic transitions</strong>. A good multi-turn dataset needs to show the model how to:</p>
+
+<ul>
+  <li>Remember what was said three turns ago without explicitly referencing it</li>
+  <li>Gracefully change direction when the user shifts topic mid-conversation</li>
+  <li>Handle clarifications that partially contradict earlier instructions</li>
+  <li>Recover from its own earlier mistakes when the user corrects it</li>
+  <li>Know when to ask for clarification vs. when to make a reasonable assumption</li>
+</ul>
+
+<p>Each of those behaviours needs to be demonstrated through the data. You can't just <em>tell</em> the model to do these things — you have to <em>show</em> it, in the form of example conversations where a good assistant does exactly that, turn by turn.</p>
+
+<div class="pull-quote"><p>"You can't tell the model how to handle ambiguous corrections. You have to write a conversation where it happens perfectly, so the model learns by example."</p></div>
+
+<p>Designing those edge cases — imagining the exact user message that creates the problem, then writing the ideal assistant response — is the hardest part of this job. It took me several months to get genuinely good at it.</p>
+
+<h2>Surprise #3 — Coding Prompts and Math Prompts Are Completely Different Disciplines</h2>
+
+<p>I assumed writing technical prompts would feel consistent. Code is code, math is math — right?</p>
+
+<p>Wrong. Coding prompts and math prompts require almost opposite thinking.</p>
+
+<div class="insight-grid">
+  <div class="insight-card">
+    <div class="insight-icon">💻</div>
+    <div class="insight-title">Coding Prompts</div>
+    <div class="insight-desc">Need real, runnable code in the response. Need to cover edge cases in the problem statement. Need to specify language, version, and constraints. The format is everything — indentation, comments, structure.</div>
+  </div>
+  <div class="insight-card">
+    <div class="insight-icon">🔢</div>
+    <div class="insight-title">Math Prompts</div>
+    <div class="insight-desc">KaTeX notation for every formula. Step-by-step reasoning shown explicitly. The <em>process</em> matters more than the answer. A correct answer with bad reasoning is a failed example.</div>
+  </div>
+</div>
+
+<p>And then there's the intersection — algorithmic problems that need both code and mathematical explanation. Those require you to context-switch mid-response between two completely different modes of precision.</p>
+
+<p>The Post-ITN format added another layer: normalising spoken numbers, units, dates, and currencies the way a text-to-speech system expects them — which is often the opposite of how you'd naturally write them.</p>
+
+<div class="code-block"><span class="comment"># Post-ITN example — written for TTS normalisation</span>
+# Natural: "The temperature was 38.5°C on March 14th, 2024"
+# Post-ITN: "The temperature was thirty-eight point five degrees Celsius on the fourteenth of March twenty twenty-four"
+
+<span class="comment"># KaTeX example in SFT response</span>
+# The quadratic formula is: $$x = \frac{-b \pm \sqrt{b^2 - 4ac}}{2a}$$
+# Each step must be shown, not just the final answer</div>
+
+<h2>Surprise #4 — The Sheer Diversity of Categories</h2>
+
+<p>Before I started, I thought prompt engineering was mainly about writing good questions and answers. I didn't realise how many <em>types</em> of tasks the model needs to handle, and how different each one feels to write.</p>
+
+<p>In a single week I might write prompts covering:</p>
+
+<ul>
+  <li>Summarisation of technical documents (concise, no hallucination)</li>
+  <li>Creative rewriting with specific tone constraints</li>
+  <li>Information extraction from structured and unstructured text</li>
+  <li>Tool use and function calling scenarios</li>
+  <li>Multi-step reasoning chains for logic problems</li>
+  <li>Code generation and debugging in 3 different languages</li>
+  <li>Safety edge cases requiring careful dual-use analysis</li>
+  <li>Instruction following with conflicting or ambiguous constraints</li>
+</ul>
+
+<p>Each category has its own conventions, its own failure modes, and its own quality signals. You learn them all simultaneously, and after a few months you start to <strong>feel</strong> when a response is subtly wrong in a way you can't immediately articulate — and then have to articulate it anyway, precisely, in the evaluation rationale.</p>
+
+<h2>Surprise #5 — Building the Team Was Part of the Job</h2>
+
+<p>At some point I noticed gaps in our team's coverage — certain categories were consistently weaker because not enough people had the right combination of skills to write them well. I hadn't been asked to fix this. I just started doing it.</p>
+
+<p>I designed an evaluation framework to test candidates on prompt diversity, instruction-following quality, LLM knowledge, guideline adherence, and category coverage. Then I ran interviews. Then I onboarded the people who passed.</p>
+
+<p>Nobody told me this was my job. But the work needed doing, and I could see it needed doing, so I did it. That might be the most unexpected thing about the role — how much initiative the best work requires.</p>
+
+<div class="callout"><p><strong>If you want to do this work:</strong> Start writing SFT pairs now, before you get hired. Pick a category — coding, or math, or safety — and write 20 high-quality examples. The difference between a candidate who says "I understand SFT" and one who shows you 20 real examples is enormous.</p></div>
+
+<h2>What I'd Tell Someone Starting Out</h2>
+
+<p>The skills that matter most in this job are not the ones that appear in the job posting. Technical writing precision matters more than knowing the latest model architectures. The ability to hold ambiguity without resolving it prematurely matters more than knowing all the safety categories by name. Intellectual honesty about your own uncertainty matters more than confidence.</p>
+
+<p>And the work compounds. The first month felt like learning a new language. By month six, I was writing prompts that I genuinely believe made the model better for real users — and I could feel the difference in the quality of what I was producing.</p>
+
+<p>That feeling is worth a lot.</p>
+
+<div class="section-divider"><span>✦</span></div>
+
+<p style="font-size:15px;color:var(--tx3);font-family:var(--fn)"><em>Ramana Vemunoori is a Prompt Engineer at Centific working on Apple's LLM Project, and an AI & Data Science engineer based in Hyderabad, India. He also builds ML-powered applications and two AI startups.</em></p>
+
+</div>
+
+<div class="art-footer">
+  <div class="share-section">
+    <div class="share-title">Found this useful?</div>
+    <div class="share-desc">Share it with someone trying to break into prompt engineering or LLM work.</div>
+    <div class="share-btns">
+      <a href="https://www.linkedin.com/in/ramana-vemunoori" target="_blank" class="share-btn">💼 Share on LinkedIn</a>
+      <a href="https://twitter.com/intent/tweet?text=What%20Nobody%20Tells%20You%20About%20Writing%20Prompts%20for%20Apple%27s%20LLM%20by%20%40RamanaVemunoori" target="_blank" class="share-btn">𝕏 Share on X</a>
+      <a href="index.html" class="share-btn">🏠 Visit Portfolio</a>
+    </div>
+  </div>
+  <div style="margin-top:12px;font-size:12px;color:var(--tx3);text-align:center">Next reads</div>
+  <div class="next-posts">
+    <a href="blog-ml-projects.html" class="next-card">
+      <div class="next-lbl">Next Article</div>
+      <div class="next-title">I Built 4 ML Projects From Scratch. Here's What Each One Taught Me.</div>
+    </a>
+    <a href="blog-ai-career.html" class="next-card">
+      <div class="next-lbl">Also Popular</div>
+      <div class="next-title">How to Actually Break Into AI/ML in India in 2025</div>
+    </a>
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
+  <div class="foot-copy">© 2025 Ramana Vemunoori</div>
+  <a href="blog.html" class="nav-back" style="text-decoration:none">← Blog</a>
+</footer>
+<script>
+const co=document.getElementById('co'),ci=document.getElementById('ci');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ci.style.left=mx+'px';ci.style.top=my+'px';});
+(function a(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;co.style.left=cx+'px';co.style.top=cy+'px';requestAnimationFrame(a);})();
+window.addEventListener('scroll',()=>{const t=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('prog').style.width=(window.scrollY/t*100)+'%';});
+</script>
+</body>
+</html>

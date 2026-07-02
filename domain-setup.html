@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domain Setup Guide — ramana-ai.com · Ramana Vemunoori</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--or:#F97316;--bg:#060606;--bg2:#0b0b0b;--bg3:#111;--bg4:#161616;--bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.13);--bdo:rgba(249,115,22,.3);--tx:#f0f0f0;--tx2:#888;--tx3:#444;--fn:'Space Grotesk',sans-serif;--fd:'Syne',sans-serif;--r:14px;--gn:#22c55e;--bl:#3b82f6;--pu:#a78bfa;}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:var(--fn);background:var(--bg);color:var(--tx);overflow-x:hidden;cursor:none;}
+::-webkit-scrollbar{width:2px;}::-webkit-scrollbar-thumb{background:var(--or);}
+#co,#ci{position:fixed;border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
+#co{width:40px;height:40px;border:1.5px solid rgba(249,115,22,.45);transition:.2s;}
+#ci{width:6px;height:6px;background:var(--or);}
+#prog{position:fixed;top:0;left:0;height:2px;background:linear-gradient(90deg,#ea6a0a,#ff9a52);z-index:1000;width:0;}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;align-items:center;justify-content:space-between;padding:0 6%;background:rgba(6,6,6,.92);backdrop-filter:blur(24px);border-bottom:1px solid var(--bd);}
+.nav-logo{font-family:var(--fd);font-size:17px;font-weight:800;color:var(--tx);text-decoration:none;letter-spacing:-.5px;}.nav-logo em{color:var(--or);font-style:normal;}
+.nav-back{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx2);text-decoration:none;padding:8px 16px;border:1px solid var(--bd);border-radius:9px;transition:all .2s;}.nav-back:hover{color:var(--or);border-color:var(--bdo);}
+
+/* HERO */
+.guide-hero{padding:110px 6% 70px;border-bottom:1px solid var(--bd);position:relative;overflow:hidden;}
+.guide-hero::before{content:'';position:absolute;top:-80px;right:-80px;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.06) 0%,transparent 70%);}
+.guide-hero-inner{max-width:860px;margin:0 auto;}
+.guide-status{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:100px;padding:7px 16px;margin-bottom:22px;font-size:12px;color:var(--gn);font-weight:600;}
+.status-dot{width:7px;height:7px;border-radius:50%;background:var(--gn);animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(34,197,94,.4);}50%{opacity:.7;box-shadow:0 0 0 5px rgba(34,197,94,0);}}
+.guide-h1{font-family:var(--fd);font-size:clamp(32px,5.5vw,62px);font-weight:800;letter-spacing:-3px;line-height:.95;color:var(--tx);margin-bottom:20px;}
+.guide-h1 em{color:var(--or);font-style:normal;}
+.guide-desc{font-size:17px;color:var(--tx2);line-height:1.75;max-width:620px;margin-bottom:36px;}
+.progress-overview{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:8px;}
+.po-step{background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);padding:16px 14px;text-align:center;transition:border-color .2s;cursor:pointer;}
+.po-step:hover,.po-step.done{border-color:var(--bdo);}
+.po-step.done .po-num{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);color:var(--gn);}
+.po-num{width:32px;height:32px;border-radius:50%;background:rgba(249,115,22,.08);border:1.5px solid rgba(249,115,22,.25);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:13px;font-weight:800;color:var(--or);margin:0 auto 8px;}
+.po-label{font-size:11px;color:var(--tx2);line-height:1.4;}
+
+/* MAIN LAYOUT */
+.guide-body{display:grid;grid-template-columns:260px 1fr;gap:0;max-width:1200px;margin:0 auto;padding:0 0 100px;}
+
+/* SIDEBAR */
+.guide-sidebar{padding:40px 0 40px 6%;position:sticky;top:64px;align-self:start;height:calc(100vh - 64px);overflow-y:auto;}
+.sidebar-label{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:16px;}
+.toc-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:9px;cursor:pointer;transition:background .2s;text-decoration:none;margin-bottom:4px;}
+.toc-item:hover,.toc-item.active{background:rgba(249,115,22,.07);}
+.toc-item.active .toc-num{border-color:var(--or);color:var(--or);background:rgba(249,115,22,.1);}
+.toc-item.done .toc-num{border-color:var(--gn);color:var(--gn);background:rgba(34,197,94,.1);}
+.toc-item.done .toc-check{display:flex;}
+.toc-num{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--bd2);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--tx3);flex-shrink:0;transition:all .2s;}
+.toc-text{font-size:12px;color:var(--tx2);font-weight:500;flex:1;}
+.toc-check{width:16px;height:16px;border-radius:50%;background:var(--gn);display:none;align-items:center;justify-content:center;font-size:9px;color:#000;flex-shrink:0;}
+.sidebar-cost{margin-top:28px;padding:16px;background:var(--bg3);border:1px solid var(--bd);border-radius:var(--r);}
+.cost-title{font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:12px;}
+.cost-item{display:flex;justify-content:space-between;font-size:12px;padding:6px 0;border-bottom:1px solid var(--bd);}
+.cost-item:last-child{border:none;font-weight:700;color:var(--tx);}
+.cost-label{color:var(--tx2);}
+.cost-val{color:var(--gn);}
+.free-badge{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:5px;padding:2px 7px;font-size:10px;color:var(--gn);font-weight:700;}
+
+/* CONTENT */
+.guide-content{padding:40px 6% 0;}
+.step-section{padding:48px 0;border-bottom:1px solid var(--bd);}
+.step-section:last-child{border:none;}
+.step-header{display:flex;align-items:flex-start;gap:18px;margin-bottom:32px;}
+.step-badge{width:48px;height:48px;border-radius:50%;background:rgba(249,115,22,.08);border:2px solid rgba(249,115,22,.25);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:16px;font-weight:800;color:var(--or);flex-shrink:0;}
+.step-badge.done{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3);color:var(--gn);}
+.step-meta{}
+.step-num{font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--tx3);margin-bottom:5px;}
+.step-title{font-family:var(--fd);font-size:24px;font-weight:800;letter-spacing:-.8px;color:var(--tx);}
+.step-sub{font-size:14px;color:var(--tx2);margin-top:5px;}
+.step-body{font-size:14px;color:var(--tx2);line-height:1.75;margin-bottom:22px;}
+.step-body strong{color:var(--tx);}
+
+/* CARDS */
+.option-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:20px 0;}
+.option-card{background:var(--bg3);border:2px solid var(--bd);border-radius:var(--r);padding:20px;cursor:pointer;transition:all .2s;text-align:center;}
+.option-card:hover{border-color:var(--bdo);transform:translateY(-2px);}
+.option-card.recommended{border-color:rgba(249,115,22,.4);background:rgba(249,115,22,.04);}
+.option-card.recommended .rec-badge{display:block;}
+.rec-badge{display:none;background:var(--or);color:#000;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:3px 9px;border-radius:5px;margin-bottom:10px;}
+.option-icon{font-size:28px;margin-bottom:10px;}
+.option-name{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:5px;}
+.option-price{font-size:13px;color:var(--gn);font-weight:600;margin-bottom:5px;}
+.option-note{font-size:11px;color:var(--tx3);}
+
+/* CODE BLOCKS */
+.code-block{background:var(--bg4);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden;margin:18px 0;}
+.code-header{padding:10px 16px;background:var(--bg3);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;}
+.code-title{font-size:11px;color:var(--tx3);font-weight:600;letter-spacing:.5px;}
+.code-copy{font-size:11px;color:var(--tx3);cursor:pointer;background:none;border:none;font-family:var(--fn);transition:color .2s;}.code-copy:hover{color:var(--or);}
+.code-body{padding:16px 18px;font-family:'Courier New',monospace;font-size:13px;color:#7dd3fc;line-height:1.7;overflow-x:auto;}
+.code-body .comment{color:var(--tx3);}
+.code-body .key{color:#f0abfc;}
+.code-body .val{color:#86efac;}
+.code-body .or{color:var(--or);}
+
+/* DNS TABLE */
+.dns-table{width:100%;border-collapse:collapse;margin:18px 0;font-size:13px;}
+.dns-table th{text-align:left;padding:10px 14px;font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--tx3);border-bottom:2px solid var(--bd);background:var(--bg3);}
+.dns-table td{padding:12px 14px;border-bottom:1px solid var(--bd);color:var(--tx2);vertical-align:top;}
+.dns-table tr:hover td{background:rgba(255,255,255,.02);}
+.dns-table .mono{font-family:'Courier New',monospace;color:#7dd3fc;font-size:12px;}
+.dns-table .orange{color:var(--or);font-weight:600;}
+
+/* CHECKLIST */
+.checklist{list-style:none;margin:18px 0;}
+.checklist li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--bd);font-size:14px;color:var(--tx2);}
+.checklist li:last-child{border:none;}
+.cl-check{width:20px;height:20px;border-radius:5px;border:2px solid var(--bd2);flex-shrink:0;margin-top:1px;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;}
+.cl-check.checked{background:var(--gn);border-color:var(--gn);}
+.cl-check.checked::after{content:'✓';font-size:11px;color:#000;font-weight:700;}
+.cl-text{}
+.cl-text strong{color:var(--tx);}
+.cl-text small{display:block;font-size:12px;color:var(--tx3);margin-top:3px;}
+
+/* INFO BOXES */
+.info-box{border-radius:var(--r);padding:18px 22px;margin:18px 0;}
+.info-box.tip{background:rgba(59,130,246,.06);border:1px solid rgba(59,130,246,.2);}
+.info-box.warn{background:rgba(245,158,11,.06);border:1px solid rgba(245,158,11,.2);}
+.info-box.success{background:rgba(34,197,94,.06);border:1px solid rgba(34,197,94,.2);}
+.info-box.free{background:rgba(249,115,22,.06);border:1px solid rgba(249,115,22,.2);}
+.info-icon{font-size:16px;margin-bottom:8px;}
+.info-title{font-size:13px;font-weight:700;margin-bottom:5px;}
+.info-title.tip-c{color:var(--bl);}
+.info-title.warn-c{color:#f59e0b;}
+.info-title.success-c{color:var(--gn);}
+.info-title.free-c{color:var(--or);}
+.info-body{font-size:13px;color:var(--tx2);line-height:1.65;}
+.info-body strong{color:var(--tx);}
+.info-body a{color:var(--or);text-decoration:none;}
+.info-body a:hover{text-decoration:underline;}
+
+/* COMPLETE BTN */
+.mark-done{display:inline-flex;align-items:center;gap:8px;background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.2);border-radius:9px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--gn);cursor:pointer;font-family:var(--fn);transition:all .2s;margin-top:10px;}
+.mark-done:hover{background:rgba(34,197,94,.15);}
+.mark-done.done-state{background:rgba(34,197,94,.15);border-color:rgba(34,197,94,.4);}
+
+/* FINAL SECTION */
+.final-card{background:var(--bg3);border:1px solid rgba(249,115,22,.25);border-radius:20px;padding:40px;text-align:center;margin-top:48px;}
+.final-emoji{font-size:56px;margin-bottom:18px;}
+.final-title{font-family:var(--fd);font-size:28px;font-weight:800;letter-spacing:-1px;color:var(--tx);margin-bottom:10px;}
+.final-title em{color:var(--or);font-style:normal;}
+.final-desc{font-size:15px;color:var(--tx2);margin-bottom:28px;line-height:1.7;}
+.final-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--or);color:#000;padding:13px 26px;border-radius:11px;font-size:14px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s;}.btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 36px rgba(249,115,22,.4);}
+.btn-g{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.05);border:1px solid var(--bd2);color:var(--tx);padding:13px 26px;border-radius:11px;font-size:14px;font-weight:500;text-decoration:none;transition:all .2s;}.btn-g:hover{border-color:var(--bdo);}
+
+footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;}.foot-logo em{color:var(--or);font-style:normal;}
+.foot-copy{font-size:12px;color:var(--tx3);}
+@media(max-width:900px){.guide-body{grid-template-columns:1fr;}.guide-sidebar{position:static;height:auto;padding:30px 5%;border-bottom:1px solid var(--bd);}.option-grid{grid-template-columns:1fr 1fr;}.progress-overview{grid-template-columns:repeat(3,1fr);}}
+@media(max-width:600px){.option-grid{grid-template-columns:1fr;}.progress-overview{grid-template-columns:1fr 1fr;}}
+</style>
+</head>
+<body>
+<div id="co"></div><div id="ci"></div>
+<div id="prog"></div>
+<nav>
+  <a href="index.html" class="nav-logo">Ramana<em>.vr</em></a>
+  <a href="index.html" class="nav-back">← Portfolio</a>
+</nav>
+
+<!-- HERO -->
+<div class="guide-hero">
+  <div class="guide-hero-inner">
+    <div class="guide-status"><div class="status-dot"></div>Live Setup Guide — Free Path · Updated June 2026</div>
+    <h1 class="guide-h1">Deploy <em>ramana.is-a.dev</em><br>Step by Step — ₹0 Cost</h1>
+    <p class="guide-desc">Complete guide to getting a real free domain, pushing to GitHub, deploying on Vercel, and going live — including the exact DNS values, every command you need, and the optional paid upgrade path later.</p>
+    <div class="progress-overview">
+      <div class="po-step" onclick="scrollTo('step1')"><div class="po-num">1</div><div class="po-label">Free Domain</div></div>
+      <div class="po-step" onclick="scrollTo('step2')"><div class="po-num">2</div><div class="po-label">GitHub Repo</div></div>
+      <div class="po-step" onclick="scrollTo('step3')"><div class="po-num">3</div><div class="po-label">Deploy Vercel</div></div>
+      <div class="po-step" onclick="scrollTo('step4')"><div class="po-num">4</div><div class="po-label">Connect DNS</div></div>
+      <div class="po-step" onclick="scrollTo('step5')"><div class="po-num">5</div><div class="po-label">Go Live ✓</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="guide-body">
+  <!-- SIDEBAR -->
+  <div class="guide-sidebar">
+    <div class="sidebar-label">Steps</div>
+    <a class="toc-item active" href="#step1" id="toc1"><div class="toc-num">1</div><div class="toc-text">Buy Domain</div><div class="toc-check">✓</div></a>
+    <a class="toc-item" href="#step2" id="toc2"><div class="toc-num">2</div><div class="toc-text">Create GitHub Repo</div><div class="toc-check">✓</div></a>
+    <a class="toc-item" href="#step3" id="toc3"><div class="toc-num">3</div><div class="toc-text">Deploy on Vercel</div><div class="toc-check">✓</div></a>
+    <a class="toc-item" href="#step4" id="toc4"><div class="toc-num">4</div><div class="toc-text">Connect DNS</div><div class="toc-check">✓</div></a>
+    <a class="toc-item" href="#step5" id="toc5"><div class="toc-num">5</div><div class="toc-text">Post-Launch</div><div class="toc-check">✓</div></a>
+
+    <div class="sidebar-cost">
+      <div class="cost-title">Total Cost — Free Path</div>
+      <div class="cost-item"><span class="cost-label">Domain (is-a.dev)</span><span class="cost-val free-badge">FREE</span></div>
+      <div class="cost-item"><span class="cost-label">Vercel Hosting</span><span class="cost-val free-badge">FREE</span></div>
+      <div class="cost-item"><span class="cost-label">SSL Certificate</span><span class="cost-val free-badge">FREE</span></div>
+      <div class="cost-item"><span class="cost-label">GitHub</span><span class="cost-val free-badge">FREE</span></div>
+      <div class="cost-item"><span class="cost-label" style="font-weight:700;color:var(--tx)">Total / Year</span><span class="cost-val" style="font-weight:700;color:var(--gn)">₹0</span></div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:10px;line-height:1.5">Upgrade to ramana-ai.com later for ~₹800/yr whenever you want — fully optional.</div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="guide-content">
+
+    <!-- STEP 1 -->
+    <div class="step-section" id="step1">
+      <div class="step-header">
+        <div class="step-badge" id="badge1">1</div>
+        <div class="step-meta">
+          <div class="step-num">Step 01 · ~15 minutes</div>
+          <div class="step-title">Get Your Domain — Free Route</div>
+          <div class="step-sub">ramana.is-a.dev — zero cost, real domain, full DNS control</div>
+        </div>
+      </div>
+
+      <div class="info-box free">
+        <div class="info-icon">🆓</div>
+        <div class="info-title free-c">Yes, this is genuinely free — no credit card, ever</div>
+        <div class="info-body"><strong>is-a.dev</strong> is an open-source project (5,000+ contributors, backed by Cloudflare) that gives developers a free subdomain like <strong>ramana.is-a.dev</strong>. You get full DNS control, free HTTPS, and it points to your Vercel deployment exactly like a paid domain would. It's used by thousands of real developer portfolios. <strong>Skip Freenom (.tk/.ml/.cf)</strong> — that service is unreliable now and has a reputation for revoking domains without warning.</div>
+      </div>
+
+      <p class="step-body">Here's exactly how to claim <strong>ramana.is-a.dev</strong> in about 15 minutes of actual work, then a 1–2 day wait for approval:</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">domains/ramana.json — the file you'll create</span><button class="code-copy" onclick="copyCode(this,'isadev-json')">Copy</button></div>
+        <div class="code-body" id="isadev-json">{
+  <span class="key">"description"</span>: <span class="val">"Ramana Vemunoori — AI Engineer Portfolio"</span>,
+  <span class="key">"repo"</span>: <span class="val">"https://github.com/Ve0602/ramana-portfolio"</span>,
+  <span class="key">"owner"</span>: {
+    <span class="key">"username"</span>: <span class="val">"Ve0602"</span>,
+    <span class="key">"email"</span>: <span class="val">"vemunooriramana0602@gmail.com"</span>
+  },
+  <span class="key">"record"</span>: {
+    <span class="key">"CNAME"</span>: <span class="val">"cname.vercel-dns.com"</span>
+  }
+}</div>
+      </div>
+
+      <div class="step-body">
+        <strong>The exact steps:</strong>
+        <ol style="margin-top:14px">
+          <li>Go to <strong>github.com/is-a-dev/register</strong> and click "Fork" (top right)</li>
+          <li>In your forked repo, navigate to the <strong>/domains</strong> folder</li>
+          <li>Create a new file named <strong>ramana.json</strong></li>
+          <li>Paste the JSON above (it already has your real GitHub username and email)</li>
+          <li>Commit the file, then open a Pull Request back to the original repo</li>
+          <li>A bot checks your PR automatically — usually approved within 24–48 hours</li>
+          <li>Once merged, <strong>ramana.is-a.dev</strong> is live and pointed at Vercel</li>
+        </ol>
+      </div>
+
+      <div class="info-box tip">
+        <div class="info-title tip-c">💡 Even faster — ask any AI to walk you through it</div>
+        <div class="info-body">Paste this into Claude or any AI assistant: <em>"I want to register a free .is-a.dev subdomain. GitHub username: Ve0602, email: vemunooriramana0602@gmail.com, desired subdomain: ramana, hosting: Vercel CNAME cname.vercel-dns.com. Walk me through forking the repo and submitting the PR."</em> — it'll generate the exact file and guide you click by click.</div>
+      </div>
+
+      <div class="section-divider" style="margin:36px 0"><span>⚡</span></div>
+
+      <div class="step-title" style="font-size:18px;margin-bottom:14px">Later, when you want a paid .com (optional, ~₹800/yr)</div>
+      <p class="step-body">Once you've built traffic and want the brand upgrade to <strong>ramana-ai.com</strong>, here's the comparison. This step is entirely optional — many developers run their whole career off a free subdomain.</p>
+
+      <div class="option-grid">
+        <div class="option-card recommended">
+          <div class="rec-badge">⭐ If You Upgrade Later</div>
+          <div class="option-icon">🌐</div>
+          <div class="option-name">Namecheap</div>
+          <div class="option-price">~₹800/yr</div>
+          <div class="option-note">Free privacy, easy DNS, great support</div>
+        </div>
+        <div class="option-card">
+          <div class="option-icon">🔶</div>
+          <div class="option-name">Cloudflare Registrar</div>
+          <div class="option-price">~₹750/yr</div>
+          <div class="option-note">At-cost pricing, no markup, best value long-term</div>
+        </div>
+        <div class="option-card">
+          <div class="option-icon">💻</div>
+          <div class="option-name">.dev domain</div>
+          <div class="option-price">~₹900/yr</div>
+          <div class="option-note">ramana.dev — signals "developer" instantly, forces HTTPS</div>
+        </div>
+      </div>
+
+      <ul class="checklist" id="cl1">
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Fork github.com/is-a-dev/register</strong><small>Free GitHub account required — you likely already have one</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Create domains/ramana.json with the JSON above</strong><small>Update the CNAME once you know your Vercel URL — see Step 3</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Submit the Pull Request</strong><small>Wait 24–48 hours for the automated bot + maintainer approval</small></div></li>
+      </ul>
+      <button class="mark-done" id="md1" onclick="markDone(1)">✓ Step 1 Done</button>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-section" id="step2">
+      <div class="step-header">
+        <div class="step-badge" id="badge2">2</div>
+        <div class="step-meta">
+          <div class="step-num">Step 02 · ~15 minutes</div>
+          <div class="step-title">Create GitHub Repository</div>
+          <div class="step-sub">Push all your portfolio files to a public repo</div>
+        </div>
+      </div>
+
+      <p class="step-body">Vercel deploys directly from GitHub. Every time you push a change, your site automatically rebuilds and redeploys in ~30 seconds.</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">Terminal — Git Setup</span><button class="code-copy" onclick="copyCode(this,'git-setup')">Copy</button></div>
+        <div class="code-body" id="git-setup"><span class="comment"># 1. Create the repo on github.com first, then:</span>
+git init
+git add .
+git commit -m <span class="val">"🚀 Initial portfolio deployment"</span>
+git branch -M main
+git remote add origin https://github.com/<span class="or">Ve0602</span>/ramana-portfolio.git
+git push -u origin main</div>
+      </div>
+
+      <div class="info-box warn">
+        <div class="info-title warn-c">⚠ Important — Your folder structure</div>
+        <div class="info-body">Make sure <strong>index.html</strong> is at the root of the repo (not inside a subfolder). The <strong>videos_ai/</strong> folder should also be at root level alongside index.html.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">Correct folder structure</span><button class="code-copy" onclick="copyCode(this,'folder-structure')">Copy</button></div>
+        <div class="code-body" id="folder-structure">ramana-portfolio/
+├── <span class="or">index.html</span>          ← must be at root
+├── blog.html
+├── blog-apple-llm.html
+├── blog-ml-projects.html
+├── blog-ai-career.html
+├── project-guardian.html
+├── project-heart.html
+├── project-forest.html
+├── project-mana.html
+├── resume.html
+├── resume_ats.html
+├── vercel.json         ← already configured
+├── <span class="or">videos_ai/</span>
+│   ├── 1.mp4
+│   ├── 2.mp4  ...
+└── ...</div>
+      </div>
+
+      <ul class="checklist">
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Create repo on github.com</strong><small>Name: ramana-portfolio · Set to Public · No README</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Run git init and push</strong><small>Use the commands above in your portfolio folder</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Verify files on GitHub</strong><small>Check that index.html is visible at root on github.com/Ve0602/ramana-portfolio</small></div></li>
+      </ul>
+      <button class="mark-done" id="md2" onclick="markDone(2)">✓ Step 2 Done</button>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-section" id="step3">
+      <div class="step-header">
+        <div class="step-badge" id="badge3">3</div>
+        <div class="step-meta">
+          <div class="step-num">Step 03 · ~5 minutes</div>
+          <div class="step-title">Deploy on Vercel</div>
+          <div class="step-sub">Free hosting, auto-deploys, global CDN — zero config needed</div>
+        </div>
+      </div>
+
+      <p class="step-body">Vercel is the best free hosting for static portfolios. Your <strong>vercel.json</strong> is already pre-configured with the right settings. Just connect the repo.</p>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">vercel.json — Already in your folder</span><button class="code-copy" onclick="copyCode(this,'vercel-json')">Copy</button></div>
+        <div class="code-body" id="vercel-json">{
+  <span class="key">"version"</span>: <span class="val">2</span>,
+  <span class="key">"routes"</span>: [
+    { <span class="key">"src"</span>: <span class="val">"/(.*)"</span>, <span class="key">"dest"</span>: <span class="val">"/$1"</span> }
+  ],
+  <span class="key">"headers"</span>: [{
+    <span class="key">"source"</span>: <span class="val">"/(.*)"</span>,
+    <span class="key">"headers"</span>: [
+      { <span class="key">"key"</span>: <span class="val">"X-Frame-Options"</span>, <span class="key">"value"</span>: <span class="val">"SAMEORIGIN"</span> },
+      { <span class="key">"key"</span>: <span class="val">"Cache-Control"</span>, <span class="key">"value"</span>: <span class="val">"public, max-age=3600"</span> }
+    ]
+  }]
+}</div>
+      </div>
+
+      <div class="option-grid" style="grid-template-columns:1fr 1fr 1fr">
+        <div class="option-card" style="text-align:left">
+          <div style="font-size:22px;margin-bottom:10px">1️⃣</div>
+          <div class="option-name" style="text-align:left">Go to vercel.com</div>
+          <div class="option-note" style="text-align:left;margin-top:6px">Sign up / log in with your GitHub account</div>
+        </div>
+        <div class="option-card" style="text-align:left">
+          <div style="font-size:22px;margin-bottom:10px">2️⃣</div>
+          <div class="option-name" style="text-align:left">Import Project</div>
+          <div class="option-note" style="text-align:left;margin-top:6px">Click "Add New → Project" and select ramana-portfolio from your repos</div>
+        </div>
+        <div class="option-card" style="text-align:left">
+          <div style="font-size:22px;margin-bottom:10px">3️⃣</div>
+          <div class="option-name" style="text-align:left">Deploy</div>
+          <div class="option-note" style="text-align:left;margin-top:6px">Leave all settings default. Click Deploy. Done in ~60 seconds.</div>
+        </div>
+      </div>
+
+      <div class="info-box success">
+        <div class="info-title success-c">✅ After deploy</div>
+        <div class="info-body">Vercel gives you a free URL like <strong>ramana-portfolio.vercel.app</strong>. Your portfolio is already live and shareable. Next step connects your custom domain.</div>
+      </div>
+
+      <ul class="checklist">
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Sign into vercel.com with GitHub</strong></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Import ramana-portfolio repo</strong><small>Framework Preset: Other · Root Directory: ./ · leave all else default</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Click Deploy and wait ~60 seconds</strong></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Visit the .vercel.app URL to confirm it works</strong><small>Test video playback, particle animations, project page links</small></div></li>
+      </ul>
+      <button class="mark-done" id="md3" onclick="markDone(3)">✓ Step 3 Done</button>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-section" id="step4">
+      <div class="step-header">
+        <div class="step-badge" id="badge4">4</div>
+        <div class="step-meta">
+          <div class="step-num">Step 04 · ~5 minutes + wait for PR approval</div>
+          <div class="step-title">Connect DNS — ramana.is-a.dev</div>
+          <div class="step-sub">Point your free domain at Vercel</div>
+        </div>
+      </div>
+
+      <p class="step-body">If you already submitted the <strong>domains/ramana.json</strong> PR in Step 1, this step is mostly already done — you just need to confirm the CNAME value matches your live Vercel deployment.</p>
+
+      <div class="info-box success">
+        <div class="info-title success-c">✅ How is-a.dev DNS works</div>
+        <div class="info-body">Unlike a traditional registrar, you don't touch DNS records yourself — the <strong>record.CNAME</strong> field in your <strong>ramana.json</strong> file IS the DNS record. Once your PR merges, is-a.dev's Cloudflare-backed system automatically creates the CNAME pointing <strong>ramana.is-a.dev → cname.vercel-dns.com</strong>.</div>
+      </div>
+
+      <div class="code-block">
+        <div class="code-header"><span class="code-title">Add the domain inside Vercel too</span></div>
+        <div class="code-body">Vercel Dashboard
+  → Your Project (ramana-portfolio)
+  → Settings → Domains
+  → Add Domain → type: <span class="or">ramana.is-a.dev</span>
+  → Vercel detects the CNAME automatically (no further input needed)
+  → Wait for the green "Valid Configuration" checkmark</div>
+      </div>
+
+      <ul class="checklist">
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Confirm your PR was merged on github.com/is-a-dev/register</strong><small>Check the Pull Requests tab — look for a green merge checkmark</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Add ramana.is-a.dev in Vercel → Settings → Domains</strong></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Wait for Vercel's "Valid Configuration" checkmark</strong><small>Usually instant since the CNAME is already correct</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Visit ramana.is-a.dev in browser</strong><small>Confirm the green padlock (HTTPS) and your portfolio loads</small></div></li>
+      </ul>
+      <button class="mark-done" id="md4" onclick="markDone(4)">✓ Step 4 Done</button>
+
+      <div class="section-divider" style="margin:40px 0"><span>⚡</span></div>
+
+      <div class="step-title" style="font-size:18px;margin-bottom:6px">Optional later — upgrading to a paid .com</div>
+      <p class="step-body" style="margin-top:10px">When you eventually buy <strong>ramana-ai.com</strong> from Namecheap or Cloudflare, here are the exact DNS records to add. This entirely replaces the is-a.dev step above — you don't need both.</p>
+
+      <table class="dns-table">
+        <thead>
+          <tr><th>Type</th><th>Host</th><th>Value / Points To</th><th>TTL</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="orange">A</td>
+            <td class="mono">@</td>
+            <td class="mono">76.76.19.61</td>
+            <td class="mono">Automatic</td>
+          </tr>
+          <tr>
+            <td class="orange">CNAME</td>
+            <td class="mono">www</td>
+            <td class="mono">cname.vercel-dns.com.</td>
+            <td class="mono">Automatic</td>
+          </tr>
+          <tr>
+            <td style="color:var(--tx3);font-size:12px" colspan="4">⚠ Always copy the exact values Vercel's Domains panel shows you — they're auto-generated per project</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="info-box warn">
+        <div class="info-title warn-c">⚠ Delete conflicting records first</div>
+        <div class="info-body">Registrars add default A records when you buy a domain. <strong>Delete any existing A records for "@" before adding the Vercel one</strong>, or the connection will fail silently.</div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step-section" id="step5">
+      <div class="step-header">
+        <div class="step-badge" id="badge5">5</div>
+        <div class="step-meta">
+          <div class="step-num">Step 05 · Post-Launch Checklist</div>
+          <div class="step-title">Go Live & Polish</div>
+          <div class="step-sub">Everything to check before sharing your URL with the world</div>
+        </div>
+      </div>
+
+      <ul class="checklist">
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>SSL Certificate active</strong><small>Green padlock in browser — Vercel issues this automatically, takes ~5 mins after DNS connects</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Videos play correctly</strong><small>Check hero section — foreground video + ambient blur background both playing</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>All project pages open</strong><small>Click all 4 project cards — Guardian, Heart, Forest, MANA</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Live demo apps work</strong><small>Test fraud detector, cardiac risk, fire calculator, MANA marketplace</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Blog posts accessible</strong><small>Click Blog in nav → all 3 articles open correctly</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Mobile responsive</strong><small>Test on your phone — nav, hero, project grid, contact all look clean</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Update admin.html password</strong><small>Open admin.html → Settings → Change from default to something secure</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Update LinkedIn with new URL</strong><small>Add ramana-ai.com to your LinkedIn Featured section and About</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Update resume with new URL</strong><small>Add ramana-ai.com to both resume.html and resume_ats.html header</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Submit to Google Search Console</strong><small>search.google.com/search-console → Add property → ramana-ai.com → verify → Submit sitemap.xml</small></div></li>
+        <li><div class="cl-check" onclick="toggleCheck(this)"></div><div class="cl-text"><strong>Share on LinkedIn with a post</strong><small>"Rebuilt my portfolio — check it out: ramana-ai.com 🚀" — tag it AI, PromptEngineering, MachineLearning</small></div></li>
+      </ul>
+      <button class="mark-done" id="md5" onclick="markDone(5)">✓ Step 5 Done — I'm Live!</button>
+
+      <div class="final-card">
+        <div class="final-emoji">🎉</div>
+        <div class="final-title">You're live at <em>ramana-ai.com</em></div>
+        <div class="final-desc">Your cinematic portfolio is deployed, indexed, and ready to impress. Every project has a live demo. Every blog post is SEO-optimised. Your startups are highlighted. Now share it everywhere.</div>
+        <div class="final-btns">
+          <a href="index.html" class="btn-p">🏠 View Portfolio</a>
+          <a href="https://search.google.com/search-console" target="_blank" class="btn-g">📊 Google Search Console</a>
+          <a href="https://www.linkedin.com/in/ramana-vemunoori" target="_blank" class="btn-g">💼 Update LinkedIn</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
+  <div class="foot-copy">© 2025 Ramana Vemunoori · Domain Setup Guide</div>
+  <a href="index.html" class="nav-back" style="text-decoration:none">← Portfolio</a>
+</footer>
+
+<script>
+/* Cursor */
+const co=document.getElementById('co'),ci=document.getElementById('ci');
+let mx=0,my=0,cx=0,cy=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ci.style.left=mx+'px';ci.style.top=my+'px';});
+(function a(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;co.style.left=cx+'px';co.style.top=cy+'px';requestAnimationFrame(a);})();
+window.addEventListener('scroll',()=>{const t=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('prog').style.width=(window.scrollY/t*100)+'%';});
+
+function scrollTo(id){document.getElementById(id).scrollIntoView({behavior:'smooth'});}
+
+/* Checklist */
+function toggleCheck(el){
+  el.classList.toggle('checked');
+}
+
+/* Mark step done */
+const doneSteps = JSON.parse(localStorage.getItem('doneSteps')||'[]');
+doneSteps.forEach(s=>applyDone(s));
+
+function markDone(n){
+  const btn=document.getElementById('md'+n);
+  const badge=document.getElementById('badge'+n);
+  const toc=document.getElementById('toc'+n);
+  btn.classList.add('done-state');
+  btn.textContent='✅ Completed!';
+  badge.classList.add('done');
+  badge.textContent='✓';
+  toc.classList.add('done');
+  toc.querySelector('.toc-check').style.display='flex';
+  if(!doneSteps.includes(n)){doneSteps.push(n);localStorage.setItem('doneSteps',JSON.stringify(doneSteps));}
+}
+function applyDone(n){
+  const btn=document.getElementById('md'+n);
+  const badge=document.getElementById('badge'+n);
+  const toc=document.getElementById('toc'+n);
+  if(!btn)return;
+  btn.classList.add('done-state');btn.textContent='✅ Completed!';
+  badge.classList.add('done');badge.textContent='✓';
+  toc.classList.add('done');toc.querySelector('.toc-check').style.display='flex';
+}
+
+/* Copy code */
+function copyCode(btn, id){
+  const text=document.getElementById(id).innerText;
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='Copied!';
+    setTimeout(()=>btn.textContent='Copy',2000);
+  });
+}
+
+/* Active TOC on scroll */
+const sections=['step1','step2','step3','step4','step5'];
+const tocs=['toc1','toc2','toc3','toc4','toc5'];
+window.addEventListener('scroll',()=>{
+  let current='step1';
+  sections.forEach(id=>{
+    const el=document.getElementById(id);
+    if(el && el.getBoundingClientRect().top < 120) current=id;
+  });
+  tocs.forEach((t,i)=>{
+    document.getElementById(t).classList.toggle('active', sections[i]===current && !document.getElementById(t).classList.contains('done'));
+  });
+});
+</script>
+</body>
+</html>

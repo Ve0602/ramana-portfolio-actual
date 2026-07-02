@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ramana Vemunoori — ATS Resume</title>
+<meta name="robots" content="noindex">
+<style>
+/* ATS-OPTIMIZED: Clean, single-column readable by all ATS parsers */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Calibri','Arial',sans-serif;font-size:11pt;line-height:1.45;color:#000;background:#fff;max-width:800px;margin:0 auto;padding:32px 40px}
+
+/* TOOLBAR - hidden in print */
+.toolbar{background:#1a1a1a;color:#fff;padding:12px 0;display:flex;align-items:center;justify-content:center;gap:16px;margin:-32px -40px 32px;flex-wrap:wrap;gap:12px}
+.tbtn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Calibri','Arial',sans-serif;text-decoration:none;border:none;transition:all .2s}
+.tbtn-p{background:#F97316;color:#fff}.tbtn-p:hover{opacity:.88}
+.tbtn-s{background:rgba(255,255,255,.12);color:#fff;border:1px solid rgba(255,255,255,.2)}.tbtn-s:hover{background:rgba(255,255,255,.2)}
+.toolbar-note{font-size:12px;color:#aaa;text-align:center;padding:0 16px}
+
+/* HEADER */
+.r-name{font-size:22pt;font-weight:700;color:#000;margin-bottom:4px;letter-spacing:0.5px}
+.r-title{font-size:12pt;color:#333;margin-bottom:8px;font-weight:400}
+.r-contacts{display:flex;flex-wrap:wrap;gap:4px 18px;font-size:10pt;color:#333;margin-bottom:0}
+.r-contacts a{color:#333;text-decoration:none}
+.r-contacts span{display:flex;align-items:center;gap:4px}
+
+/* DIVIDER */
+.divider{border:none;border-top:2px solid #000;margin:10px 0 10px}
+.divider-thin{border:none;border-top:1px solid #ccc;margin:6px 0}
+
+/* SECTION */
+.sec-title{font-size:12pt;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:#000;margin-bottom:6px;margin-top:14px}
+
+/* SUMMARY */
+.summary{font-size:10.5pt;color:#111;line-height:1.55}
+
+/* EXPERIENCE */
+.exp-item{margin-bottom:14px}
+.exp-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.exp-role{font-size:11pt;font-weight:700;color:#000}
+.exp-date{font-size:10pt;color:#444;white-space:nowrap;font-weight:600}
+.exp-co{font-size:10.5pt;color:#222;margin-bottom:4px;font-style:italic}
+.exp-ach{list-style:disc;padding-left:18px;margin-top:4px}
+.exp-ach li{font-size:10.5pt;color:#111;line-height:1.5;margin-bottom:3px}
+.exp-ach li strong{font-weight:700;color:#000}
+.exp-skills{font-size:10pt;color:#444;margin-top:6px}
+.exp-skills-label{font-weight:700;color:#000}
+
+/* PROJECTS */
+.proj-item{margin-bottom:12px}
+.proj-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.proj-name{font-size:11pt;font-weight:700;color:#000}
+.proj-tech{font-size:10pt;color:#444;font-style:italic}
+.proj-desc{font-size:10.5pt;color:#111;line-height:1.5;margin-top:3px}
+.proj-highlights{list-style:disc;padding-left:18px;margin-top:3px}
+.proj-highlights li{font-size:10.5pt;color:#111;line-height:1.5;margin-bottom:2px}
+
+/* SKILLS */
+.skills-table{width:100%;border-collapse:collapse}
+.skills-table td{font-size:10.5pt;padding:3px 8px 3px 0;vertical-align:top;width:50%}
+.skills-table td:first-child{font-weight:700;color:#000;white-space:nowrap;width:160px}
+
+/* EDUCATION */
+.edu-item{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:5px}
+.edu-left{}
+.edu-degree{font-size:10.5pt;font-weight:700;color:#000}
+.edu-inst{font-size:10pt;color:#333;font-style:italic}
+.edu-right{text-align:right;white-space:nowrap}
+.edu-score{font-size:10pt;font-weight:700;color:#000}
+.edu-year{font-size:10pt;color:#444}
+
+/* CERTS */
+.cert-list{list-style:disc;padding-left:18px;columns:2;column-gap:20px}
+.cert-list li{font-size:10.5pt;color:#111;line-height:1.5;margin-bottom:2px;break-inside:avoid}
+
+/* STARTUPS */
+.startup-item{margin-bottom:8px}
+.startup-top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.startup-name{font-size:11pt;font-weight:700;color:#000}
+.startup-status{font-size:10pt;color:#444;font-style:italic}
+.startup-desc{font-size:10.5pt;color:#111;line-height:1.5;margin-top:3px}
+
+/* PRINT */
+@media print{
+  .toolbar{display:none!important}
+  body{padding:18px 24px;margin:0;max-width:100%}
+  .sec-title{page-break-after:avoid}
+  .exp-item,.proj-item,.edu-item{page-break-inside:avoid}
+}
+@page{margin:16mm 14mm;size:A4}
+</style>
+</head>
+<body>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <span class="toolbar-note">ATS-Optimized Resume — Open in Chrome → Print → Save as PDF</span>
+  <button class="tbtn tbtn-p" onclick="window.print()">🖨️ Save as PDF</button>
+  <a href="./resume.html" class="tbtn tbtn-s">📄 Visual Resume</a>
+  <a href="./index.html" class="tbtn tbtn-s">← Portfolio</a>
+</div>
+
+<!-- ══════════════════════════════════ -->
+<!-- HEADER -->
+<!-- ══════════════════════════════════ -->
+<div class="r-name">RAMANA VEMUNOORI</div>
+<div class="r-title">AI &amp; Data Science Professional | Prompt Engineer | LLM Fine-Tuning | ML Annotator</div>
+<div class="r-contacts">
+  <span>📞 <a href="tel:+918499882843">+91 8499882843</a></span>
+  <span>✉️ <a href="mailto:vemunooriramana0602@gmail.com">vemunooriramana0602@gmail.com</a></span>
+  <span>🔗 <a href="https://www.linkedin.com/in/ramana-vemunoori">linkedin.com/in/ramana-vemunoori</a></span>
+  <span>🐙 <a href="https://github.com/Ve0602">github.com/Ve0602</a></span>
+  <span>🌐 <a href="https://ramana-ai.com">ramana-ai.com</a></span>
+  <span>📍 Hyderabad, Telangana, India | Remote</span>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- PROFESSIONAL SUMMARY -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Professional Summary</div>
+<hr class="divider-thin">
+<p class="summary">
+AI and Data Science professional with 2+ years of hands-on experience in prompt engineering, LLM fine-tuning data creation, and multi-modal AI annotation. Core contributor to Apple's LLM Project through Centific Global Technologies, designing high-quality SFT datasets across 10+ task categories including coding, math, tool use, and safety. Proven expertise in building end-to-end ML systems: fraud detection, cardiac risk prediction, and environmental monitoring. Adept at multi-modal annotation (audio, OCR, handwriting, sports video) with deep knowledge of Apple annotation guidelines. Strong Python foundations with experience in scikit-learn, Flask, PyTorch, and TensorFlow. Founder of two technology startups: Nexwork (freelance marketplace) and Careerflow AI (AI-powered job portal). Remote-ready and open to full-time, contract, and consulting engagements.
+</p>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- PROFESSIONAL EXPERIENCE -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Professional Experience</div>
+<hr class="divider-thin">
+
+<div class="exp-item">
+  <div class="exp-top">
+    <div class="exp-role">Prompt Engineer</div>
+    <div class="exp-date">Apr 2024 – Present</div>
+  </div>
+  <div class="exp-co">Centific Global Technologies India Pvt. Ltd. | ARCCAA Analytics and IT Solutions LLP | Contract, Remote</div>
+  <ul class="exp-ach">
+    <li>Contributed as a core team member to the <strong>Apple LLM Project</strong> — developing and fine-tuning an advanced AI language model targeting Apple's ecosystem of products and digital assistant features.</li>
+    <li>Designed and authored diverse, high-quality <strong>SFT (Supervised Fine-Tuning) prompt-response pairs</strong> spanning 10+ task categories including coding, math, summarization, rewriting, extraction, closed/open Q&amp;A, tool use, and safety, following rigorous LLM SFT Data Guidelines v2.1.7.</li>
+    <li>Created multi-turn conversation datasets demonstrating <strong>context retention, topic transitions, and error recovery</strong> patterns for large language model training — some of the hardest capabilities to train in LLMs.</li>
+    <li>Authored prompts with precise instruction-following requirements in <strong>Post-ITN format, KaTeX math notation, and Markdown code blocks</strong>; applied safety taxonomy frameworks to flag and handle harmful, controversial, and sensitive content across all task categories.</li>
+    <li>Conducted data pre-processing and quality checks on large training corpora, ensuring cleanliness, balance, and diversity across user intent types.</li>
+    <li><strong>Team Leadership Initiative:</strong> Independently identified talent gaps, conducted interviews, and onboarded new prompt engineers — evaluating candidates on prompt quality, LLM knowledge, guideline adherence, and task-category expertise.</li>
+    <li>Collaborated within a cross-functional team of SMEs to maintain annotation consistency and meet quality benchmarks across all deliverables.</li>
+  </ul>
+  <div class="exp-skills"><span class="exp-skills-label">Technologies:</span> Prompt Engineering · SFT Data Creation · LLM Fine-Tuning · Python · PyTorch · TensorFlow · Pandas · NumPy · scikit-learn · KaTeX · Safety Taxonomy</div>
+</div>
+
+<div class="exp-item">
+  <div class="exp-top">
+    <div class="exp-role">Project Associate – AI Annotation Specialist</div>
+    <div class="exp-date">2024 – Present</div>
+  </div>
+  <div class="exp-co">Centific / Oneforma Platform | Freelance, Remote</div>
+  <ul class="exp-ach">
+    <li><strong>Cricket Part 2 – Siri Audio Annotation (Apple):</strong> Annotated audio recordings of user-Siri interactions using a time-series spectrogram tool. Applied timestamped labels (Invocation, User Turn, Siri Turn, Bystander Speech, Filler, Pause); transcribed speech in Post-ITN format with [unsure:] and [truncated:] tags. Handled two-shot triggers, interrupted turns, and multi-speaker scenarios per Apple annotation guidelines.</li>
+    <li><strong>OCR – Latin Script Boxing &amp; Transcription (v3.6):</strong> Performed character-level and word-level annotation of Latin script handwritten text. Applied bounding boxes, line segmentation, principal lines (ascender, median, baseline, descender), and cursive handling for training OCR and voice recognition models.</li>
+    <li><strong>Hindi/Marathi Handwriting Annotation (Devanagari):</strong> Annotated Devanagari handwritten text at character level using Segmenter tool. Applied Shirorekha marking, line segmentation, annotation group segmentation, and illegibility flags. Used Line, Path, and Cutpoint tools for complex cursive strokes.</li>
+    <li><strong>Sports Annotation – Baseball Broadcasts (KCU):</strong> Conducted image analysis and bounding-box annotation for baseball broadcast frames including shot classification, split-screen detection, and player/object role labeling (batter, pitcher, catcher, umpire, dugout staff).</li>
+    <li>Maintained high annotation precision across all projects through consistent quality checks, ground truth corrections, and strict adherence to project-specific guidelines.</li>
+  </ul>
+  <div class="exp-skills"><span class="exp-skills-label">Technologies:</span> Audio Annotation · OCR · Image Labeling · Handwriting Recognition · Speech Transcription · Data Labeling · ML Data Pipelines · Spectrogram Tools</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- KEY PROJECTS -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Key Projects</div>
+<hr class="divider-thin">
+
+<div class="proj-item">
+  <div class="proj-top">
+    <div class="proj-name">Guardian of Your Money — Advanced Fraud Detection ML System</div>
+    <div class="proj-tech">Python · RandomForest · XGBoost · Flask · IBM Cloud</div>
+  </div>
+  <div class="proj-desc">Advanced real-time fraud detection engine with rule-based explainability. Evolved from academic project to production-grade system with demo mode fallback, live transaction streaming endpoint, and plain-English fraud reasoning (why a transaction is flagged, not just whether it is).</div>
+  <ul class="proj-highlights">
+    <li>Detects fraud across 5 transaction types (TRANSFER, CASH_OUT, PAYMENT, DEBIT, MOBILE_PAY) with confidence scores</li>
+    <li>Built explain_fraud() engine generating human-readable fraud signals for each flagged transaction</li>
+    <li>Deployed as Flask app with /predict and /stream endpoints; serialized model in PKL format</li>
+  </ul>
+</div>
+
+<div class="proj-item">
+  <div class="proj-top">
+    <div class="proj-name">For Your Good Heart — Cardiac Risk AI</div>
+    <div class="proj-tech">Python · SVM · StandardScaler · Flask · scikit-learn</div>
+  </div>
+  <div class="proj-desc">Clinical cardiac risk assessment system using SVM classifier on UCI Heart Failure dataset. Analyzes 11 biomarkers to deliver 4-level risk stratification (Low/Moderate/High/Critical) and personalized, medically-grounded lifestyle advice per biomarker threshold.</div>
+</div>
+
+<div class="proj-item">
+  <div class="proj-top">
+    <div class="proj-name">Before the Forest Burns — Fire Risk Intelligence System</div>
+    <div class="proj-tech">Python · Canadian FWI Algorithm · Flask · GeoJSON · NumPy</div>
+  </div>
+  <div class="proj-desc">Multi-zone forest fire risk intelligence system using the Canadian Forest Fire Weather Index (FWI). Monitors 6 geographic zones in real-time, computing 5-level risk classification from temperature, humidity, wind, rainfall, and FFMC/ISI indices with plain-language factor explanations.</div>
+</div>
+
+<div class="proj-item">
+  <div class="proj-top">
+    <div class="proj-name">MANA — Home-Cooked Food Marketplace</div>
+    <div class="proj-tech">React · Spring Boot · MongoDB · MySQL · Flask · Figma · REST APIs</div>
+  </div>
+  <div class="proj-desc">Full-stack AI-powered marketplace connecting home cooks with consumers seeking authentic homemade meals. Features AI dietary matching engine, 3-tier subscription management, and real-time cook availability. Built for Hyderabad's home cooking community using microservices architecture.</div>
+</div>
+
+<div class="proj-item">
+  <div class="proj-top">
+    <div class="proj-name">Online Payments Fraud Detection — Academic ML Pipeline</div>
+    <div class="proj-tech">Python · scikit-learn · XGBoost · Flask · IBM Cloud</div>
+  </div>
+  <div class="proj-desc">End-to-end ML pipeline comparing 5 classification algorithms (Decision Tree, Random Forest, SVM, Extra Tree, XGBoost) on 6.3M+ transaction PaySim dataset. Deployed as Flask web application on IBM Cloud with PKL model serialization.</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- SKILLS -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Skills &amp; Technologies</div>
+<hr class="divider-thin">
+<table class="skills-table">
+  <tr>
+    <td>AI / ML</td>
+    <td>Prompt Engineering · LLM Fine-Tuning · SFT Data Creation · NLP · Agentic Workflows · Model Evaluation · Safety Taxonomy</td>
+  </tr>
+  <tr>
+    <td>ML Frameworks</td>
+    <td>PyTorch · TensorFlow · scikit-learn · XGBoost · Pandas · NumPy · KaTeX · Flask</td>
+  </tr>
+  <tr>
+    <td>Programming</td>
+    <td>Python (Advanced) · JavaScript · Java · SQL · HTML · CSS · Bootstrap</td>
+  </tr>
+  <tr>
+    <td>Backend / DB</td>
+    <td>Spring Boot · REST APIs · MongoDB · MySQL · IBM Cloud · Microservices</td>
+  </tr>
+  <tr>
+    <td>Annotation</td>
+    <td>Audio Annotation · OCR / Boxing · Image Labeling · Speech Transcription · Handwriting · Sports Video · Post-ITN Format</td>
+  </tr>
+  <tr>
+    <td>Tools</td>
+    <td>Git · GitHub · Figma · React · MS Office · Agile / Scrum · Data Pre-processing</td>
+  </tr>
+  <tr>
+    <td>Languages</td>
+    <td>English (Professional) · Telugu (Native) · Hindi (Conversational)</td>
+  </tr>
+</table>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- STARTUPS -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Entrepreneurship</div>
+<hr class="divider-thin">
+
+<div class="startup-item">
+  <div class="startup-top">
+    <div class="startup-name">Nexwork — Co-Founder</div>
+    <div class="startup-status">In Development | 2024 – Present</div>
+  </div>
+  <div class="startup-desc">Next-generation freelance marketplace connecting skilled professionals with clients. Smarter matching algorithms, streamlined hiring process, and fair compensation structures — redefining how freelancers and businesses collaborate in India and globally.</div>
+</div>
+
+<div class="startup-item">
+  <div class="startup-top">
+    <div class="startup-name">Careerflow AI — Co-Founder</div>
+    <div class="startup-status">In Development | 2024 – Present</div>
+  </div>
+  <div class="startup-desc">AI-powered job portal for students and hiring clients. Intelligent candidate-job matching eliminates friction from the hiring process — students find the right opportunities, companies find the right talent, faster and more accurately than traditional job boards.</div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- EDUCATION -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Education</div>
+<hr class="divider-thin">
+
+<div class="edu-item">
+  <div class="edu-left">
+    <div class="edu-degree">Bachelor of Technology — Computer Science &amp; Engineering (CSE)</div>
+    <div class="edu-inst">Vaagdevi Engineering College, Warangal | JNTUH University</div>
+  </div>
+  <div class="edu-right">
+    <div class="edu-score">CGPA: 6.69</div>
+    <div class="edu-year">2019 – 2023</div>
+  </div>
+</div>
+
+<div class="edu-item">
+  <div class="edu-left">
+    <div class="edu-degree">Intermediate — MPC (Math, Physics, Chemistry)</div>
+    <div class="edu-inst">SR Junior College, Hyderabad | Board of Intermediate Education</div>
+  </div>
+  <div class="edu-right">
+    <div class="edu-score">8.8 / 10</div>
+    <div class="edu-year">2017 – 2019</div>
+  </div>
+</div>
+
+<div class="edu-item">
+  <div class="edu-left">
+    <div class="edu-degree">Secondary School Certificate (SSC)</div>
+    <div class="edu-inst">Ekashila e-Techno School, Warangal | BSE Telangana</div>
+  </div>
+  <div class="edu-right">
+    <div class="edu-score">9.5 / 10</div>
+    <div class="edu-year">2017</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ══════════════════════════════════ -->
+<!-- CERTIFICATIONS -->
+<!-- ══════════════════════════════════ -->
+<div class="sec-title">Certifications &amp; Training</div>
+<hr class="divider-thin">
+<ul class="cert-list">
+  <li>Junior Full Stack Java Developer — Tata Strive</li>
+  <li>Applied Data Science Externship &amp; Internship — Smart Intenz</li>
+  <li>Python Programming — Besant Technologies</li>
+  <li>Java Programming — Besant Technologies</li>
+  <li>Fundamentals of DevOps — Udemy (In Progress)</li>
+  <li>Time Management &amp; Productivity Tools — Udemy</li>
+  <li>PowerPoint Presentation — Udemy</li>
+  <li>Excel — Udemy</li>
+</ul>
+
+</body>
+</html>
