@@ -1129,89 +1129,41 @@ footer {
   .nav-links { display: none; }
   .nav-ham { display: flex; }
 
-  /* ── MOBILE LAYOUT: Video top, details below ── */
-
-  /* Hero becomes a vertical flex column */
-  #hero {
-    flex-direction: column !important;
-    height: auto !important;
-    min-height: 100vh !important;
-  }
-
-  /* Video sits at TOP — full width, fixed height */
+  /* Video fills full screen as cinematic background */
   .hero-video-fg {
-    position: relative !important;
     width: 100% !important;
-    height: 55vw !important;
-    min-height: 220px !important;
-    max-height: 340px !important;
-    opacity: 1 !important;
-    z-index: 2 !important;
-    flex-shrink: 0;
-  }
-  .hero-video-fg video {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: cover !important;
-  }
-  /* Remove side gradient on video — show full video */
-  .hero-video-fg::after {
-    background: linear-gradient(
-      to bottom,
-      transparent 60%,
-      rgba(6,6,6,0.8) 100%
-    ) !important;
+    opacity: 0.55 !important;
   }
 
-  /* Hide ambient background video — saves mobile data */
-  .hero-video-bg { display: none !important; }
-
-  /* Hide all overlays — not needed for stacked layout */
-  .hero-overlay-top,
-  .hero-overlay-bottom,
-  .hero-overlay-left { display: none !important; }
-
-  /* Details sit BELOW the video */
-  .hero-content {
-    position: relative !important;
+  /* Light overlay — video visible, text readable */
+  .hero-overlay-left {
     width: 100% !important;
-    padding: 32px 6% 48px !important;
-    justify-content: flex-start !important;
-    z-index: 5 !important;
-    background: var(--bg) !important;
+    background: rgba(6,6,6,0.42) !important;
   }
+  .hero-overlay-top { height: 12% !important; }
+  .hero-overlay-bottom { height: 18% !important; }
+
+  /* Text centered over video */
+  .hero-content { justify-content: center; padding: 0 5%; }
   .hero-text {
-    text-align: center !important;
-    max-width: 100% !important;
-    width: 100% !important;
+    text-align: center;
+    max-width: 100%;
+    width: 100%;
+    position: relative;
+    z-index: 6;
   }
 
-  /* Name — clean, no shadow needed (dark bg below) */
+  /* Name with shadow so readable over video */
   .hero-name {
-    font-size: clamp(36px, 9vw, 58px) !important;
+    font-size: clamp(34px, 8vw, 58px) !important;
     white-space: normal !important;
-    letter-spacing: -1.5px !important;
-    text-shadow: none !important;
-    line-height: 1.1 !important;
+    letter-spacing: -1px !important;
+    text-shadow: 0 2px 24px rgba(0,0,0,0.95), 0 0 48px rgba(0,0,0,0.9) !important;
   }
-  .hero-role { text-shadow: none !important; }
-  .hero-chip { margin: 0 auto 28px !important; }
-  .hero-btns { justify-content: center !important; }
-
-  /* Video controls — on top of video */
-  .video-controls {
-    position: absolute !important;
-    bottom: 8px !important;
-    right: 12px !important;
-    z-index: 10 !important;
+  .hero-role {
+    text-shadow: 0 2px 12px rgba(0,0,0,0.95) !important;
   }
-
-  /* Sound hint & scroll indicator */
-  .sound-hint { bottom: 8px !important; }
-  .scroll-indicator { display: none !important; }
-
-  /* Three.js canvas — hide on mobile for performance */
-  #cinematic-canvas { display: none !important; }
+  .hero-btns { justify-content: center; }
 
   /* Rest of page layout */
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
@@ -1225,85 +1177,27 @@ footer {
   .pd-metrics { grid-template-columns: 1fr; }
   .ann-grid { grid-template-columns: 1fr; }
   section { padding: 80px 5%; }
+  .video-controls { bottom: 80px; right: 16px; }
 }
 
-/* iPhone SE — very small screens */
+/* iPhone SE — very small */
 @media (max-width: 400px) {
-  .hero-video-fg {
-    height: 52vw !important;
-    min-height: 200px !important;
-  }
   .hero-name { font-size: 30px !important; letter-spacing: -0.5px !important; }
-  .hero-chip { font-size: 9px !important; padding: 6px 12px !important; }
-  .hero-role { font-size: 13px !important; }
+  .hero-chip { font-size: 9px; padding: 6px 12px; }
+  .hero-role { font-size: 13px; }
 }
 
-/* DESKTOP RESET — undo ALL mobile overrides above 900px */
+/* DESKTOP RESET — undo mobile overrides above 900px */
 @media (min-width: 901px) {
-  /* Restore hero to original side-by-side layout */
-  #hero { flex-direction: row !important; min-height: 100vh !important; }
-
-  /* Restore background video */
-  .hero-video-bg { display: block !important; }
-
-  /* Restore foreground video — right side, absolute position */
-  .hero-video-fg {
-    position: absolute !important;
-    right: 0 !important; top: 0 !important;
-    width: 50% !important;
-    height: 100% !important;
-    max-height: none !important;
-    opacity: 1 !important;
-  }
-  .hero-video-fg::after {
-    background: linear-gradient(
-      to right,
-      var(--bg) 0%,
-      rgba(6,6,6,0.6) 35%,
-      transparent 65%
-    ),
-    linear-gradient(
-      to bottom,
-      rgba(6,6,6,0.5) 0%,
-      transparent 20%,
-      transparent 75%,
-      var(--bg) 100%
-    ) !important;
-  }
-
-  /* Restore overlays */
-  .hero-overlay-top { display: block !important; height: 30% !important; }
-  .hero-overlay-bottom { display: block !important; height: 40% !important; }
+  .hero-video-fg { width: 50% !important; opacity: 1 !important; }
   .hero-overlay-left {
-    display: block !important;
     width: 50% !important;
     background: linear-gradient(to right, rgba(6,6,6,0.92) 0%, rgba(6,6,6,0.4) 60%, transparent 100%) !important;
   }
-
-  /* Restore Three.js canvas */
-  #cinematic-canvas { display: block !important; }
-
-  /* Restore hero content — left side */
-  .hero-content {
-    position: relative !important;
-    padding: 0 6% !important;
-    background: transparent !important;
-    justify-content: flex-start !important;
-  }
-  .hero-text {
-    text-align: left !important;
-    max-width: 50% !important;
-  }
+  .hero-overlay-top { height: 30% !important; }
+  .hero-overlay-bottom { height: 40% !important; }
   .hero-name { white-space: nowrap !important; text-shadow: none !important; }
   .hero-role { text-shadow: none !important; }
-  .hero-chip { margin: 0 0 38px !important; }
-  .hero-btns { justify-content: flex-start !important; }
-
-  /* Restore scroll indicator */
-  .scroll-indicator { display: flex !important; }
-
-  /* Restore video controls position */
-  .video-controls { bottom: 32px !important; right: 32px !important; }
 }
 
 /* Large monitors — cap font so name never overflows */
@@ -1756,7 +1650,10 @@ footer {
     <div class="startup-grid">
       <div class="startup-card reveal">
         <div class="startup-glow"></div>
-        <div class="startup-status"><div class="startup-status-dot"></div>Active Development</div>
+        <div class="startup-status" style="background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.25);">
+          <div class="startup-status-dot" style="background:#a78bfa;animation:pulse 2s infinite;"></div>
+          <span style="color:#a78bfa">Coming Soon</span>
+        </div>
         <span class="startup-icon">🌐</span>
         <div class="startup-name">Nexwork</div>
         <p class="startup-desc">A freelance marketplace platform built to connect skilled freelancers with clients who value quality. Think Upwork, but designed specifically for India's growing creator and tech economy — with smarter matching, fairer pricing, and real community.</p>
@@ -1765,12 +1662,14 @@ footer {
           <div class="startup-progress-track"><div class="startup-progress-fill" style="width:65%"></div></div>
         </div>
         <div class="startup-tags"><span class="sk-tag">Marketplace</span><span class="sk-tag">Freelance</span><span class="sk-tag">Platform</span><span class="sk-tag">India</span></div>
-        <button class="startup-cta" onclick="openInterest('nexwork')">📩 Register Interest →</button>
+        <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:700;color:#a78bfa;margin-top:4px;">
+          🚀 Launching Soon — Stay Tuned
+        </div>
       </div>
 
       <div class="startup-card reveal">
         <div class="startup-glow"></div>
-        <div class="startup-status"><div class="startup-status-dot"></div>Active Development</div>
+        <div class="startup-status"><div class="startup-status-dot"></div>Live — Try it now</div>
         <span class="startup-icon">🤖</span>
         <div class="startup-name">Careerflow AI</div>
         <p class="startup-desc">An AI-powered job portal purpose-built for students and hiring clients. Careerflow AI uses intelligent matching to connect fresh talent with the right opportunities — going beyond keywords to understand potential, skills, and fit. Students discover relevant jobs; companies find candidates who actually fit.</p>
@@ -1779,7 +1678,10 @@ footer {
           <div class="startup-progress-track"><div class="startup-progress-fill" style="width:35%"></div></div>
         </div>
         <div class="startup-tags"><span class="sk-tag">AI Matching</span><span class="sk-tag">Job Portal</span><span class="sk-tag">Students</span><span class="sk-tag">EdTech</span></div>
-        <button class="startup-cta" onclick="openInterest('careerflow')">📩 Register Interest →</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
+          <a href="https://careerflow-ai-eta.vercel.app/" target="_blank" class="btn-primary" style="font-size:13px;padding:11px 20px;border-radius:10px;text-decoration:none;">🚀 Visit Careerflow AI →</a>
+          <button class="startup-cta" onclick="openInterest('careerflow')" style="margin-top:0;">📩 Register Interest</button>
+        </div>
       </div>
     </div>
   </div>
