@@ -1057,7 +1057,7 @@ section { padding: 120px 6%; }
 #contact { background: var(--bg2); }
 .contact-inner { max-width: 760px; margin: 0 auto; text-align: center; }
 .contact-cards {
-  display: grid; grid-template-columns: repeat(3, 1fr);
+  display: grid; grid-template-columns: repeat(4, 1fr);
   gap: 18px; margin-top: 50px;
 }
 .contact-card {
@@ -1207,6 +1207,105 @@ footer {
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
 }
+
+/* ═══════════════════════════════════════════
+   MOBILE HERO — completely separate block
+═══════════════════════════════════════════ */
+.mobile-hero { display: none; }
+
+@media (max-width: 900px) {
+  /* Hide desktop hero content */
+  .hero-video-bg { display: none !important; }
+  .hero-video-fg { display: none !important; }
+  #cinematic-canvas { display: none !important; }
+  .hero-overlay-top, .hero-overlay-bottom, .hero-overlay-left { display: none !important; }
+  .hero-content { display: none !important; }
+  .video-controls { display: none !important; }
+  .sound-hint { display: none !important; }
+  .scroll-indicator { display: none !important; }
+  .hero-grain { display: none !important; }
+
+  /* Show mobile hero */
+  .mobile-hero { display: flex !important; flex-direction: column; width: 100%; }
+
+  /* Mobile video block */
+  .mh-video {
+    width: 100%;
+    height: 56vw;
+    min-height: 220px;
+    max-height: 360px;
+    position: relative;
+    overflow: hidden;
+    background: #000;
+    flex-shrink: 0;
+  }
+  .mh-video video {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .mh-video-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0; height: 40%;
+    background: linear-gradient(to top, rgba(6,6,6,0.8), transparent);
+  }
+  .mh-controls {
+    position: absolute; bottom: 10px; right: 12px;
+    display: flex; gap: 8px;
+  }
+  .mh-btn {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: #fff; cursor: pointer;
+    transition: all .2s;
+  }
+  .mh-btn:hover { background: rgba(249,115,22,0.3); border-color: rgba(249,115,22,0.5); }
+
+  /* Mobile details block */
+  .mh-details {
+    background: var(--bg);
+    padding: 28px 6% 40px;
+    text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 16px;
+  }
+  .mh-chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(249,115,22,0.08);
+    border: 1px solid rgba(249,115,22,0.2);
+    border-radius: 100px; padding: 7px 16px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 1.5px; color: var(--or);
+    text-transform: uppercase;
+  }
+  .mh-chip-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--or); animation: pulse 2s infinite; }
+  .mh-name {
+    font-family: var(--fd);
+    font-size: clamp(38px, 10vw, 60px);
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1.05;
+    color: var(--tx);
+    margin: 0;
+  }
+  .mh-name .accent { color: var(--or); }
+  .mh-role {
+    font-size: 15px; color: var(--tx2);
+    line-height: 1.7; max-width: 340px;
+  }
+  .mh-role strong { color: var(--tx); }
+  .mh-btns {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    margin-top: 4px;
+  }
+}
+
+/* iPhone SE */
+@media (max-width: 400px) {
+  .mh-video { height: 54vw; min-height: 200px; }
+  .mh-name { font-size: 34px; letter-spacing: -1.5px; }
+  .mh-role { font-size: 13px; }
+  .mh-chip { font-size: 9px; padding: 6px 12px; }
+}
 </style>
 </head>
 <body>
@@ -1234,7 +1333,8 @@ footer {
     <li><a href="#startups">Ventures</a></li>
     <li><a href="#contact">Contact</a></li>
     <li><a href="blog.html">Blog</a></li>
-    <li><a href="domain-setup.html">🚀 Deploy</a></li>
+    <li><a href="https://github.com/Ve0602" target="_blank">GitHub</a></li>
+    <li><a href="#contact" class="nav-cta" style="background:linear-gradient(135deg,#16a34a,#22c55e);display:flex;align-items:center;gap:6px;"><span style="width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 2s infinite;flex-shrink:0;"></span>Hire Me</a></li>
     <li><a href="resume.html" target="_blank" class="nav-cta">↓ Resume</a></li>
   </ul>
   <button class="nav-ham" id="ham" aria-label="Open menu"><span></span><span></span><span></span></button>
@@ -1248,6 +1348,9 @@ footer {
   <a href="#experience" onclick="closeMob()">Experience</a>
   <a href="#startups" onclick="closeMob()">Ventures</a>
   <a href="#contact" onclick="closeMob()">Contact</a>
+  <a href="blog.html" onclick="closeMob()">Blog</a>
+  <a href="https://github.com/Ve0602" target="_blank" onclick="closeMob()">GitHub</a>
+  <a href="#contact" onclick="closeMob()" style="color:#22c55e">🟢 Hire Me</a>
   <a href="resume.html" target="_blank">↓ Resume</a>
 </div>
 
@@ -1255,6 +1358,32 @@ footer {
      CINEMATIC HERO
 ═══════════════════════════════════════ -->
 <section id="hero">
+
+  <!-- ═══ MOBILE HERO — video top, details below ═══ -->
+  <div class="mobile-hero">
+    <div class="mh-video">
+      <video id="mob-vid" autoplay muted playsinline preload="auto">
+        <source src="videos_ai/All in one.mp4" type="video/mp4">
+        <source src="videos_ai/1.mp4" type="video/mp4">
+      </video>
+      <div class="mh-video-overlay"></div>
+      <div class="mh-controls">
+        <button class="mh-btn" id="mob-play" onclick="toggleMobVid()" title="Pause">⏸</button>
+        <button class="mh-btn" id="mob-mute" onclick="toggleMobMute()" title="Unmute">🔇</button>
+      </div>
+    </div>
+    <div class="mh-details">
+      <div class="mh-chip"><div class="mh-chip-dot"></div>Prompt Engineer · Apple LLM Project</div>
+      <h1 class="mh-name">Ramana<br><span class="accent">Vemunoori</span></h1>
+      <p class="mh-role"><strong>AI & Data Science Engineer</strong> crafting intelligent systems that turn raw data into real decisions. 1.3+ years fine-tuning the models powering tomorrow's assistants.</p>
+      <div class="mh-btns">
+        <a href="#projects" class="btn-primary">↓ View Projects</a>
+        <a href="#contact" class="btn-ghost">Let's Talk →</a>
+      </div>
+    </div>
+  </div>
+  <!-- ═══ END MOBILE HERO ═══ -->
+
   <!-- Ambient BG video (blurred) -->
   <div class="hero-video-bg">
     <video id="vid-bg" autoplay loop muted playsinline preload="auto">
@@ -1292,7 +1421,7 @@ footer {
       </h1>
 
       <p class="hero-role" id="hero-role">
-        <strong>AI & Data Science Engineer</strong> crafting intelligent systems that turn raw data into real decisions. 2+ years fine-tuning the models powering tomorrow's assistants.
+        <strong>AI & Data Science Engineer</strong> crafting intelligent systems that turn raw data into real decisions. 1.3+ years fine-tuning the models powering tomorrow's assistants.
       </p>
 
       <div class="hero-btns" id="hero-btns">
@@ -1363,9 +1492,9 @@ footer {
       <div class="about-card reveal">
         <div class="about-av">RV</div>
         <div class="about-q">The person behind the models</div>
-        <p class="about-bio">I'm Ramana Vemunoori — a Hyderabad-based AI & Data Science professional with 2+ years building real-world intelligent systems. My core work is on Apple's LLM Project at Centific, where I design fine-tuning data that shapes how Apple's AI assistants understand and respond to the world.<br><br>Outside that, I build ML-powered apps (fraud detection, cardiac risk, forest fire prediction) and run two stealth startups in the AI and marketplace space. I believe the best AI is built by people who understand both the code and the user.</p>
+        <p class="about-bio">I'm Ramana Vemunoori — a Hyderabad-based AI & Data Science professional with 1.3+ years building real-world intelligent systems. My core work is on Apple's LLM Project at Centific, where I design fine-tuning data that shapes how Apple's AI assistants understand and respond to the world.<br><br>Outside that, I build ML-powered apps (fraud detection, cardiac risk, forest fire prediction) and run two stealth startups in the AI and marketplace space. I believe the best AI is built by people who understand both the code and the user.</p>
         <div class="about-minis">
-          <div class="about-mini"><div class="about-mini-n">2+</div><div class="about-mini-l">Years in AI/ML</div></div>
+          <div class="about-mini"><div class="about-mini-n">1.3+</div><div class="about-mini-l">Years in AI/ML</div></div>
           <div class="about-mini"><div class="about-mini-n">1000+</div><div class="about-mini-l">SFT Prompts Written</div></div>
           <div class="about-mini"><div class="about-mini-n">5</div><div class="about-mini-l">ML Projects Deployed</div></div>
           <div class="about-mini"><div class="about-mini-n">2</div><div class="about-mini-l">Startups Building</div></div>
@@ -1587,7 +1716,7 @@ footer {
         <div class="tl-dot"></div>
         <div class="tl-hd">
           <div><div class="tl-role">Prompt Engineer</div><div class="tl-co">Centific Global Technologies · ARCCAA Analytics · Remote</div></div>
-          <span class="tl-date">Apr 2024 – Present</span>
+          <span class="tl-date">Apr 2024 – Aug 2024</span>
         </div>
         <ul class="tl-ach">
           <li>Core contributor to the <strong style="color:var(--tx)">Apple LLM Project</strong> — crafting fine-tuning data for an AI system embedded in Apple's ecosystem and digital assistants.</li>
@@ -1607,7 +1736,7 @@ footer {
         <div class="tl-dot"></div>
         <div class="tl-hd">
           <div><div class="tl-role">AI Annotation Specialist</div><div class="tl-co">Centific / Oneforma Platform · Freelance · Remote</div></div>
-          <span class="tl-date">2024 – Present</span>
+          <span class="tl-date">Mar 2025 – Mar 2026</span>
         </div>
         <ul class="tl-ach">
           <li>Delivered high-precision multi-modal AI annotation across 4 distinct Apple & enterprise projects — audio, OCR, handwriting, and sports broadcast video.</li>
@@ -1651,7 +1780,7 @@ footer {
       <div class="startup-card reveal">
         <div class="startup-glow"></div>
         <div class="startup-status" style="background:rgba(139,92,246,0.1);border-color:rgba(139,92,246,0.25);">
-          <div class="startup-status-dot" style="background:#a78bfa;animation:pulse 2s infinite;"></div>
+          <div class="startup-status-dot" style="background:#a78bfa;"></div>
           <span style="color:#a78bfa">Coming Soon</span>
         </div>
         <span class="startup-icon">🌐</span>
@@ -1662,14 +1791,14 @@ footer {
           <div class="startup-progress-track"><div class="startup-progress-fill" style="width:65%"></div></div>
         </div>
         <div class="startup-tags"><span class="sk-tag">Marketplace</span><span class="sk-tag">Freelance</span><span class="sk-tag">Platform</span><span class="sk-tag">India</span></div>
-        <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:700;color:#a78bfa;margin-top:4px;">
+        <div style="display:inline-flex;align-items:center;gap:9px;background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.25);border-radius:11px;padding:12px 20px;font-size:13px;font-weight:700;color:#a78bfa;">
           🚀 Launching Soon — Stay Tuned
         </div>
       </div>
 
       <div class="startup-card reveal">
         <div class="startup-glow"></div>
-        <div class="startup-status"><div class="startup-status-dot"></div>Live — Try it now</div>
+        <div class="startup-status"><div class="startup-status-dot"></div>Live — Try it Now</div>
         <span class="startup-icon">🤖</span>
         <div class="startup-name">Careerflow AI</div>
         <p class="startup-desc">An AI-powered job portal purpose-built for students and hiring clients. Careerflow AI uses intelligent matching to connect fresh talent with the right opportunities — going beyond keywords to understand potential, skills, and fit. Students discover relevant jobs; companies find candidates who actually fit.</p>
@@ -1678,9 +1807,9 @@ footer {
           <div class="startup-progress-track"><div class="startup-progress-fill" style="width:35%"></div></div>
         </div>
         <div class="startup-tags"><span class="sk-tag">AI Matching</span><span class="sk-tag">Job Portal</span><span class="sk-tag">Students</span><span class="sk-tag">EdTech</span></div>
-        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;">
-          <a href="https://careerflow-ai-eta.vercel.app/" target="_blank" class="btn-primary" style="font-size:13px;padding:11px 20px;border-radius:10px;text-decoration:none;">🚀 Visit Careerflow AI →</a>
-          <button class="startup-cta" onclick="openInterest('careerflow')" style="margin-top:0;">📩 Register Interest</button>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <a href="https://careerflow-ai-eta.vercel.app/" target="_blank" class="btn-primary" style="font-size:13px;padding:11px 20px;border-radius:10px;text-decoration:none;display:inline-flex;align-items:center;gap:7px;">🚀 Visit Careerflow AI →</a>
+          <button class="startup-cta" onclick="openInterest('careerflow')" style="margin-top:0;">📩 Interest</button>
         </div>
       </div>
     </div>
@@ -1773,15 +1902,20 @@ footer {
     <h2 class="sec-title reveal">Let's build<br><em style="color:var(--or);font-style:normal">something great</em></h2>
     <p class="sec-sub reveal" style="margin:0 auto 0">Open for freelance projects, consulting, collaborations, and the right full-time opportunities.</p>
     <div class="contact-cards">
+      <a href="tel:+918499882843" class="contact-card reveal">
+        <div class="cc-icon">📱</div>
+        <div class="cc-label">Phone</div>
+        <div class="cc-val">+91 8499882843<br><span style="font-size:11px;color:var(--tx3)">Alt: +91 7075823643</span></div>
+      </a>
       <a href="mailto:vemunooriramana0602@gmail.com" class="contact-card reveal">
         <div class="cc-icon">📧</div>
         <div class="cc-label">Email</div>
-        <div class="cc-val">vemunooriramana0602<br>@gmail.com</div>
+        <div class="cc-val">vemunooriramana0602<br>@gmail.com<br><span style="font-size:11px;color:var(--tx3)">Alt: vemunooriramana<br>@gmail.com</span></div>
       </a>
-      <a href="https://www.linkedin.com/in/ramana-vemunoori" target="_blank" class="contact-card reveal">
+      <a href="https://www.linkedin.com/in/vemunoori-ramana" target="_blank" class="contact-card reveal">
         <div class="cc-icon">💼</div>
         <div class="cc-label">LinkedIn</div>
-        <div class="cc-val">ramana-vemunoori</div>
+        <div class="cc-val">vemunoori-ramana</div>
       </a>
       <a href="https://github.com/Ve0602" target="_blank" class="contact-card reveal">
         <div class="cc-icon">🐙</div>
@@ -2452,6 +2586,33 @@ lightStyle.textContent = `
 document.head.appendChild(lightStyle);
 
 // ═══════════════════════════════════════════
+// ── MOBILE VIDEO CONTROLS ──
+const mobVid = document.getElementById('mob-vid');
+let mobPlaying = true, mobMuted = true;
+if(mobVid){
+  mobVid.addEventListener('ended', function(){
+    mobPlaying = false;
+    const btn = document.getElementById('mob-play');
+    if(btn){ btn.textContent='↺'; btn.style.background='rgba(249,115,22,0.3)'; }
+  });
+}
+function toggleMobVid(){
+  if(!mobVid) return;
+  const btn = document.getElementById('mob-play');
+  if(mobPlaying){
+    mobVid.pause(); btn.textContent='▶'; btn.style.background='';
+  } else {
+    if(mobVid.ended){ mobVid.currentTime=0; }
+    mobVid.play(); btn.textContent='⏸'; btn.style.background='';
+  }
+  mobPlaying=!mobPlaying;
+}
+function toggleMobMute(){
+  if(!mobVid) return;
+  mobMuted=!mobMuted; mobVid.muted=mobMuted;
+  document.getElementById('mob-mute').textContent=mobMuted?'🔇':'🔊';
+}
+
 // ESC KEY to close overlays
 // ═══════════════════════════════════════════
 document.addEventListener('keydown', e => {
