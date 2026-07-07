@@ -91,6 +91,62 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
 .foot-copy{font-size:12px;color:var(--tx3);}
 @media(max-width:800px){.metrics-strip-inner,.video-grid,.ann-grid,.skills-grid{grid-template-columns:1fr 1fr;}.skills-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:500px){.metrics-strip-inner{grid-template-columns:1fr 1fr;}.video-grid,.ann-grid,.skills-grid{grid-template-columns:1fr;}}
+
+/* VIDEO MODAL — fullscreen player */
+.video-modal-bg {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(0,0,0,0.95);
+  display: flex; align-items: center; justify-content: center;
+  padding: 40px;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+.video-modal-bg.open { opacity: 1; pointer-events: all; }
+.video-modal {
+  width: 100%; max-width: 1000px;
+  background: var(--bg3);
+  border: 1px solid var(--bd2);
+  border-radius: 16px;
+  overflow: hidden;
+  transform: scale(0.95);
+  transition: transform 0.3s ease;
+}
+.video-modal-bg.open .video-modal { transform: scale(1); }
+.vm-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 22px;
+  border-bottom: 1px solid var(--bd);
+  background: rgba(59,130,246,0.04);
+}
+.vm-title-block { display: flex; align-items: center; gap: 12px; }
+.vm-cat { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--bl); }
+.vm-title { font-size: 15px; font-weight: 800; color: var(--tx); font-family: var(--fd); }
+.vm-close {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--bd2);
+  color: var(--tx2); font-size: 18px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.vm-close:hover { background: rgba(239,68,68,0.15); border-color: rgba(239,68,68,0.4); color: #ef4444; }
+.vm-video-wrap {
+  width: 100%; background: #000;
+  display: flex; align-items: center; justify-content: center;
+  max-height: 70vh;
+}
+.vm-video-wrap video {
+  width: 100%; height: auto; max-height: 70vh; display: block;
+}
+.vm-desc {
+  padding: 18px 22px; font-size: 13px; color: var(--tx2); line-height: 1.7;
+  border-top: 1px solid var(--bd);
+}
+
+@media (max-width: 700px) {
+  .video-modal-bg { padding: 0; }
+  .video-modal { border-radius: 0; max-height: 100vh; overflow-y: auto; }
+  .vm-video-wrap video { max-height: 40vh; }
+}
 </style>
 </head>
 <body>
@@ -140,7 +196,7 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
     <h2 class="sec-h2 reveal">Each Project Explained</h2>
     <p class="sec-sub reveal">Select a project to see a video walkthrough of the annotation process, tools used, and what makes it technically challenging.</p>
     <div class="video-grid">
-      <div class="vid-card reveal active">
+      <div class="vid-card reveal active" data-video="videos_ai/Cricket_Part_2___Siri_Audio_Annotation.mp4" data-cat="🎙️ Apple · Audio" data-title="Cricket Part 2 — Siri Audio Annotation" data-desc="Time-series spectrogram annotation of user-Siri audio interactions. Timestamped labels: Invocation, User Turn, Siri Turn, Bystander Speech, Filler, Pause.">
         <div class="vid-thumb">
           <video autoplay loop muted playsinline><source src="videos_ai/Cricket_Part_2___Siri_Audio_Annotation.mp4" type="video/mp4"></video>
           <div class="vid-play"><div class="vid-play-btn">▶</div></div>
@@ -151,7 +207,7 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
           <div class="vid-desc">Time-series spectrogram annotation of user-Siri audio interactions. Timestamped labels: Invocation, User Turn, Siri Turn, Bystander Speech, Filler, Pause.</div>
         </div>
       </div>
-      <div class="vid-card reveal">
+      <div class="vid-card reveal" data-video="videos_ai/Latin_Script_Boxing___Transcription.mp4" data-cat="✍️ OCR · Latin Script" data-title="Latin Script Boxing & Transcription" data-desc="Character-level and word-level bounding box annotation of Latin handwriting. Line segmentation, principal lines, diacritic marking, cursive handling.">
         <div class="vid-thumb">
           <video loop muted playsinline><source src="videos_ai/Latin_Script_Boxing___Transcription.mp4" type="video/mp4"></video>
           <div class="vid-play"><div class="vid-play-btn">▶</div></div>
@@ -162,7 +218,7 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
           <div class="vid-desc">Character-level and word-level bounding box annotation of Latin handwriting. Line segmentation, principal lines, diacritic marking, cursive handling.</div>
         </div>
       </div>
-      <div class="vid-card reveal">
+      <div class="vid-card reveal" data-video="videos_ai/Devanagari_Handwriting_Segmentation.mp4" data-cat="📝 Devanagari · Hindi/Marathi" data-title="Devanagari Handwriting Segmentation" data-desc="Character segmentation using Segmenter tool. Shirorekha annotation, principal line marking, cut-and-mark approach for cursive shirorekha connections.">
         <div class="vid-thumb">
           <video loop muted playsinline><source src="videos_ai/Devanagari_Handwriting_Segmentation.mp4" type="video/mp4"></video>
           <div class="vid-play"><div class="vid-play-btn">▶</div></div>
@@ -173,7 +229,7 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
           <div class="vid-desc">Character segmentation using Segmenter tool. Shirorekha annotation, principal line marking, cut-and-mark approach for cursive shirorekha connections.</div>
         </div>
       </div>
-      <div class="vid-card reveal">
+      <div class="vid-card reveal" data-video="videos_ai/Baseball_Broadcast_Annotation__KCU_.mp4" data-cat="⚾ Sports AI · Video" data-title="Baseball Broadcast Annotation (KCU)" data-desc="Image analysis of baseball broadcast frames. Shot classification, split-screen detection, player role labeling: batter, pitcher, catcher, umpire, dugout staff.">
         <div class="vid-thumb">
           <video loop muted playsinline><source src="videos_ai/Baseball_Broadcast_Annotation__KCU_.mp4" type="video/mp4"></video>
           <div class="vid-play"><div class="vid-play-btn">▶</div></div>
@@ -324,6 +380,26 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
   </div>
 </div>
 
+
+<!-- VIDEO MODAL -->
+<div class="video-modal-bg" id="video-modal-bg" onclick="if(event.target===this)closeVideoModal()">
+  <div class="video-modal">
+    <div class="vm-header">
+      <div class="vm-title-block">
+        <div>
+          <div class="vm-cat" id="vm-cat">Category</div>
+          <div class="vm-title" id="vm-title">Video Title</div>
+        </div>
+      </div>
+      <button class="vm-close" onclick="closeVideoModal()">✕</button>
+    </div>
+    <div class="vm-video-wrap">
+      <video id="vm-video" controls playsinline></video>
+    </div>
+    <div class="vm-desc" id="vm-desc">Description text here.</div>
+  </div>
+</div>
+
 <footer>
   <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
   <div class="foot-copy">© 2025 Ramana Vemunoori</div>
@@ -337,14 +413,38 @@ document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;ci.style.lef
 (function a(){cx+=(mx-cx)*.1;cy+=(my-cy)*.1;co.style.left=cx+'px';co.style.top=cy+'px';requestAnimationFrame(a);})();
 window.addEventListener('scroll',()=>{const t=document.documentElement.scrollHeight-window.innerHeight;document.getElementById('prog').style.width=(window.scrollY/t*100)+'%';});
 document.querySelectorAll('.reveal').forEach(el=>{ScrollTrigger.create({trigger:el,start:'top 88%',onEnter:()=>el.classList.add('on')});});
-// Video card click to play
+// Video card click — open fullscreen modal with controls
 document.querySelectorAll('.vid-card').forEach(card=>{
   card.addEventListener('click',()=>{
     document.querySelectorAll('.vid-card').forEach(c=>c.classList.remove('active'));
     card.classList.add('active');
-    const v=card.querySelector('video');
-    if(v){v.play();}
+
+    const src = card.dataset.video;
+    const cat = card.dataset.cat;
+    const title = card.dataset.title;
+    const desc = card.dataset.desc;
+
+    const modalVideo = document.getElementById('vm-video');
+    document.getElementById('vm-cat').textContent = cat;
+    document.getElementById('vm-title').textContent = title;
+    document.getElementById('vm-desc').textContent = desc;
+    modalVideo.src = src;
+    modalVideo.muted = false;
+
+    document.getElementById('video-modal-bg').classList.add('open');
+    modalVideo.play();
   });
+});
+
+function closeVideoModal(){
+  const modalVideo = document.getElementById('vm-video');
+  modalVideo.pause();
+  modalVideo.currentTime = 0;
+  document.getElementById('video-modal-bg').classList.remove('open');
+}
+
+document.addEventListener('keydown', e=>{
+  if(e.key === 'Escape') closeVideoModal();
 });
 </script>
 </body>
