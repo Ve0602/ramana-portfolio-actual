@@ -2548,16 +2548,51 @@ function closeInterest(){
 function submitInterest(){
   const name = document.getElementById('im-name').value.trim();
   const email = document.getElementById('im-email').value.trim();
+  const msg = document.getElementById('im-msg').value.trim();
   if(!name || !email){ alert('Please enter your name and email.'); return; }
-  // Would send to backend in production
-  document.getElementById('interest-bg').innerHTML = `
-    <div class="interest-modal" style="text-align:center">
-      <div style="font-size:48px;margin-bottom:20px">🎉</div>
-      <div style="font-family:var(--fd);font-size:24px;font-weight:800;color:var(--tx);margin-bottom:12px">You're on the list!</div>
-      <p style="font-size:14px;color:var(--tx2);margin-bottom:24px">We'll reach out to ${email} when we launch. Thank you, ${name}!</p>
-      <button onclick="closeInterest()" style="background:var(--or);color:#000;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Close</button>
-    </div>
-  `;
+
+  const names = { nexwork: 'Nexwork', careerflow: 'Careerflow AI' };
+
+  const submitBtn = document.querySelector('.im-submit');
+  if(submitBtn){ submitBtn.textContent = 'Sending...'; submitBtn.disabled = true; }
+
+  const formData = new FormData();
+  formData.append('name', name);
+  formData.append('email', email);
+  formData.append('message', msg || '(no message)');
+  formData.append('interested_in', names[currentStartup] || currentStartup);
+  formData.append('_subject', 'New Interest: ' + (names[currentStartup] || currentStartup) + ' — from ' + name);
+
+  fetch('https://formspree.io/f/xvzjeejl', {
+    method: 'POST',
+    headers: { 'Accept': 'application/json' },
+    body: formData
+  })
+  .then(res => {
+    if(res.ok){
+      document.getElementById('interest-bg').innerHTML = `
+        <div class="interest-modal" style="text-align:center">
+          <div style="font-size:48px;margin-bottom:20px">🎉</div>
+          <div style="font-family:var(--fd);font-size:24px;font-weight:800;color:var(--tx);margin-bottom:12px">You're on the list!</div>
+          <p style="font-size:14px;color:var(--tx2);margin-bottom:24px">We'll reach out to ${email} when we launch. Thank you, ${name}!</p>
+          <button onclick="closeInterest()" style="background:var(--or);color:#000;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Close</button>
+        </div>
+      `;
+    } else {
+      throw new Error('Submission failed');
+    }
+  })
+  .catch(() => {
+    document.getElementById('interest-bg').innerHTML = `
+      <div class="interest-modal" style="text-align:center">
+        <div style="font-size:48px;margin-bottom:20px">⚠️</div>
+        <div style="font-family:var(--fd);font-size:22px;font-weight:800;color:var(--tx);margin-bottom:12px">Something went wrong</div>
+        <p style="font-size:14px;color:var(--tx2);margin-bottom:24px">Please email directly at <strong style="color:var(--or)">vemunooriramana0602@gmail.com</strong> instead.</p>
+        <button onclick="closeInterest()" style="background:var(--or);color:#000;border:none;padding:12px 28px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer">Close</button>
+      </div>
+    `;
+  });
+
   document.getElementById('interest-bg').classList.add('open');
 }
 
