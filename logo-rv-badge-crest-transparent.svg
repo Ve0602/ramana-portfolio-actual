@@ -1,0 +1,21 @@
+<svg viewBox="0 0 240 300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="blueGrad2" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#2f6fd6"/>
+      <stop offset="100%" stop-color="#1a3a8f"/>
+    </radialGradient>
+  </defs>
+  <path d="M68,58 L86,26 L110,53 L128,18 L146,53 L170,26 L188,58 Z" fill="#C9A227"/>
+  <rect x="64" y="56" width="128" height="12" rx="2" fill="#C9A227"/>
+  <path d="M48,68 L208,68 L208,168 Q208,198 178,215 L128,273 L78,215 Q48,198 48,168 Z"
+        fill="none" stroke="#C9A227" stroke-width="7"/>
+  <rect x="62" y="118" width="132" height="132" rx="26" fill="url(#blueGrad2)"/>
+  <g transform="translate(128,184) scale(0.62) translate(-128,-184)">
+    <path d="M50,92 L86,56" fill="none" stroke="#f5c542" stroke-width="20" stroke-linecap="butt"/>
+    <path d="M72,220 L72,62 A 33,31 0 1 1 72,124 L128,220"
+          fill="none" stroke="#f5c542" stroke-width="20" stroke-linecap="butt" stroke-linejoin="round"/>
+    <path d="M154,92 L190,56" fill="none" stroke="#f5c542" stroke-width="20" stroke-linecap="butt"/>
+    <path d="M190,56 L128,220"
+          fill="none" stroke="#f5c542" stroke-width="20" stroke-linecap="butt" stroke-linejoin="round"/>
+  </g>
+</svg>
