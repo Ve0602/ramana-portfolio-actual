@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerFlow AI — Plans & Billing</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800&family=Satoshi:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--white:#fff;--surface:#eeecea;--border:#e2dfd6;--border2:#ccc9bc;
+  --dark:#0f172a;--dark2:#1e293b;--green:#059669;--green-dim:rgba(5,150,105,0.08);
+  --red:#dc2626;--red-dim:rgba(220,38,38,0.08);--amber:#d97706;--amber-dim:rgba(217,119,6,0.08);
+  --blue:#2563eb;--blue-dim:rgba(37,99,235,0.08);--purple:#7c3aed;--purple-dim:rgba(124,58,237,0.08);
+  --indigo:#4f46e5;--indigo-dim:rgba(79,70,229,0.08);
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --font-head:'Cabinet Grotesk',sans-serif;--font-body:'Satoshi',sans-serif;--font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.05);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.14);
+}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* NAV */
+.nav{background:var(--dark);height:54px;display:flex;align-items:center;padding:0 28px;position:sticky;top:0;z-index:30}
+.logo{font-family:var(--font-head);font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.4px}
+.logo span{color:#6ee7b7}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.current-plan-pill{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);font-size:12px;color:rgba(255,255,255,0.7);font-family:var(--font-mono)}
+.current-plan-pill strong{color:#fff}
+.user-av{width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.12);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer}
+
+/* PAGE TABS */
+.page-tabs{background:var(--white);border-bottom:1px solid var(--border);display:flex;padding:0 28px;gap:0}
+.ptab{padding:14px 18px;font-size:13px;font-weight:500;color:var(--text3);cursor:pointer;border-bottom:2.5px solid transparent;transition:all 0.15s;white-space:nowrap}
+.ptab:hover{color:var(--text)}
+.ptab.active{color:var(--dark);border-bottom-color:var(--dark);font-weight:700}
+
+/* CONTENT */
+.page{display:none}
+.page.active{display:block;animation:fadeUp 0.2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ PLANS PAGE ═══ */
+.plans-hero{background:linear-gradient(135deg,var(--dark),#1e3a5f);padding:48px 28px;text-align:center}
+.plans-hero h1{font-family:var(--font-head);font-size:36px;font-weight:800;color:#fff;letter-spacing:-1px;margin-bottom:8px}
+.plans-hero p{color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:24px}
+.billing-toggle{display:inline-flex;align-items:center;gap:12px;background:rgba(255,255,255,0.08);border-radius:20px;padding:4px;border:1px solid rgba(255,255,255,0.12)}
+.billing-opt{padding:7px 20px;border-radius:16px;font-size:13px;font-weight:600;cursor:pointer;color:rgba(255,255,255,0.5);transition:all 0.2s}
+.billing-opt.active{background:#fff;color:var(--dark)}
+.save-badge{background:var(--green);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px}
+
+.plans-wrap{padding:40px 28px;max-width:1100px;margin:0 auto}
+.plans-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:48px}
+.plan-card{background:var(--white);border:2px solid var(--border);border-radius:20px;padding:0;overflow:hidden;transition:all 0.2s;position:relative}
+.plan-card:hover{box-shadow:var(--shadow-lg);border-color:var(--border2)}
+.plan-card.popular{border-color:var(--dark);transform:scale(1.02)}
+.plan-card.current{border-color:var(--green)}
+.plan-popular-tag{background:var(--dark);color:#fff;text-align:center;padding:7px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em}
+.plan-current-tag{background:var(--green);color:#fff;text-align:center;padding:7px;font-size:11px;font-weight:700}
+.plan-header{padding:24px 22px 16px}
+.plan-icon{font-size:28px;margin-bottom:10px}
+.plan-name{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-0.3px;margin-bottom:4px}
+.plan-desc{font-size:12px;color:var(--text3);margin-bottom:16px;line-height:1.5}
+.plan-price{display:flex;align-items:baseline;gap:4px;margin-bottom:4px}
+.price-amount{font-family:var(--font-head);font-size:36px;font-weight:800;letter-spacing:-1px;line-height:1}
+.price-period{font-size:12px;color:var(--text3)}
+.price-orig{font-size:13px;color:var(--text3);text-decoration:line-through;margin-bottom:12px}
+.plan-cta{display:block;width:calc(100% - 44px);margin:0 22px 20px;padding:11px;border-radius:var(--radius-lg);font-size:13px;font-weight:700;cursor:pointer;border:none;font-family:var(--font-body);text-align:center;transition:all 0.2s}
+.cta-dark{background:var(--dark);color:#fff}
+.cta-dark:hover{background:var(--dark2)}
+.cta-outline{background:transparent;color:var(--dark);border:2px solid var(--border2)}
+.cta-outline:hover{border-color:var(--dark)}
+.cta-current{background:var(--green-dim);color:var(--green);border:1.5px solid rgba(5,150,105,0.3);cursor:default}
+.plan-divider{height:1px;background:var(--border);margin:0 22px}
+.plan-features{padding:16px 22px 20px}
+.feature-item{display:flex;align-items:flex-start;gap:8px;padding:5px 0;font-size:13px;color:var(--text2)}
+.feature-item.disabled{color:var(--text3)}
+.fi-check{color:var(--green);font-size:14px;flex-shrink:0;margin-top:1px}
+.fi-x{color:var(--text3);font-size:14px;flex-shrink:0;margin-top:1px}
+
+/* COMPARISON TABLE */
+.compare-section{margin-bottom:48px}
+.compare-title{font-family:var(--font-head);font-size:22px;font-weight:800;letter-spacing:-0.5px;margin-bottom:20px;text-align:center}
+.compare-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--white);box-shadow:var(--shadow)}
+.compare-table{width:100%;border-collapse:collapse;min-width:700px}
+.compare-table th{padding:14px 16px;text-align:center;font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;border-bottom:2px solid var(--border);background:var(--surface)}
+.compare-table th:first-child{text-align:left}
+.compare-table th.highlight{background:var(--dark);color:#fff;border-radius:var(--radius) var(--radius) 0 0}
+.compare-table td{padding:12px 16px;text-align:center;font-size:13px;border-bottom:1px solid var(--border)}
+.compare-table td:first-child{text-align:left;font-weight:500;color:var(--text2)}
+.compare-table tr:last-child td{border-bottom:none}
+.compare-table tr:hover td{background:var(--surface)}
+.compare-table td.highlight{background:rgba(15,23,42,0.03)}
+.cmp-yes{color:var(--green);font-size:16px}
+.cmp-no{color:var(--text3);font-size:14px}
+.cmp-val{font-family:var(--font-mono);font-size:12px;color:var(--dark);font-weight:600}
+.cmp-group{font-family:var(--font-head);font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:var(--text3);background:var(--surface);padding:10px 16px;border-top:2px solid var(--border)}
+
+/* FAQ */
+.faq-section{max-width:680px;margin:0 auto 40px}
+.faq-title{font-family:var(--font-head);font-size:22px;font-weight:800;text-align:center;margin-bottom:24px;letter-spacing:-0.5px}
+.faq-item{border:1px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;overflow:hidden;background:var(--white)}
+.faq-q{padding:16px 18px;font-size:14px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background 0.15s}
+.faq-q:hover{background:var(--surface)}
+.faq-a{display:none;padding:0 18px 16px;font-size:13px;color:var(--text2);line-height:1.7}
+.faq-item.open .faq-a{display:block}
+.faq-item.open .faq-q{background:var(--surface)}
+.faq-arrow{transition:transform 0.2s;color:var(--text3)}
+.faq-item.open .faq-arrow{transform:rotate(180deg)}
+
+/* ═══ BILLING PAGE ═══ */
+.billing-wrap{padding:28px;max-width:900px;margin:0 auto}
+.billing-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px}
+.bcard{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+.bcard-title{font-family:var(--font-head);font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
+.plan-badge-big{display:flex;align-items:center;gap:10px;padding:14px;background:var(--surface);border-radius:var(--radius-lg);border:1px solid var(--border);margin-bottom:12px}
+.plan-badge-icon{font-size:24px}
+.plan-badge-name{font-family:var(--font-head);font-size:17px;font-weight:800}
+.plan-badge-meta{font-size:12px;color:var(--text3)}
+.usage-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.usage-label{font-size:12px;color:var(--text2)}
+.usage-val{font-family:var(--font-mono);font-size:12px;color:var(--dark);font-weight:600}
+.usage-bar{width:100%;height:6px;background:var(--surface);border-radius:3px;margin-top:3px;overflow:hidden;border:1px solid var(--border)}
+.usage-fill{height:100%;border-radius:3px;transition:width 0.5s}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:8px 16px;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:var(--font-body)}
+.btn-dark{background:var(--dark);color:#fff}
+.btn-dark:hover{background:var(--dark2)}
+.btn-outline{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-outline:hover{border-color:var(--dark);color:var(--dark)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(220,38,38,0.2)}
+.btn-danger:hover{background:rgba(220,38,38,0.12)}
+
+/* PAYMENT HISTORY TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--white);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;white-space:nowrap}
+tbody tr{border-top:1px solid var(--border);transition:background 0.1s}
+tbody tr:hover{background:var(--surface)}
+tbody td{padding:12px 16px;font-size:13px}
+.badge{display:inline-flex;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.b-green{background:var(--green-dim);color:var(--green)}
+.b-red{background:var(--red-dim);color:var(--red)}
+.b-amber{background:var(--amber-dim);color:var(--amber)}
+.b-gray{background:var(--surface);color:var(--text3);border:1px solid var(--border)}
+
+/* ═══ PAYMENT MODAL ═══ */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.7);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:24px;width:480px;max-width:95vw;overflow:hidden;box-shadow:var(--shadow-lg)}
+.modal-head{padding:24px 28px 0}
+.modal-title{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-0.4px;margin-bottom:4px}
+.modal-sub{font-size:13px;color:var(--text3);margin-bottom:20px}
+.modal-plan-strip{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--dark);border-radius:var(--radius-lg);margin-bottom:20px}
+.mps-left{display:flex;flex-direction:column}
+.mps-name{font-family:var(--font-head);font-size:16px;font-weight:800;color:#fff}
+.mps-desc{font-size:11px;color:rgba(255,255,255,0.5)}
+.mps-price{font-family:var(--font-head);font-size:22px;font-weight:800;color:#6ee7b7}
+.modal-body{padding:0 28px 24px}
+.payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
+.pm-option{padding:12px;border:2px solid var(--border);border-radius:var(--radius-lg);cursor:pointer;text-align:center;transition:all 0.15s;font-size:12px;font-weight:600;color:var(--text2)}
+.pm-option:hover{border-color:var(--dark)}
+.pm-option.selected{border-color:var(--dark);background:var(--surface);color:var(--dark)}
+.pm-icon{font-size:20px;margin-bottom:4px}
+.pm-upi-inputs{display:none;margin-bottom:14px}
+.pm-upi-inputs.visible{display:block}
+.form-group{margin-bottom:12px}
+.form-label{display:block;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.form-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 13px;color:var(--text);font-size:13px;font-family:var(--font-body);outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--dark)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pay-btn{width:100%;padding:14px;background:var(--dark);color:#fff;border:none;border-radius:var(--radius-lg);font-size:15px;font-weight:700;cursor:pointer;font-family:var(--font-body);transition:all 0.2s;margin-top:8px}
+.pay-btn:hover{background:var(--dark2)}
+.secure-note{text-align:center;font-size:11px;color:var(--text3);margin-top:10px;display:flex;align-items:center;justify-content:center;gap:4px}
+.modal-footer-close{padding:16px 28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;background:var(--surface)}
+
+/* SUCCESS SCREEN */
+.success-screen{display:none;flex-direction:column;align-items:center;padding:40px 28px;text-align:center}
+.success-screen.visible{display:flex}
+.success-icon{width:72px;height:72px;background:var(--green-dim);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:32px;margin-bottom:16px;border:2px solid rgba(5,150,105,0.3)}
+.confetti{position:fixed;inset:0;pointer-events:none;z-index:200}
+.cf-piece{position:absolute;width:8px;height:8px;border-radius:2px;animation:fall linear forwards}
+@keyframes fall{0%{transform:translateY(-20px) rotate(0deg);opacity:1}100%{transform:translateY(100vh) rotate(720deg);opacity:0}}
+
+/* OFFER BANNER */
+.offer-banner{background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:var(--radius-lg);padding:20px 24px;display:flex;align-items:center;justify-content:space-between;margin:0 28px 28px;color:#fff}
+.ob-text h3{font-family:var(--font-head);font-size:18px;font-weight:800;margin-bottom:2px}
+.ob-text p{font-size:12px;opacity:0.7}
+.ob-timer{font-family:var(--font-mono);font-size:22px;font-weight:700;background:rgba(255,255,255,0.12);padding:8px 16px;border-radius:var(--radius);border:1px solid rgba(255,255,255,0.2)}
+.ob-btn{padding:10px 20px;background:#fff;color:var(--purple);border:none;border-radius:var(--radius-lg);font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);margin-left:16px}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="logo">Career<span>Flow</span> AI</div>
+  <div class="nav-right">
+    <div class="current-plan-pill">Plan: <strong>Free</strong></div>
+    <div class="user-av">PS</div>
+  </div>
+</nav>
+
+<!-- PAGE TABS -->
+<div class="page-tabs">
+  <div class="ptab active" onclick="switchPage('plans',this)">Choose Plan</div>
+  <div class="ptab" onclick="switchPage('billing',this)">Billing & Usage</div>
+  <div class="ptab" onclick="switchPage('history',this)">Payment History</div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: PLANS
+══════════════════════════════════ -->
+<div class="page active" id="page-plans">
+
+  <div class="plans-hero">
+    <h1>Supercharge your job search</h1>
+    <p>Upgrade to let AI apply to hundreds of jobs while you sleep.</p>
+    <div class="billing-toggle">
+      <div class="billing-opt active" onclick="setBilling('monthly',this)">Monthly</div>
+      <div class="billing-opt" onclick="setBilling('annual',this)">Annual <span class="save-badge">Save 30%</span></div>
+    </div>
+  </div>
+
+  <div class="offer-banner">
+    <div class="ob-text">
+      <h3>🎉 Launch Offer — First month 50% off!</h3>
+      <p>Use code CAREERFLOW50 at checkout</p>
+    </div>
+    <div class="ob-timer" id="offer-timer">23:47:12</div>
+    <button class="ob-btn" onclick="openPayment('premium')">Claim Offer →</button>
+  </div>
+
+  <div class="plans-wrap">
+    <div class="plans-grid" id="plans-grid"></div>
+
+    <div class="compare-section">
+      <div class="compare-title">Full Feature Comparison</div>
+      <div class="compare-wrap">
+        <table class="compare-table" id="compare-table"></table>
+      </div>
+    </div>
+
+    <div class="faq-section">
+      <div class="faq-title">Frequently Asked Questions</div>
+      <div id="faq-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: BILLING
+══════════════════════════════════ -->
+<div class="page" id="page-billing">
+  <div class="billing-wrap">
+
+    <div class="billing-grid">
+      <!-- Current Plan -->
+      <div class="bcard">
+        <div class="bcard-title">Current Plan <button class="btn btn-dark" onclick="switchPage('plans',document.querySelector('.ptab'))">Upgrade →</button></div>
+        <div class="plan-badge-big">
+          <div class="plan-badge-icon">🆓</div>
+          <div>
+            <div class="plan-badge-name">Free Plan</div>
+            <div class="plan-badge-meta">₹0/month · Renews never</div>
+          </div>
+        </div>
+        <div style="font-size:12px;color:var(--text3);margin-bottom:12px">Next billing date: —</div>
+        <button class="btn btn-outline" style="width:100%" onclick="switchPage('plans',document.querySelector('.ptab'))">View all plans</button>
+      </div>
+
+      <!-- Usage -->
+      <div class="bcard">
+        <div class="bcard-title">This Month's Usage</div>
+        <div style="margin-bottom:12px">
+          <div class="usage-row"><span class="usage-label">Job Applications</span><span class="usage-val">14 / 20</span></div>
+          <div class="usage-bar"><div class="usage-fill" style="width:70%;background:var(--amber)"></div></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <div class="usage-row"><span class="usage-label">AI Resume Analyses</span><span class="usage-val">3 / 5</span></div>
+          <div class="usage-bar"><div class="usage-fill" style="width:60%;background:var(--blue)"></div></div>
+        </div>
+        <div style="margin-bottom:12px">
+          <div class="usage-row"><span class="usage-label">Auto-Apply (Premium+)</span><span class="usage-val">0 / 0</span></div>
+          <div class="usage-bar"><div class="usage-fill" style="width:0%;background:var(--text3)"></div></div>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:8px">Resets on 1st of every month</div>
+      </div>
+    </div>
+
+    <!-- Payment Methods -->
+    <div class="bcard" style="margin-bottom:20px">
+      <div class="bcard-title">Payment Methods
+        <button class="btn btn-outline" onclick="alert('Add new payment method — opens secure form')">+ Add Method</button>
+      </div>
+      <div id="payment-methods-list"></div>
+    </div>
+
+    <!-- Invoices -->
+    <div class="bcard">
+      <div class="bcard-title">Recent Invoices</div>
+      <div style="font-size:13px;color:var(--text3);padding:20px 0;text-align:center">No invoices yet. Upgrade to see billing history.</div>
+      <button class="btn btn-outline" onclick="switchPage('history',document.querySelectorAll('.ptab')[2])">View all payments →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAGE: PAYMENT HISTORY
+══════════════════════════════════ -->
+<div class="page" id="page-history">
+  <div style="padding:28px;max-width:900px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div>
+        <div style="font-family:var(--font-head);font-size:20px;font-weight:800">Payment History</div>
+        <div style="color:var(--text3);font-size:13px">All your transactions in one place</div>
+      </div>
+      <button class="btn btn-outline" onclick="alert('Downloading all invoices as ZIP...')">⬇ Download All</button>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:24px" id="payment-stats"></div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Invoice</th><th>Date</th><th>Plan</th><th>Amount</th><th>Method</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="payment-history-body"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     PAYMENT MODAL
+══════════════════════════════════ -->
+<div class="modal-overlay" id="payment-modal">
+  <div class="modal">
+    <div id="payment-form-view">
+      <div class="modal-head">
+        <div class="modal-title" id="modal-plan-title">Upgrade to Premium</div>
+        <div class="modal-sub">Secure payment via Razorpay</div>
+        <div class="modal-plan-strip">
+          <div class="mps-left">
+            <div class="mps-name" id="modal-plan-name">Premium</div>
+            <div class="mps-desc" id="modal-plan-desc">AI Resume Builder + Auto Apply</div>
+          </div>
+          <div class="mps-price" id="modal-plan-price">₹249/mo</div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Coupon -->
+        <div style="display:flex;gap:8px;margin-bottom:16px">
+          <input class="form-input" placeholder="Coupon code (e.g. CAREERFLOW50)" id="coupon-input" style="flex:1"/>
+          <button class="btn btn-outline" onclick="applyCoupon()">Apply</button>
+        </div>
+        <div id="coupon-result" style="display:none;font-size:12px;color:var(--green);font-weight:600;margin-bottom:12px;padding:8px 12px;background:var(--green-dim);border-radius:var(--radius)">✅ 50% off applied! Pay ₹125 today</div>
+
+        <!-- Payment Methods -->
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px">Choose payment method</div>
+        <div class="payment-methods">
+          <div class="pm-option selected" onclick="selectPM(this,'upi')"><div class="pm-icon">📱</div>UPI</div>
+          <div class="pm-option" onclick="selectPM(this,'card')"><div class="pm-icon">💳</div>Card</div>
+          <div class="pm-option" onclick="selectPM(this,'netbanking')"><div class="pm-icon">🏦</div>Net Banking</div>
+          <div class="pm-option" onclick="selectPM(this,'wallet')"><div class="pm-icon">👛</div>Wallet</div>
+        </div>
+
+        <!-- UPI INPUT -->
+        <div class="pm-upi-inputs visible" id="pm-upi">
+          <div class="form-group"><label class="form-label">UPI ID</label><input class="form-input" placeholder="yourname@upi" id="upi-id"/></div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <span style="padding:5px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--text2)" onclick="document.getElementById('upi-id').value='gpay'">Google Pay</span>
+            <span style="padding:5px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--text2)" onclick="document.getElementById('upi-id').value='phonepe'">PhonePe</span>
+            <span style="padding:5px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--text2)" onclick="document.getElementById('upi-id').value='paytm'">Paytm</span>
+            <span style="padding:5px 12px;border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--text2)" onclick="document.getElementById('upi-id').value='bhim'">BHIM</span>
+          </div>
+        </div>
+
+        <!-- CARD INPUT -->
+        <div class="pm-upi-inputs" id="pm-card">
+          <div class="form-group"><label class="form-label">Card Number</label><input class="form-input" placeholder="4242 4242 4242 4242" maxlength="19" oninput="formatCard(this)"/></div>
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">Expiry</label><input class="form-input" placeholder="MM / YY" maxlength="7"/></div>
+            <div class="form-group"><label class="form-label">CVV</label><input class="form-input" placeholder="•••" maxlength="4" type="password"/></div>
+          </div>
+          <div class="form-group"><label class="form-label">Name on Card</label><input class="form-input" placeholder="Priya Sharma"/></div>
+        </div>
+
+        <!-- NET BANKING -->
+        <div class="pm-upi-inputs" id="pm-netbanking">
+          <div class="form-group"><label class="form-label">Select Bank</label>
+            <select class="form-input" style="appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center">
+              <option>SBI — State Bank of India</option><option>HDFC Bank</option><option>ICICI Bank</option>
+              <option>Axis Bank</option><option>Kotak Mahindra</option><option>Yes Bank</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- WALLET -->
+        <div class="pm-upi-inputs" id="pm-wallet">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+            <div class="pm-option" onclick="this.classList.toggle('selected')"><div class="pm-icon">📲</div>Paytm</div>
+            <div class="pm-option" onclick="this.classList.toggle('selected')"><div class="pm-icon">🟣</div>PhonePe</div>
+            <div class="pm-option" onclick="this.classList.toggle('selected')"><div class="pm-icon">🔵</div>Amazon Pay</div>
+            <div class="pm-option" onclick="this.classList.toggle('selected')"><div class="pm-icon">🟠</div>MobiKwik</div>
+          </div>
+        </div>
+
+        <!-- ORDER SUMMARY -->
+        <div style="background:var(--surface);border-radius:var(--radius);padding:12px;margin-top:14px;font-size:12px">
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--text2)">Plan</span><span id="order-plan">Premium Monthly</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--text2)">Original price</span><span id="order-orig">₹249</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px;color:var(--green)" id="order-discount-row"><span>Discount (CAREERFLOW50)</span><span id="order-discount">-</span></div>
+          <div style="display:flex;justify-content:space-between;margin-bottom:5px"><span style="color:var(--text2)">GST (18%)</span><span id="order-gst">₹44.82</span></div>
+          <div style="height:1px;background:var(--border);margin:6px 0"></div>
+          <div style="display:flex;justify-content:space-between;font-weight:700;font-size:14px"><span>Total</span><span id="order-total" style="color:var(--dark)">₹293.82</span></div>
+        </div>
+
+        <button class="pay-btn" id="pay-btn" onclick="processPayment()">Pay ₹293.82 →</button>
+        <div class="secure-note">🔒 Secured by Razorpay · PCI DSS compliant · 256-bit SSL</div>
+      </div>
+      <div class="modal-footer-close">
+        <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+        <div style="font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px">🇮🇳 Payments processed in India · GST invoice provided</div>
+      </div>
+    </div>
+
+    <!-- SUCCESS VIEW -->
+    <div class="success-screen" id="success-view">
+      <div class="success-icon">🎉</div>
+      <div style="font-family:var(--font-head);font-size:24px;font-weight:800;letter-spacing:-0.5px;margin-bottom:6px">Payment Successful!</div>
+      <div style="font-size:14px;color:var(--text2);margin-bottom:20px">Welcome to CareerFlow <span id="success-plan-name">Premium</span>!</div>
+      <div style="background:var(--surface);border-radius:var(--radius-lg);padding:16px;width:100%;margin-bottom:20px;border:1px solid var(--border)">
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--text3)">Transaction ID</span><span style="font-family:var(--font-mono);color:var(--dark)" id="txn-id">pay_Qx8k2mnp4</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:6px"><span style="color:var(--text3)">Amount Paid</span><span style="font-weight:700" id="amount-paid">₹293.82</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:12px"><span style="color:var(--text3)">Next Renewal</span><span id="next-renewal">1 Aug 2026</span></div>
+      </div>
+      <div style="display:flex;gap:10px;width:100%">
+        <button class="btn btn-outline" style="flex:1" onclick="alert('Downloading invoice PDF...')">⬇ Download Invoice</button>
+        <button class="btn btn-dark" style="flex:1" onclick="closeModal();location.reload()">Start Using Premium →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// DATA
+// ═══════════════════════════════════
+const plans = [
+  {
+    id:'free', icon:'🆓', name:'Free', desc:'Get started with basic job search',
+    monthly:0, annual:0, color:'var(--text3)', popular:false, current:true,
+    cta:'Current Plan', ctaStyle:'cta-current',
+    features:[
+      {text:'20 applications / month', ok:true},
+      {text:'Basic job search', ok:true},
+      {text:'Resume upload', ok:true},
+      {text:'Application tracking', ok:true},
+      {text:'AI Resume Builder', ok:false},
+      {text:'ATS Score & Optimization', ok:false},
+      {text:'Auto Apply Agent', ok:false},
+      {text:'AI Career Coach', ok:false},
+    ]
+  },
+  {
+    id:'premium', icon:'⚡', name:'Premium', desc:'AI-powered job applications',
+    monthly:249, annual:174, color:'var(--indigo)', popular:true, current:false,
+    cta:'Upgrade to Premium', ctaStyle:'cta-dark',
+    features:[
+      {text:'Unlimited applications', ok:true},
+      {text:'Advanced job search + filters', ok:true},
+      {text:'AI Resume Builder', ok:true},
+      {text:'ATS Score & Optimization', ok:true},
+      {text:'Auto Apply — 10 jobs/day', ok:true},
+      {text:'AI Career Coach', ok:false},
+      {text:'Interview Preparation AI', ok:false},
+      {text:'Priority Support', ok:false},
+    ]
+  },
+  {
+    id:'premium_plus', icon:'🚀', name:'Premium Plus', desc:'Full AI career automation',
+    monthly:499, annual:349, color:'var(--purple)', popular:false, current:false,
+    cta:'Upgrade to Plus', ctaStyle:'cta-dark',
+    features:[
+      {text:'Unlimited applications', ok:true},
+      {text:'Advanced job search + filters', ok:true},
+      {text:'AI Resume Builder (unlimited)', ok:true},
+      {text:'ATS Score & Optimization', ok:true},
+      {text:'Auto Apply — unlimited', ok:true},
+      {text:'AI Career Coach', ok:true},
+      {text:'Interview Preparation AI', ok:true},
+      {text:'Priority Support 24/7', ok:true},
+    ]
+  },
+  {
+    id:'enterprise', icon:'🏢', name:'Enterprise', desc:'For teams & companies hiring at scale',
+    monthly:null, annual:null, color:'var(--amber)', popular:false, current:false,
+    cta:'Contact Sales', ctaStyle:'cta-outline',
+    features:[
+      {text:'Everything in Plus', ok:true},
+      {text:'Recruiter Suite (10 seats)', ok:true},
+      {text:'Custom AI models', ok:true},
+      {text:'Dedicated account manager', ok:true},
+      {text:'Custom integrations', ok:true},
+      {text:'SLA & compliance reports', ok:true},
+      {text:'White-label option', ok:true},
+      {text:'Onboarding & training', ok:true},
+    ]
+  }
+];
+
+const compareRows = [
+  {group:'Job Search'},
+  {feature:'Monthly Applications', free:'20', premium:'Unlimited', plus:'Unlimited', enterprise:'Unlimited'},
+  {feature:'Advanced Filters', free:false, premium:true, plus:true, enterprise:true},
+  {feature:'Visa Sponsorship Filter', free:false, premium:true, plus:true, enterprise:true},
+  {feature:'Salary Insights', free:false, premium:true, plus:true, enterprise:true},
+  {group:'AI Features'},
+  {feature:'ATS Score', free:false, premium:true, plus:true, enterprise:true},
+  {feature:'AI Resume Builder', free:false, premium:true, plus:true, enterprise:true},
+  {feature:'Resume Versions', free:'1', premium:'5', plus:'Unlimited', enterprise:'Unlimited'},
+  {feature:'Auto Apply / Day', free:false, premium:'10', plus:'Unlimited', enterprise:'Unlimited'},
+  {feature:'AI Career Coach', free:false, premium:false, plus:true, enterprise:true},
+  {feature:'Interview Prep AI', free:false, premium:false, plus:true, enterprise:true},
+  {feature:'Cover Letter Generator', free:false, premium:true, plus:true, enterprise:true},
+  {group:'Support & Extras'},
+  {feature:'Support', free:'Community', premium:'Email', plus:'Priority 24/7', enterprise:'Dedicated'},
+  {feature:'Job Alerts', free:false, premium:true, plus:true, enterprise:true},
+  {feature:'Analytics Dashboard', free:'Basic', premium:'Advanced', plus:'Full', enterprise:'Custom'},
+  {feature:'API Access', free:false, premium:false, plus:false, enterprise:true},
+];
+
+const paymentHistory = [
+  {id:'INV-2026-001',date:'1 Jun 2026',plan:'Premium Plus',amount:'₹499',method:'UPI · GPay',status:'success'},
+  {id:'INV-2026-002',date:'1 May 2026',plan:'Premium Plus',amount:'₹499',method:'UPI · GPay',status:'success'},
+  {id:'INV-2025-012',date:'1 Apr 2026',plan:'Premium',amount:'₹249',method:'Card · HDFC',status:'success'},
+  {id:'INV-2025-011',date:'1 Mar 2026',plan:'Premium',amount:'₹249',method:'Card · HDFC',status:'success'},
+  {id:'INV-2025-010',date:'1 Feb 2026',plan:'Premium',amount:'₹249',method:'UPI · PhonePe',status:'failed'},
+  {id:'INV-2025-009',date:'1 Jan 2026',plan:'Premium',amount:'₹249',method:'UPI · PhonePe',status:'success'},
+];
+
+const savedPaymentMethods = [
+  {type:'UPI', detail:'priya@okaxis', icon:'📱', default:true},
+  {type:'Card', detail:'HDFC •••• 4242', icon:'💳', default:false},
+];
+
+const faqs = [
+  {q:'Can I cancel anytime?', a:'Yes! You can cancel your subscription at any time from the Billing page. You\'ll continue to have access until the end of your billing period.'},
+  {q:'Is auto-apply safe and legal?', a:'CareerFlow AI only applies to jobs on platforms where we have official API access or user-authorized workflows. We never violate any platform\'s Terms of Service.'},
+  {q:'What payment methods are accepted?', a:'We accept all major UPI apps (GPay, PhonePe, Paytm, BHIM), Debit/Credit Cards, Net Banking, and wallets. International cards are also supported.'},
+  {q:'Will I get a GST invoice?', a:'Yes! Every payment generates a GST-compliant invoice sent to your email and available for download from the Payment History page.'},
+  {q:'What happens when I upgrade mid-month?', a:'You\'ll be charged a prorated amount for the remaining days of the current billing cycle. Full pricing applies from the next cycle.'},
+  {q:'Is my payment data secure?', a:'All payments are processed by Razorpay, a PCI DSS Level 1 certified payment gateway. CareerFlow never stores your card details.'},
+];
+
+// ═══════════════════════════════════
+// BILLING TOGGLE
+// ═══════════════════════════════════
+let billingCycle = 'monthly';
+function setBilling(cycle, el){
+  billingCycle = cycle;
+  document.querySelectorAll('.billing-opt').forEach(o=>o.classList.remove('active'));
+  el.classList.add('active');
+  renderPlans();
+}
+
+// ═══════════════════════════════════
+// RENDER PLANS
+// ═══════════════════════════════════
+function renderPlans(){
+  document.getElementById('plans-grid').innerHTML = plans.map(p=>`
+    <div class="plan-card ${p.popular?'popular':''} ${p.current?'current':''}">
+      ${p.popular?'<div class="plan-popular-tag">⭐ Most Popular</div>':''}
+      ${p.current?'<div class="plan-current-tag">✓ Your Current Plan</div>':''}
+      <div class="plan-header">
+        <div class="plan-icon">${p.icon}</div>
+        <div class="plan-name" style="color:${p.color}">${p.name}</div>
+        <div class="plan-desc">${p.desc}</div>
+        <div class="plan-price">
+          ${p.monthly===null
+            ? '<div class="price-amount" style="font-size:24px;color:var(--text2)">Custom</div>'
+            : p.monthly===0
+              ? '<div class="price-amount">₹0</div><span class="price-period">forever</span>'
+              : `<div class="price-amount">₹${billingCycle==='monthly'?p.monthly:p.annual}</div><span class="price-period">/month</span>`
+          }
+        </div>
+        ${billingCycle==='annual'&&p.annual&&p.monthly?`<div class="price-orig">₹${p.monthly}/mo billed monthly</div>`:'<div style="height:20px"></div>'}
+      </div>
+      <button class="plan-cta ${p.ctaStyle}" onclick="${p.current?'':p.monthly===null?`alert('Contact sales@careerflow.ai')`:`openPayment('${p.id}')`}">
+        ${p.cta}
+      </button>
+      <div class="plan-divider"></div>
+      <div class="plan-features">
+        ${p.features.map(f=>`<div class="feature-item ${f.ok?'':'disabled'}">
+          <span class="${f.ok?'fi-check':'fi-x'}">${f.ok?'✓':'✗'}</span>
+          ${f.text}
+        </div>`).join('')}
+      </div>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════
+// RENDER COMPARE TABLE
+// ═══════════════════════════════════
+function renderCompare(){
+  let html = `<thead><tr>
+    <th style="width:220px">Feature</th>
+    <th>Free</th><th class="highlight">Premium</th><th>Plus</th><th>Enterprise</th>
+  </tr></thead><tbody>`;
+  compareRows.forEach(r=>{
+    if(r.group){
+      html += `<tr><td colspan="5" class="cmp-group">${r.group}</td></tr>`;
+    } else {
+      const cell = v => v===true?`<span class="cmp-yes">✓</span>`:v===false?`<span class="cmp-no">—</span>`:`<span class="cmp-val">${v}</span>`;
+      html += `<tr>
+        <td>${r.feature}</td>
+        <td>${cell(r.free)}</td>
+        <td class="highlight">${cell(r.premium)}</td>
+        <td>${cell(r.plus)}</td>
+        <td>${cell(r.enterprise)}</td>
+      </tr>`;
+    }
+  });
+  html += '</tbody>';
+  document.getElementById('compare-table').innerHTML = html;
+}
+
+// ═══════════════════════════════════
+// RENDER FAQ
+// ═══════════════════════════════════
+function renderFAQ(){
+  document.getElementById('faq-list').innerHTML = faqs.map((f,i)=>`
+    <div class="faq-item" id="faq-${i}">
+      <div class="faq-q" onclick="toggleFAQ(${i})">
+        ${f.q} <span class="faq-arrow">▾</span>
+      </div>
+      <div class="faq-a">${f.a}</div>
+    </div>`).join('');
+}
+function toggleFAQ(i){
+  document.getElementById('faq-'+i).classList.toggle('open');
+}
+
+// ═══════════════════════════════════
+// RENDER BILLING
+// ═══════════════════════════════════
+function renderPaymentMethods(){
+  document.getElementById('payment-methods-list').innerHTML = savedPaymentMethods.map((m,i)=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:12px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:8px">
+      <span style="font-size:20px">${m.icon}</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600">${m.type} · ${m.detail}</div>
+        ${m.default?`<div style="font-size:11px;color:var(--green);font-weight:600">Default</div>`:''}
+      </div>
+      <button class="btn btn-outline" style="font-size:11px;padding:4px 10px" onclick="alert('Remove ${m.detail}')">Remove</button>
+    </div>`).join('');
+}
+
+// ═══════════════════════════════════
+// RENDER PAYMENT HISTORY
+// ═══════════════════════════════════
+function renderPaymentHistory(){
+  const total = paymentHistory.filter(p=>p.status==='success').reduce((s,p)=>s+parseInt(p.amount.replace('₹','')),0);
+  document.getElementById('payment-stats').innerHTML = `
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:center;box-shadow:var(--shadow)">
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--green)">₹${total.toLocaleString()}</div>
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;margin-top:4px">Total Paid</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:center;box-shadow:var(--shadow)">
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--blue)">${paymentHistory.filter(p=>p.status==='success').length}</div>
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;margin-top:4px">Successful Payments</div>
+    </div>
+    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;text-align:center;box-shadow:var(--shadow)">
+      <div style="font-family:var(--font-head);font-size:28px;font-weight:800;color:var(--amber)">${paymentHistory.filter(p=>p.status==='failed').length}</div>
+      <div style="font-size:11px;color:var(--text3);text-transform:uppercase;margin-top:4px">Failed Payments</div>
+    </div>`;
+
+  document.getElementById('payment-history-body').innerHTML = paymentHistory.map(p=>`<tr>
+    <td style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">${p.id}</td>
+    <td style="color:var(--text2)">${p.date}</td>
+    <td><span class="badge b-gray">${p.plan}</span></td>
+    <td style="font-family:var(--font-mono);font-weight:700;color:var(--dark)">${p.amount}</td>
+    <td style="color:var(--text3)">${p.method}</td>
+    <td><span class="badge ${p.status==='success'?'b-green':'b-red'}">${p.status==='success'?'✓ Paid':'✗ Failed'}</span></td>
+    <td><button class="btn btn-outline" style="padding:4px 10px;font-size:11px" onclick="alert('Downloading ${p.id}.pdf...')">⬇ Invoice</button></td>
+  </tr>`).join('');
+}
+
+// ═══════════════════════════════════
+// PAYMENT MODAL
+// ═══════════════════════════════════
+let currentPlan = null;
+let couponApplied = false;
+
+function openPayment(planId){
+  currentPlan = plans.find(p=>p.id===planId);
+  if(!currentPlan) return;
+  const price = billingCycle==='monthly' ? currentPlan.monthly : currentPlan.annual;
+  document.getElementById('modal-plan-title').textContent = `Upgrade to ${currentPlan.name}`;
+  document.getElementById('modal-plan-name').textContent = currentPlan.name;
+  document.getElementById('modal-plan-desc').textContent = currentPlan.features.filter(f=>f.ok).slice(0,2).map(f=>f.text).join(' · ');
+  document.getElementById('modal-plan-price').textContent = `₹${price}/mo`;
+  document.getElementById('order-plan').textContent = `${currentPlan.name} ${billingCycle==='monthly'?'Monthly':'Annual'}`;
+  document.getElementById('order-orig').textContent = `₹${price}`;
+  document.getElementById('coupon-result').style.display='none';
+  document.getElementById('coupon-input').value='';
+  couponApplied = false;
+  updateOrderSummary(price);
+  document.getElementById('payment-form-view').style.display='block';
+  document.getElementById('success-view').classList.remove('visible');
+  document.getElementById('payment-modal').classList.add('open');
+}
+
+function updateOrderSummary(basePrice){
+  const disc = couponApplied ? Math.floor(basePrice*0.5) : 0;
+  const afterDisc = basePrice - disc;
+  const gst = Math.round(afterDisc * 0.18 * 100)/100;
+  const total = afterDisc + gst;
+  document.getElementById('order-discount').textContent = disc ? `-₹${disc}` : '-';
+  document.getElementById('order-discount-row').style.opacity = disc ? '1' : '0.4';
+  document.getElementById('order-gst').textContent = `₹${gst.toFixed(2)}`;
+  document.getElementById('order-total').textContent = `₹${total.toFixed(2)}`;
+  document.getElementById('pay-btn').textContent = `Pay ₹${total.toFixed(2)} →`;
+}
+
+function applyCoupon(){
+  const code = document.getElementById('coupon-input').value.trim().toUpperCase();
+  const res = document.getElementById('coupon-result');
+  if(code === 'CAREERFLOW50'){
+    couponApplied = true;
+    res.style.display='block';
+    res.textContent = '✅ 50% off applied! Coupon CAREERFLOW50 accepted.';
+    res.style.color='var(--green)';
+  } else if(code){
+    couponApplied = false;
+    res.style.display='block';
+    res.textContent = '❌ Invalid coupon code. Try CAREERFLOW50';
+    res.style.color='var(--red)';
+  }
+  const price = billingCycle==='monthly' ? currentPlan.monthly : currentPlan.annual;
+  updateOrderSummary(price);
+}
+
+function selectPM(el, type){
+  document.querySelectorAll('.pm-option').forEach(o=>o.classList.remove('selected'));
+  el.classList.add('selected');
+  ['upi','card','netbanking','wallet'].forEach(t=>{
+    document.getElementById('pm-'+t).classList.toggle('visible', t===type);
+  });
+}
+
+function formatCard(inp){
+  let v = inp.value.replace(/\D/g,'');
+  v = v.match(/.{1,4}/g)?.join(' ')||v;
+  inp.value = v;
+}
+
+function processPayment(){
+  document.getElementById('pay-btn').textContent = '⏳ Processing...';
+  document.getElementById('pay-btn').disabled = true;
+  setTimeout(()=>{
+    showSuccess();
+  }, 2000);
+}
+
+function showSuccess(){
+  document.getElementById('payment-form-view').style.display='none';
+  document.getElementById('success-view').classList.add('visible');
+  document.getElementById('success-plan-name').textContent = currentPlan?.name || 'Premium';
+  document.getElementById('txn-id').textContent = 'pay_' + Math.random().toString(36).slice(2,10).toUpperCase();
+  document.getElementById('amount-paid').textContent = document.getElementById('order-total').textContent;
+  document.getElementById('next-renewal').textContent = '1 Aug 2026';
+  launchConfetti();
+  // Update nav pill
+  document.querySelector('.current-plan-pill').innerHTML = `Plan: <strong>${currentPlan?.name}</strong>`;
+}
+
+function launchConfetti(){
+  const container = document.createElement('div');
+  container.className = 'confetti';
+  document.body.appendChild(container);
+  const colors = ['#10b981','#3b82f6','#8b5cf6','#f59e0b','#ec4899','#06b6d4'];
+  for(let i=0;i<60;i++){
+    const piece = document.createElement('div');
+    piece.className = 'cf-piece';
+    piece.style.cssText = `left:${Math.random()*100}%;top:0;background:${colors[Math.floor(Math.random()*colors.length)]};animation-duration:${1.5+Math.random()*2}s;animation-delay:${Math.random()*0.5}s;border-radius:${Math.random()>0.5?'50%':'2px'};width:${6+Math.random()*6}px;height:${6+Math.random()*6}px;`;
+    container.appendChild(piece);
+  }
+  setTimeout(()=>container.remove(), 4000);
+}
+
+function closeModal(){
+  document.getElementById('payment-modal').classList.remove('open');
+  document.getElementById('pay-btn').disabled = false;
+  document.getElementById('pay-btn').textContent = 'Pay →';
+}
+document.getElementById('payment-modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal()});
+
+// ═══════════════════════════════════
+// PAGE NAV
+// ═══════════════════════════════════
+function switchPage(name, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  document.querySelectorAll('.ptab').forEach(t=>t.classList.remove('active'));
+  if(el) el.classList.add('active');
+}
+
+// ═══════════════════════════════════
+// OFFER TIMER
+// ═══════════════════════════════════
+let timerSecs = 23*3600 + 47*60 + 12;
+function tickTimer(){
+  timerSecs--;
+  if(timerSecs<0) timerSecs = 24*3600;
+  const h = String(Math.floor(timerSecs/3600)).padStart(2,'0');
+  const m = String(Math.floor((timerSecs%3600)/60)).padStart(2,'0');
+  const s = String(timerSecs%60).padStart(2,'0');
+  const el = document.getElementById('offer-timer');
+  if(el) el.textContent = `${h}:${m}:${s}`;
+}
+setInterval(tickTimer, 1000);
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+renderPlans();
+renderCompare();
+renderFAQ();
+renderPaymentMethods();
+renderPaymentHistory();
+</script>
+</body>
+</html>

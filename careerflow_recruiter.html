@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerFlow AI — Recruiter Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800&family=Satoshi:wght@300;400;500;700&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f7f6f2;
+  --white:#fff;
+  --surface:#f0efe9;
+  --border:#e2dfd6;
+  --border2:#ccc9bc;
+  --accent:#0f172a;
+  --accent2:#1e293b;
+  --indigo:#4f46e5;
+  --indigo-dim:rgba(79,70,229,0.08);
+  --green:#059669;
+  --green-dim:rgba(5,150,105,0.08);
+  --red:#dc2626;
+  --red-dim:rgba(220,38,38,0.08);
+  --amber:#d97706;
+  --amber-dim:rgba(217,119,6,0.08);
+  --blue:#2563eb;
+  --blue-dim:rgba(37,99,235,0.08);
+  --text:#0f172a;
+  --text2:#475569;
+  --text3:#94a3b8;
+  --font-head:'Cabinet Grotesk',sans-serif;
+  --font-body:'Satoshi',sans-serif;
+  --radius:10px;
+  --radius-lg:16px;
+  --shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 12px rgba(0,0,0,0.04);
+  --shadow-lg:0 8px 32px rgba(0,0,0,0.10);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6}
+
+/* LAYOUT */
+.shell{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;flex-shrink:0;background:var(--accent);display:flex;flex-direction:column;overflow-y:auto}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:56px;background:var(--white);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:12px}
+.content{flex:1;overflow-y:auto;padding:24px}
+
+/* SIDEBAR */
+.logo-wrap{padding:20px 18px 16px;border-bottom:1px solid rgba(255,255,255,0.08)}
+.logo{font-family:var(--font-head);font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.4px}
+.logo span{color:#6ee7b7}
+.logo-sub{font-size:10px;color:rgba(255,255,255,0.35);margin-top:2px;letter-spacing:0.08em}
+.company-chip{display:flex;align-items:center;gap:10px;padding:12px 16px;margin:12px 8px;background:rgba(255,255,255,0.06);border-radius:var(--radius);border:1px solid rgba(255,255,255,0.08)}
+.company-av{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#6ee7b7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.company-name{font-size:12px;font-weight:600;color:#fff;line-height:1.3}
+.company-role{font-size:10px;color:rgba(255,255,255,0.4)}
+.nav-sect{padding:14px 18px 4px;font-size:9px;color:rgba(255,255,255,0.25);letter-spacing:0.12em;text-transform:uppercase;font-weight:600}
+.nav-item{display:flex;align-items:center;gap:9px;padding:9px 14px;margin:1px 8px;border-radius:var(--radius);cursor:pointer;color:rgba(255,255,255,0.5);font-size:13px;transition:all 0.15s;position:relative}
+.nav-item:hover{background:rgba(255,255,255,0.06);color:rgba(255,255,255,0.85)}
+.nav-item.active{background:rgba(255,255,255,0.1);color:#fff}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:#6ee7b7;border-radius:0 3px 3px 0}
+.nav-ico{width:16px;text-align:center;font-size:14px}
+.nav-badge{margin-left:auto;background:#6ee7b7;color:#0f172a;font-size:9px;padding:1px 6px;border-radius:10px;font-weight:700}
+.sidebar-bottom{margin-top:auto;padding:14px 8px;border-top:1px solid rgba(255,255,255,0.08)}
+.user-row{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius);cursor:pointer}
+.user-row:hover{background:rgba(255,255,255,0.06)}
+.user-av{width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.15);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.user-info-name{font-size:12px;font-weight:600;color:#fff}
+.user-info-sub{font-size:10px;color:rgba(255,255,255,0.35)}
+
+/* TOPBAR */
+.tb-title{font-family:var(--font-head);font-size:15px;font-weight:700}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:var(--font-body)}
+.btn-primary{background:var(--indigo);color:#fff}
+.btn-primary:hover{background:#4338ca}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--text3);color:var(--text)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(220,38,38,0.2)}
+.btn-success{background:var(--green-dim);color:var(--green);border:1px solid rgba(5,150,105,0.2)}
+.btn-icon{width:32px;height:32px;padding:0;justify-content:center;border-radius:50%}
+.notif-btn{width:34px;height:34px;border-radius:var(--radius);border:1px solid var(--border);background:var(--white);color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
+.notif-dot{position:absolute;top:8px;right:8px;width:6px;height:6px;background:var(--red);border-radius:50%;border:1.5px solid var(--white)}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block;animation:fadeUp 0.2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* CARDS & GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow)}
+.card-sm{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px;box-shadow:var(--shadow)}
+
+/* STAT CARDS */
+.stat-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.stat-label{font-size:11px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+.stat-val{font-family:var(--font-head);font-size:32px;font-weight:800;line-height:1;letter-spacing:-1px}
+.stat-delta{font-size:11px;color:var(--text3);margin-top:6px}
+.delta-up{color:var(--green)}
+.delta-dn{color:var(--red)}
+
+/* TABLE */
+.tbl-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border);background:var(--white);box-shadow:var(--shadow)}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--surface);padding:10px 16px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.08em;white-space:nowrap}
+tbody tr{border-top:1px solid var(--border);transition:background 0.1s}
+tbody tr:hover{background:var(--surface)}
+tbody td{padding:12px 16px;font-size:13px;white-space:nowrap}
+.cell-user{display:flex;align-items:center;gap:10px}
+.av{width:32px;height:32px;border-radius:50%;background:var(--indigo-dim);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;border:1px solid rgba(79,70,229,0.15)}
+.cell-name{font-size:13px;font-weight:600;color:var(--text)}
+.cell-sub{font-size:11px;color:var(--text3)}
+
+/* BADGE */
+.badge{display:inline-flex;align-items:center;font-size:11px;padding:2px 9px;border-radius:20px;font-weight:600}
+.b-green{background:var(--green-dim);color:var(--green)}
+.b-red{background:var(--red-dim);color:var(--red)}
+.b-amber{background:var(--amber-dim);color:var(--amber)}
+.b-blue{background:var(--blue-dim);color:var(--blue)}
+.b-indigo{background:var(--indigo-dim);color:var(--indigo)}
+.b-gray{background:var(--surface);color:var(--text3);border:1px solid var(--border)}
+
+/* FORMS */
+.form-group{margin-bottom:16px}
+.form-label{display:block;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:5px}
+.form-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:10px 13px;color:var(--text);font-size:13px;font-family:var(--font-body);outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--indigo);background:var(--white)}
+.form-textarea{resize:vertical;min-height:100px}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.form-section-title{font-family:var(--font-head);font-size:13px;font-weight:700;color:var(--text);margin:20px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+
+/* JOB POSTING STEPS */
+.step-tabs{display:flex;gap:0;background:var(--surface);border-radius:var(--radius-lg);padding:4px;margin-bottom:24px;border:1px solid var(--border)}
+.step-tab{flex:1;padding:9px 12px;text-align:center;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;color:var(--text3);transition:all 0.2s}
+.step-tab.active{background:var(--white);color:var(--indigo);box-shadow:var(--shadow)}
+.step-tab.done{color:var(--green)}
+.step-body{display:none}
+.step-body.active{display:block;animation:fadeUp 0.2s ease}
+
+/* CANDIDATE CARD */
+.candidate-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:18px;display:flex;gap:14px;align-items:flex-start;transition:all 0.15s;cursor:pointer;box-shadow:var(--shadow)}
+.candidate-card:hover{border-color:var(--border2);box-shadow:var(--shadow-lg);transform:translateY(-1px)}
+.cand-av{width:48px;height:48px;border-radius:50%;background:var(--indigo-dim);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:16px;font-weight:800;flex-shrink:0;border:1.5px solid rgba(79,70,229,0.15)}
+.cand-body{flex:1}
+.cand-name{font-family:var(--font-head);font-size:15px;font-weight:800;margin-bottom:2px;letter-spacing:-0.3px}
+.cand-title{font-size:12px;color:var(--text2);margin-bottom:6px}
+.cand-pills{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.cand-pill{font-size:10px;padding:2px 8px;border-radius:20px;background:var(--surface);color:var(--text3);border:1px solid var(--border)}
+.cand-footer{display:flex;align-items:center;justify-content:space-between}
+.match-ring{display:flex;align-items:center;gap:5px}
+.match-score{font-family:var(--font-head);font-size:18px;font-weight:800}
+.match-lbl{font-size:10px;color:var(--text3)}
+.cand-actions{display:flex;gap:6px}
+
+/* PIPELINE */
+.pipeline{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:20px}
+.pipeline-col{background:var(--white);border-radius:var(--radius-lg);border:1px solid var(--border);overflow:hidden}
+.pipeline-head{padding:10px 14px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;border-bottom:1px solid var(--border)}
+.pipeline-body{padding:10px;min-height:120px;display:flex;flex-direction:column;gap:8px}
+.pipeline-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px;cursor:pointer;transition:all 0.15s}
+.pipeline-card:hover{background:var(--bg);border-color:var(--border2)}
+.p-name{font-size:12px;font-weight:600;margin-bottom:2px}
+.p-role{font-size:10px;color:var(--text3)}
+.p-match{font-size:10px;font-weight:700}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.6);z-index:100;align-items:flex-start;justify-content:center;padding-top:60px;overflow-y:auto}
+.modal-overlay.open{display:flex}
+.modal{background:var(--white);border-radius:20px;padding:0;width:680px;max-width:95vw;box-shadow:var(--shadow-lg);margin-bottom:40px;overflow:hidden}
+.modal-header{padding:24px 28px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-0.4px}
+.modal-body{padding:24px 28px}
+.modal-footer{padding:16px 28px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px;background:var(--surface)}
+
+/* ANALYTICS */
+.chart-bar-h{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.chart-bar-label{font-size:12px;color:var(--text2);width:90px;flex-shrink:0}
+.chart-bar-track{flex:1;height:8px;background:var(--surface);border-radius:4px;overflow:hidden;border:1px solid var(--border)}
+.chart-bar-fill{height:100%;border-radius:4px;transition:width 0.5s}
+.chart-bar-val{font-size:11px;color:var(--text3);width:30px;text-align:right;font-family:'Cabinet Grotesk',monospace}
+
+/* TOGGLE */
+.toggle{width:38px;height:22px;border-radius:11px;border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
+.toggle.off{background:var(--border2)}
+.toggle.on{background:var(--indigo)}
+.toggle::after{content:'';position:absolute;left:4px;top:4px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform 0.2s;box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle.on::after{transform:translateX(16px)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* SEARCH */
+.search-wrap{position:relative}
+.search-wrap input{width:100%;padding:9px 14px 9px 36px;border-radius:20px;border:1.5px solid var(--border);background:var(--white);font-size:13px;outline:none;font-family:var(--font-body);color:var(--text);transition:border-color 0.2s}
+.search-wrap input:focus{border-color:var(--indigo)}
+.search-ico{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+
+/* TAG INPUT */
+.tag-input-wrap{display:flex;flex-wrap:wrap;gap:5px;padding:8px 10px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);min-height:44px;cursor:text;transition:border-color 0.2s}
+.tag-input-wrap:focus-within{border-color:var(--indigo);background:var(--white)}
+.skill-tag-pill{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:var(--indigo-dim);color:var(--indigo);border-radius:20px;font-size:12px;font-weight:600}
+.skill-tag-pill button{background:none;border:none;cursor:pointer;color:var(--indigo);font-size:14px;line-height:1;padding:0 0 1px}
+.tag-input-wrap input{border:none;outline:none;background:transparent;font-size:13px;font-family:var(--font-body);color:var(--text);flex:1;min-width:80px}
+
+/* Section heading */
+.section-heading{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-family:var(--font-head);font-size:15px;font-weight:800;letter-spacing:-0.3px}
+</style>
+</head>
+<body>
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo-wrap">
+    <div class="logo">Career<span>Flow</span> AI</div>
+    <div class="logo-sub">RECRUITER PORTAL</div>
+  </div>
+  <div class="company-chip">
+    <div class="company-av">TC</div>
+    <div><div class="company-name">TechCorp India</div><div class="company-role">Hiring Manager</div></div>
+  </div>
+  <div class="nav-sect">Main</div>
+  <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-ico">⬡</span> Dashboard</div>
+  <div class="nav-item" onclick="nav('post-job',this)"><span class="nav-ico">＋</span> Post a Job</div>
+  <div class="nav-item" onclick="nav('my-jobs',this)"><span class="nav-ico">◎</span> My Jobs <span class="nav-badge">6</span></div>
+  <div class="nav-sect">Talent</div>
+  <div class="nav-item" onclick="nav('candidates',this)"><span class="nav-ico">◉</span> Candidates</div>
+  <div class="nav-item" onclick="nav('pipeline',this)"><span class="nav-ico">◈</span> Hiring Pipeline</div>
+  <div class="nav-item" onclick="nav('search',this)"><span class="nav-ico">◇</span> Search Talent</div>
+  <div class="nav-sect">Reports</div>
+  <div class="nav-item" onclick="nav('analytics',this)"><span class="nav-ico">⬡</span> Analytics</div>
+  <div class="nav-item" onclick="nav('settings',this)"><span class="nav-ico">◎</span> Settings</div>
+  <div class="sidebar-bottom">
+    <div class="user-row">
+      <div class="user-av">MJ</div>
+      <div><div class="user-info-name">Meera Joshi</div><div class="user-info-sub">HR Manager</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-title" id="page-title">Dashboard</div>
+    <div class="tb-right">
+      <button class="btn btn-primary" onclick="nav('post-job',document.querySelector('[onclick*=post-job]'))">＋ Post a Job</button>
+      <button class="notif-btn">🔔<div class="notif-dot"></div></button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ══════════ DASHBOARD ══════════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-label">Active Jobs</div><div class="stat-val" style="color:var(--indigo)">6</div><div class="stat-delta"><span class="delta-up">↑ 2</span> this month</div></div>
+        <div class="stat-card"><div class="stat-label">Total Applications</div><div class="stat-val" style="color:var(--text)">248</div><div class="stat-delta"><span class="delta-up">↑ 34</span> this week</div></div>
+        <div class="stat-card"><div class="stat-label">Shortlisted</div><div class="stat-val" style="color:var(--green)">42</div><div class="stat-delta">17% conversion</div></div>
+        <div class="stat-card"><div class="stat-label">Time to Hire</div><div class="stat-val" style="color:var(--amber)">18d</div><div class="stat-delta"><span class="delta-up">↓ 3 days</span> faster</div></div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <!-- Active Jobs -->
+        <div class="card" style="padding:0">
+          <div style="padding:18px 20px 0" class="section-heading">
+            <div class="section-title">Active Job Postings</div>
+            <button class="btn btn-ghost" onclick="nav('my-jobs',document.querySelector('[onclick*=my-jobs]'))">View all</button>
+          </div>
+          <div class="tbl-wrap" style="border:none;box-shadow:none;margin-top:10px">
+            <table>
+              <thead><tr><th>Job Title</th><th>Apps</th><th>Status</th></tr></thead>
+              <tbody id="dash-jobs-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Applicants -->
+        <div class="card" style="padding:0">
+          <div style="padding:18px 20px 0" class="section-heading">
+            <div class="section-title">Recent Applicants</div>
+            <button class="btn btn-ghost" onclick="nav('candidates',document.querySelector('[onclick*=candidates]'))">View all</button>
+          </div>
+          <div class="tbl-wrap" style="border:none;box-shadow:none;margin-top:10px">
+            <table>
+              <thead><tr><th>Candidate</th><th>Role</th><th>Match</th><th>Action</th></tr></thead>
+              <tbody id="dash-applicants-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick pipeline stats -->
+      <div class="card">
+        <div class="section-heading"><div class="section-title">Hiring Funnel — This Month</div></div>
+        <div style="display:flex;gap:0;align-items:flex-end;height:80px;margin-bottom:10px" id="funnel-bars"></div>
+        <div style="display:flex;gap:0" id="funnel-labels"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ POST A JOB ══════════ -->
+    <div class="page" id="page-post-job">
+      <div style="max-width:720px">
+        <div class="step-tabs" id="post-step-tabs">
+          <div class="step-tab active" onclick="jobStep(1)">① Job Details</div>
+          <div class="step-tab" onclick="jobStep(2)">② Requirements</div>
+          <div class="step-tab" onclick="jobStep(3)">③ Compensation</div>
+          <div class="step-tab" onclick="jobStep(4)">④ Preview & Post</div>
+        </div>
+
+        <!-- STEP 1 -->
+        <div class="step-body active" id="job-step-1">
+          <div class="card">
+            <div class="form-section-title">Basic Information</div>
+            <div class="form-group"><label class="form-label">Job Title *</label><input class="form-input" id="j-title" placeholder="e.g. Senior React Developer" oninput="updatePreview()"/></div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Department</label><select class="form-input form-select"><option>Engineering</option><option>Design</option><option>Product</option><option>Marketing</option><option>Sales</option><option>HR</option></select></div>
+              <div class="form-group"><label class="form-label">Job Type *</label><select class="form-input form-select" id="j-type" onchange="updatePreview()"><option>Full Time</option><option>Part Time</option><option>Contract</option><option>Internship</option><option>Freelance</option></select></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Work Mode *</label><select class="form-input form-select" id="j-mode" onchange="updatePreview()"><option>Onsite</option><option>Remote</option><option>Hybrid</option></select></div>
+              <div class="form-group"><label class="form-label">Number of Openings</label><input class="form-input" type="number" value="1" min="1"/></div>
+            </div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">City</label><input class="form-input" id="j-city" placeholder="Mumbai" oninput="updatePreview()"/></div>
+              <div class="form-group"><label class="form-label">State</label><select class="form-input form-select"><option>Maharashtra</option><option>Karnataka</option><option>Delhi</option><option>Tamil Nadu</option><option>Telangana</option></select></div>
+            </div>
+            <div class="form-section-title">Job Description</div>
+            <div class="form-group"><label class="form-label">Description *</label><textarea class="form-input form-textarea" id="j-desc" placeholder="Describe the role, responsibilities, and what makes this opportunity exciting..." oninput="updatePreview()"></textarea></div>
+            <div class="form-group"><label class="form-label">Key Responsibilities</label><textarea class="form-input form-textarea" placeholder="• Design and build frontend components&#10;• Collaborate with backend engineers&#10;• Participate in code reviews"></textarea></div>
+            <div style="display:flex;justify-content:flex-end;margin-top:8px">
+              <button class="btn btn-primary" onclick="jobStep(2)">Next: Requirements →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="step-body" id="job-step-2">
+          <div class="card">
+            <div class="form-section-title">Experience & Education</div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Min Experience (yrs)</label><input class="form-input" type="number" value="1" min="0"/></div>
+              <div class="form-group"><label class="form-label">Max Experience (yrs)</label><input class="form-input" type="number" value="4" min="0"/></div>
+            </div>
+            <div class="form-group"><label class="form-label">Education Requirement</label><select class="form-input form-select"><option>Any Graduation</option><option>B.Tech / B.E</option><option>MCA / M.Tech</option><option>MBA</option><option>Any Post Graduation</option></select></div>
+            <div class="form-section-title">Required Skills</div>
+            <div class="form-group">
+              <label class="form-label">Required Skills (press Enter to add)</label>
+              <div class="tag-input-wrap" id="req-skills-wrap" onclick="this.querySelector('input').focus()">
+                <span class="skill-tag-pill">React.js <button onclick="removeTag(this)">×</button></span>
+                <span class="skill-tag-pill">JavaScript <button onclick="removeTag(this)">×</button></span>
+                <span class="skill-tag-pill">TypeScript <button onclick="removeTag(this)">×</button></span>
+                <input type="text" placeholder="Add skill..." onkeydown="addTag(event,'req-skills-wrap')"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Preferred Skills (nice to have)</label>
+              <div class="tag-input-wrap" id="pref-skills-wrap" onclick="this.querySelector('input').focus()">
+                <span class="skill-tag-pill" style="background:rgba(5,150,105,0.1);color:var(--green)">Node.js <button onclick="removeTag(this)" style="color:var(--green)">×</button></span>
+                <span class="skill-tag-pill" style="background:rgba(5,150,105,0.1);color:var(--green)">Docker <button onclick="removeTag(this)" style="color:var(--green)">×</button></span>
+                <input type="text" placeholder="Add skill..." onkeydown="addTag(event,'pref-skills-wrap','green')"/>
+              </div>
+            </div>
+            <div class="form-section-title">Additional Requirements</div>
+            <div class="form-row">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--border);border-radius:var(--radius)">
+                <div><div style="font-size:13px;font-weight:600">Visa Sponsorship</div><div style="font-size:11px;color:var(--text3)">Offer visa for international candidates</div></div>
+                <button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--border);border-radius:var(--radius)">
+                <div><div style="font-size:13px;font-weight:600">Equity Offered</div><div style="font-size:11px;color:var(--text3)">Include stock / ESOP in package</div></div>
+                <button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+              </div>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:20px">
+              <button class="btn btn-ghost" onclick="jobStep(1)">← Back</button>
+              <button class="btn btn-primary" onclick="jobStep(3)">Next: Compensation →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="step-body" id="job-step-3">
+          <div class="card">
+            <div class="form-section-title">Salary & Package</div>
+            <div class="form-row">
+              <div class="form-group"><label class="form-label">Min Salary (₹ LPA)</label><input class="form-input" id="j-sal-min" type="number" placeholder="12" oninput="updatePreview()"/></div>
+              <div class="form-group"><label class="form-label">Max Salary (₹ LPA)</label><input class="form-input" id="j-sal-max" type="number" placeholder="18" oninput="updatePreview()"/></div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px">
+              <div><div style="font-size:13px;font-weight:600">Show salary publicly</div><div style="font-size:11px;color:var(--text3)">Jobs with visible salary get 3× more applications</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+            </div>
+            <div class="form-section-title">Application Settings</div>
+            <div class="form-group"><label class="form-label">Application Deadline</label><input class="form-input" type="date"/></div>
+            <div class="form-group"><label class="form-label">Custom Screening Questions (optional)</label><textarea class="form-input form-textarea" placeholder="e.g. Describe your experience with React hooks?&#10;What is your notice period?"></textarea></div>
+            <div class="form-section-title">AI Matching Settings</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;border:1.5px solid rgba(79,70,229,0.2);border-radius:var(--radius);background:var(--indigo-dim);margin-bottom:12px">
+              <div><div style="font-size:13px;font-weight:600;color:var(--indigo)">AI Auto-Rank Candidates</div><div style="font-size:11px;color:var(--text3)">CareerFlow AI will score and rank applicants automatically</div></div>
+              <button class="toggle on" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;border:1.5px solid rgba(79,70,229,0.2);border-radius:var(--radius);background:var(--indigo-dim)">
+              <div><div style="font-size:13px;font-weight:600;color:var(--indigo)">Featured Listing (₹999)</div><div style="font-size:11px;color:var(--text3)">5× more visibility · Pinned at top · Bold in search results</div></div>
+              <button class="toggle off" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+            </div>
+            <div style="display:flex;justify-content:space-between;margin-top:20px">
+              <button class="btn btn-ghost" onclick="jobStep(2)">← Back</button>
+              <button class="btn btn-primary" onclick="jobStep(4)">Preview Job →</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- STEP 4: PREVIEW -->
+        <div class="step-body" id="job-step-4">
+          <div class="card" style="margin-bottom:16px" id="preview-card">
+            <div style="display:flex;align-items:flex-start;gap:14px;margin-bottom:16px">
+              <div style="width:48px;height:48px;border-radius:12px;background:var(--indigo-dim);display:flex;align-items:center;justify-content:center;font-size:18px;border:1px solid rgba(79,70,229,0.15)">TC</div>
+              <div style="flex:1">
+                <div style="font-family:var(--font-head);font-size:18px;font-weight:800;letter-spacing:-0.4px" id="prev-title">Job Title</div>
+                <div style="color:var(--text2);font-size:13px;margin-top:2px">TechCorp India · <span id="prev-city">City</span></div>
+              </div>
+              <span class="badge b-green">✓ Looks Great</span>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+              <span class="badge b-indigo" id="prev-type">Full Time</span>
+              <span class="badge b-blue" id="prev-mode">Onsite</span>
+              <span class="badge b-green" id="prev-salary">Salary TBD</span>
+            </div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:14px" id="prev-desc">Your job description will appear here…</div>
+            <div style="padding:14px;background:var(--indigo-dim);border-radius:var(--radius);border:1px solid rgba(79,70,229,0.15)">
+              <div style="font-size:11px;font-weight:700;color:var(--indigo);margin-bottom:6px">AI PREDICTION</div>
+              <div style="font-size:13px;color:var(--text2)">Based on similar jobs, you'll receive approximately <strong>40–80 applications</strong> in the first week. AI matching will surface the top 10 candidates automatically.</div>
+            </div>
+          </div>
+          <div style="display:flex;justify-content:space-between">
+            <button class="btn btn-ghost" onclick="jobStep(3)">← Edit</button>
+            <button class="btn btn-primary" onclick="publishJob()" style="padding:10px 28px;font-size:14px">🚀 Publish Job</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════ MY JOBS ══════════ -->
+    <div class="page" id="page-my-jobs">
+      <div style="display:flex;gap:10px;margin-bottom:20px;align-items:center">
+        <div class="search-wrap" style="flex:1;max-width:300px"><span class="search-ico">🔍</span><input type="text" placeholder="Search jobs..."/></div>
+        <select class="btn btn-ghost" style="height:36px;appearance:none;padding:7px 14px"><option>All Status</option><option>Active</option><option>Paused</option><option>Closed</option></select>
+        <button class="btn btn-primary" onclick="nav('post-job',document.querySelector('[onclick*=post-job]'))">＋ New Job</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Job Title</th><th>Type</th><th>Location</th><th>Applications</th><th>Views</th><th>Status</th><th>Posted</th><th>Actions</th></tr></thead>
+          <tbody id="my-jobs-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ══════════ CANDIDATES ══════════ -->
+    <div class="page" id="page-candidates">
+      <div style="display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap">
+        <div class="search-wrap" style="flex:1;min-width:200px"><span class="search-ico">🔍</span><input type="text" placeholder="Search by name, skill..." oninput="filterCands(this.value)"/></div>
+        <select class="btn btn-ghost" style="height:36px;padding:7px 14px" onchange="filterCandsByJob(this.value)">
+          <option value="">All Jobs</option>
+          <option>Senior React Developer</option>
+          <option>Backend Engineer</option>
+          <option>UI/UX Designer</option>
+        </select>
+        <select class="btn btn-ghost" style="height:36px;padding:7px 14px">
+          <option>All Status</option><option>Applied</option><option>Shortlisted</option><option>Interview</option><option>Rejected</option>
+        </select>
+      </div>
+      <div id="candidates-grid" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- ══════════ PIPELINE ══════════ -->
+    <div class="page" id="page-pipeline">
+      <div style="margin-bottom:16px;display:flex;gap:10px;align-items:center">
+        <select class="btn btn-ghost" style="height:36px;padding:7px 14px">
+          <option>Senior React Developer</option>
+          <option>Backend Engineer</option>
+          <option>UI/UX Designer</option>
+        </select>
+        <span style="font-size:12px;color:var(--text3)">Drag cards between columns to update status</span>
+      </div>
+      <div class="pipeline" id="pipeline-board"></div>
+    </div>
+
+    <!-- ══════════ SEARCH TALENT ══════════ -->
+    <div class="page" id="page-search">
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title" style="margin-bottom:14px">🔍 AI Talent Search</div>
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group" style="margin:0"><label class="form-label">Skills</label><input class="form-input" placeholder="React, Node.js, Python..."/></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Location</label><input class="form-input" placeholder="Mumbai, Remote..."/></div>
+        </div>
+        <div class="form-row-3" style="margin-bottom:12px">
+          <div class="form-group" style="margin:0"><label class="form-label">Experience</label><select class="form-input form-select"><option>Any</option><option>Fresher</option><option>1–3 yrs</option><option>3–5 yrs</option><option>5+ yrs</option></select></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Expected CTC</label><select class="form-input form-select"><option>Any</option><option>0–5 LPA</option><option>5–10 LPA</option><option>10–20 LPA</option><option>20+ LPA</option></select></div>
+          <div class="form-group" style="margin:0"><label class="form-label">Availability</label><select class="form-input form-select"><option>Any</option><option>Immediate</option><option>&lt;30 days</option><option>30–60 days</option></select></div>
+        </div>
+        <button class="btn btn-primary" onclick="searchTalent()">Search Talent</button>
+      </div>
+      <div id="talent-results" style="display:flex;flex-direction:column;gap:10px"></div>
+    </div>
+
+    <!-- ══════════ ANALYTICS ══════════ -->
+    <div class="page" id="page-analytics">
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-label">Total Views</div><div class="stat-val" style="color:var(--text)">3,842</div><div class="stat-delta"><span class="delta-up">↑ 18%</span></div></div>
+        <div class="stat-card"><div class="stat-label">Applications</div><div class="stat-val" style="color:var(--indigo)">248</div><div class="stat-delta">6.4% apply rate</div></div>
+        <div class="stat-card"><div class="stat-label">Shortlisted</div><div class="stat-val" style="color:var(--green)">42</div><div class="stat-delta">17% of applicants</div></div>
+        <div class="stat-card"><div class="stat-label">Cost per Hire</div><div class="stat-val" style="color:var(--amber)">₹0</div><div class="stat-delta">Free plan</div></div>
+      </div>
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Applications per Job</div>
+          <div id="apps-per-job"></div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Candidate Source</div>
+          <div id="cand-source"></div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-title" style="margin-bottom:14px">Top Skills in Applicants</div>
+        <div id="top-skills-chart"></div>
+      </div>
+    </div>
+
+    <!-- ══════════ SETTINGS ══════════ -->
+    <div class="page" id="page-settings">
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:16px">Company Profile</div>
+            <div class="form-group"><label class="form-label">Company Name</label><input class="form-input" value="TechCorp India"/></div>
+            <div class="form-group"><label class="form-label">Website</label><input class="form-input" value="https://techcorp.in"/></div>
+            <div class="form-group"><label class="form-label">Industry</label><select class="form-input form-select"><option selected>Software / IT</option><option>Fintech</option><option>Edtech</option></select></div>
+            <div class="form-group"><label class="form-label">Company Size</label><select class="form-input form-select"><option>500–1000</option><option>1000–5000</option></select></div>
+            <div class="form-group"><label class="form-label">About Company</label><textarea class="form-input form-textarea">TechCorp India is a leading software company...</textarea></div>
+            <button class="btn btn-primary" onclick="alert('Saved!')">Save Profile</button>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:16px">Notification Preferences</div>
+            <div id="notif-settings"></div>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px">Plan & Billing</div>
+            <div style="padding:14px;background:var(--indigo-dim);border-radius:var(--radius);border:1px solid rgba(79,70,229,0.15);margin-bottom:14px">
+              <div style="font-size:12px;color:var(--indigo);font-weight:700">CURRENT PLAN</div>
+              <div style="font-family:var(--font-head);font-size:20px;font-weight:800;margin-top:2px">Free</div>
+              <div style="font-size:12px;color:var(--text3);margin-top:4px">3 active jobs · Basic analytics</div>
+            </div>
+            <button class="btn btn-primary" style="width:100%" onclick="alert('Upgrade to Recruiter Pro — ₹2,999/mo')">Upgrade to Pro →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- MODAL: Candidate Detail -->
+<div class="modal-overlay" id="cand-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <div class="modal-title" id="modal-cand-name">Candidate Name</div>
+      <button class="btn btn-ghost" style="padding:6px 12px" onclick="closeModal('cand-modal')">✕ Close</button>
+    </div>
+    <div class="modal-body" id="modal-cand-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-danger" onclick="closeModal('cand-modal')">✗ Reject</button>
+      <button class="btn btn-success" onclick="closeModal('cand-modal')">📅 Schedule Interview</button>
+      <button class="btn btn-primary" onclick="closeModal('cand-modal')">⭐ Shortlist</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// DATA
+const myJobs=[
+  {title:'Senior React Developer',type:'Full Time',loc:'Mumbai',apps:47,views:312,status:'active',posted:'2 days ago'},
+  {title:'Backend Engineer (Node)',type:'Full Time',loc:'Remote',apps:61,views:489,status:'active',posted:'5 days ago'},
+  {title:'UI/UX Designer',type:'Full Time',loc:'Bangalore',apps:94,views:621,status:'active',posted:'1 week ago'},
+  {title:'DevOps Engineer',type:'Contract',loc:'Hybrid',apps:18,views:145,status:'paused',posted:'2 weeks ago'},
+  {title:'Data Analyst',type:'Full Time',loc:'Mumbai',apps:33,views:210,status:'active',posted:'3 weeks ago'},
+  {title:'Product Manager',type:'Full Time',loc:'Delhi',apps:22,views:188,status:'closed',posted:'1 month ago'},
+];
+
+const candidates=[
+  {name:'Priya Sharma',title:'React Developer · 2 yrs exp',loc:'Mumbai',match:94,status:'shortlisted',skills:['React','TypeScript','Node.js','AWS'],ats:82,exp:'2 years',ctc:'₹10 LPA',notice:'15 days',job:'Senior React Developer'},
+  {name:'Sneha Patel',title:'Full Stack Dev · 3 yrs exp',loc:'Bangalore',match:89,status:'interview',skills:['React','Node.js','MongoDB','Docker'],ats:91,exp:'3 years',ctc:'₹14 LPA',notice:'30 days',job:'Senior React Developer'},
+  {name:'Rahul Verma',title:'Backend Engineer · 1 yr exp',loc:'Pune',match:76,status:'applied',skills:['Node.js','PostgreSQL','Redis'],ats:68,exp:'1 year',ctc:'₹7 LPA',notice:'Immediate',job:'Backend Engineer (Node)'},
+  {name:'Amit Kumar',title:'Frontend Dev · Fresher',loc:'Delhi',match:71,status:'applied',skills:['React','JavaScript','CSS'],ats:58,exp:'Fresher',ctc:'Fresher',notice:'Immediate',job:'Senior React Developer'},
+  {name:'Divya Nair',title:'UX Designer · 4 yrs exp',loc:'Mumbai',match:88,status:'shortlisted',skills:['Figma','Adobe XD','User Research','Prototyping'],ats:79,exp:'4 years',ctc:'₹18 LPA',notice:'45 days',job:'UI/UX Designer'},
+  {name:'Karan Singh',title:'React Native Dev · 2 yrs',loc:'Chennai',match:80,status:'applied',skills:['React Native','JavaScript','Redux'],ats:74,exp:'2 years',ctc:'₹9 LPA',notice:'30 days',job:'Backend Engineer (Node)'},
+];
+
+const notifSettings=[
+  {name:'New Application',desc:'When someone applies to your job',on:true},
+  {name:'Candidate Shortlisted',desc:'AI shortlists a high-match candidate',on:true},
+  {name:'Daily Summary',desc:'Daily email with application stats',on:false},
+  {name:'Job Expiry Alert',desc:'Remind before job posting expires',on:true},
+];
+
+const pipelineData={
+  'Applied':[{name:'Amit Kumar',role:'React Dev',match:'71%',color:'var(--amber)'},{name:'Karan Singh',role:'Backend',match:'80%',color:'var(--green)'}],
+  'Shortlisted':[{name:'Priya Sharma',role:'React Dev',match:'94%',color:'var(--green)'},{name:'Divya Nair',role:'UI/UX',match:'88%',color:'var(--green)'}],
+  'Interview':[{name:'Sneha Patel',role:'Full Stack',match:'89%',color:'var(--green)'}],
+  'Assessment':[],
+  'Offer':[],
+};
+
+// RENDER
+function initials(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+
+function renderDashJobs(){
+  document.getElementById('dash-jobs-body').innerHTML=myJobs.slice(0,5).map(j=>`<tr>
+    <td style="font-weight:600">${j.title}</td>
+    <td><span style="font-family:monospace;color:var(--indigo);font-weight:700">${j.apps}</span></td>
+    <td>${j.status==='active'?'<span class="badge b-green">Active</span>':j.status==='paused'?'<span class="badge b-amber">Paused</span>':'<span class="badge b-gray">Closed</span>'}</td>
+  </tr>`).join('');
+}
+
+function renderDashApplicants(){
+  document.getElementById('dash-applicants-body').innerHTML=candidates.slice(0,5).map(c=>`<tr>
+    <td><div class="cell-user"><div class="av">${initials(c.name)}</div><div class="cell-name">${c.name}</div></div></td>
+    <td style="color:var(--text3);font-size:12px;max-width:120px;overflow:hidden;text-overflow:ellipsis">${c.job}</td>
+    <td><span style="font-weight:700;color:${c.match>=80?'var(--green)':'var(--amber)'};font-family:monospace">${c.match}%</span></td>
+    <td><button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="openCand('${c.name}')">View</button></td>
+  </tr>`).join('');
+}
+
+function renderMyJobs(){
+  document.getElementById('my-jobs-body').innerHTML=myJobs.map((j,i)=>`<tr>
+    <td style="font-weight:600">${j.title}</td>
+    <td><span class="badge b-gray">${j.type}</span></td>
+    <td style="color:var(--text3)">${j.loc}</td>
+    <td><span style="font-weight:700;color:var(--indigo)">${j.apps}</span></td>
+    <td style="color:var(--text3)">${j.views}</td>
+    <td>${j.status==='active'?'<span class="badge b-green">Active</span>':j.status==='paused'?'<span class="badge b-amber">Paused</span>':'<span class="badge b-gray">Closed</span>'}</td>
+    <td style="color:var(--text3)">${j.posted}</td>
+    <td>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="nav('candidates',document.querySelector('[onclick*=candidates]'))">View Apps</button>
+        <button class="btn btn-ghost" style="padding:4px 10px;font-size:11px" onclick="toggleJobStatus(${i})">${j.status==='active'?'Pause':'Activate'}</button>
+      </div>
+    </td>
+  </tr>`).join('');
+}
+
+function renderCandidates(data){
+  const d=data||candidates;
+  document.getElementById('candidates-grid').innerHTML=d.map(c=>`<div class="candidate-card" onclick="openCand('${c.name}')">
+    <div class="cand-av">${initials(c.name)}</div>
+    <div class="cand-body">
+      <div class="cand-name">${c.name}</div>
+      <div class="cand-title">${c.title} · ${c.loc}</div>
+      <div class="cand-pills">${c.skills.map(s=>`<span class="cand-pill">${s}</span>`).join('')}</div>
+      <div class="cand-footer">
+        <div style="display:flex;flex-direction:column">
+          <span style="font-size:10px;color:var(--text3)">ATS</span>
+          <span style="font-family:var(--font-head);font-size:16px;font-weight:800;color:${c.ats>=80?'var(--green)':'var(--amber)'}">${c.ats}</span>
+        </div>
+        <div style="font-size:12px;color:var(--text3)">Applied to: <span style="color:var(--text);font-weight:600">${c.job}</span></div>
+        <div style="display:flex;gap:6px">
+          <span class="badge ${c.status==='shortlisted'?'b-green':c.status==='interview'?'b-blue':c.status==='rejected'?'b-red':'b-gray'}">${c.status}</span>
+          <span style="font-family:monospace;font-size:13px;font-weight:800;color:${c.match>=80?'var(--green)':'var(--amber)'}">${c.match}%</span>
+        </div>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function renderPipeline(){
+  const cols=Object.entries(pipelineData);
+  const colors={'Applied':'var(--text3)','Shortlisted':'var(--green)','Interview':'var(--blue)','Assessment':'var(--amber)','Offer':'var(--indigo)'};
+  document.getElementById('pipeline-board').innerHTML=cols.map(([col,cards])=>`<div class="pipeline-col">
+    <div class="pipeline-head" style="color:${colors[col]}">${col} <span style="float:right;font-weight:800">${cards.length}</span></div>
+    <div class="pipeline-body">
+      ${cards.map(c=>`<div class="pipeline-card" onclick="openCand('${c.name}')">
+        <div class="p-name">${c.name}</div>
+        <div class="p-role">${c.role}</div>
+        <div class="p-match" style="color:${c.color};margin-top:4px">${c.match} match</div>
+      </div>`).join('')}
+      ${cards.length===0?`<div style="font-size:11px;color:var(--text3);text-align:center;padding:12px">No candidates</div>`:''}
+    </div>
+  </div>`).join('');
+}
+
+function renderTalentResults(){
+  document.getElementById('talent-results').innerHTML=candidates.map(c=>`<div class="candidate-card" onclick="openCand('${c.name}')">
+    <div class="cand-av">${initials(c.name)}</div>
+    <div class="cand-body">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div><div class="cand-name">${c.name}</div><div class="cand-title">${c.title} · ${c.loc}</div></div>
+        <div style="text-align:right"><div style="font-size:10px;color:var(--text3)">ATS Score</div><div style="font-family:var(--font-head);font-size:18px;font-weight:800;color:${c.ats>=80?'var(--green)':'var(--amber)'}">${c.ats}</div></div>
+      </div>
+      <div class="cand-pills" style="margin:8px 0">${c.skills.map(s=>`<span class="cand-pill">${s}</span>`).join('')}</div>
+      <div style="display:flex;gap:16px;font-size:12px;color:var(--text3)">
+        <span>💼 ${c.exp}</span><span>💰 ${c.ctc}</span><span>⏱ ${c.notice}</span>
+      </div>
+    </div>
+  </div>`).join('');
+}
+
+function renderFunnel(){
+  const steps=[{label:'Views',n:3842},{label:'Applied',n:248},{label:'Shortlisted',n:42},{label:'Interview',n:12},{label:'Offer',n:3}];
+  const max=steps[0].n;
+  document.getElementById('funnel-bars').innerHTML=steps.map((s,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+    <div style="width:100%;height:${Math.round((s.n/max)*70)+10}px;background:${i===0?'var(--indigo)':i===1?'#6366f1':i===2?'#818cf8':i===3?'#a5b4fc':'#c7d2fe'};border-radius:6px 6px 0 0;display:flex;align-items:flex-start;justify-content:center;padding-top:6px">
+      <span style="font-family:var(--font-head);font-size:12px;font-weight:800;color:#fff">${s.n.toLocaleString()}</span>
+    </div>
+  </div>`).join('');
+  document.getElementById('funnel-labels').innerHTML=steps.map(s=>`<div style="flex:1;text-align:center;font-size:10px;color:var(--text3);font-weight:600;padding-top:4px">${s.label}</div>`).join('');
+}
+
+function renderAnalytics(){
+  const apj=[{j:'UI/UX Designer',n:94},{j:'Backend Engineer',n:61},{j:'React Developer',n:47},{j:'Data Analyst',n:33},{j:'Product Manager',n:22}];
+  document.getElementById('apps-per-job').innerHTML=apj.map(a=>`<div class="chart-bar-h">
+    <span class="chart-bar-label" style="font-size:11px;color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${a.j}</span>
+    <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.round(a.n/94*100)}%;background:var(--indigo)"></div></div>
+    <span class="chart-bar-val">${a.n}</span>
+  </div>`).join('');
+
+  const src=[{s:'CareerFlow AI',n:168},{s:'LinkedIn',n:41},{s:'Direct Apply',n:24},{s:'Referral',n:15}];
+  document.getElementById('cand-source').innerHTML=src.map(s=>`<div class="chart-bar-h">
+    <span class="chart-bar-label">${s.s}</span>
+    <div class="chart-bar-track"><div class="chart-bar-fill" style="width:${Math.round(s.n/168*100)}%;background:var(--green)"></div></div>
+    <span class="chart-bar-val">${s.n}</span>
+  </div>`).join('');
+
+  const skills=[{s:'React.js',n:142},{s:'JavaScript',n:138},{s:'Node.js',n:94},{s:'TypeScript',n:87},{s:'Python',n:71},{s:'SQL',n:68}];
+  document.getElementById('top-skills-chart').innerHTML=`<div class="form-row-3">${skills.map(s=>`<div style="padding:12px;border:1px solid var(--border);border-radius:var(--radius)">
+    <div style="font-size:12px;font-weight:600;color:var(--text)">${s.s}</div>
+    <div style="font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--indigo);margin:4px 0">${s.n}</div>
+    <div class="chart-bar-track" style="margin-top:4px"><div class="chart-bar-fill" style="width:${Math.round(s.n/142*100)}%;background:var(--indigo)"></div></div>
+  </div>`).join('')}</div>`;
+}
+
+function renderNotifSettings(){
+  document.getElementById('notif-settings').innerHTML=notifSettings.map((s,i)=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--border)">
+    <div><div style="font-size:13px;font-weight:600">${s.name}</div><div style="font-size:11px;color:var(--text3)">${s.desc}</div></div>
+    <button class="toggle ${s.on?'on':'off'}" onclick="this.classList.toggle('on');this.classList.toggle('off')"></button>
+  </div>`).join('');
+}
+
+// JOB POSTING
+let jobStepCur=1;
+function jobStep(n){
+  document.querySelectorAll('.step-body').forEach(s=>s.classList.remove('active'));
+  document.getElementById('job-step-'+n).classList.add('active');
+  document.querySelectorAll('.step-tab').forEach((t,i)=>{
+    t.classList.remove('active','done');
+    if(i+1===n)t.classList.add('active');
+    else if(i+1<n)t.classList.add('done');
+  });
+  jobStepCur=n;
+}
+
+function updatePreview(){
+  const title=document.getElementById('j-title').value||'Job Title';
+  const city=document.getElementById('j-city').value||'Location';
+  const type=document.getElementById('j-type').value;
+  const mode=document.getElementById('j-mode').value;
+  const desc=document.getElementById('j-desc').value||'Your description will appear here…';
+  const smin=document.getElementById('j-sal-min')?.value;
+  const smax=document.getElementById('j-sal-max')?.value;
+  document.getElementById('prev-title').textContent=title;
+  document.getElementById('prev-city').textContent=city;
+  document.getElementById('prev-type').textContent=type;
+  document.getElementById('prev-mode').textContent=mode;
+  document.getElementById('prev-desc').textContent=desc.slice(0,200)+(desc.length>200?'…':'');
+  if(smin&&smax)document.getElementById('prev-salary').textContent=`₹${smin}–${smax} LPA`;
+}
+
+function addTag(e,wrapId,color='indigo'){
+  if(e.key!=='Enter')return;
+  const v=e.target.value.trim();if(!v)return;
+  const span=document.createElement('span');
+  span.className='skill-tag-pill';
+  if(color==='green')span.style.cssText='background:rgba(5,150,105,0.1);color:var(--green)';
+  span.innerHTML=`${v} <button onclick="removeTag(this)" style="${color==='green'?'color:var(--green)':''}">×</button>`;
+  e.target.parentNode.insertBefore(span,e.target);
+  e.target.value='';
+}
+function removeTag(btn){btn.parentNode.remove()}
+
+function publishJob(){
+  const title=document.getElementById('j-title').value||'New Job';
+  myJobs.unshift({title,type:'Full Time',loc:'Mumbai',apps:0,views:0,status:'active',posted:'Just now'});
+  renderMyJobs();renderDashJobs();
+  alert(`✅ "${title}" published successfully!\n\nYou can track applications in My Jobs.`);
+  nav('my-jobs',document.querySelector('[onclick*=my-jobs]'));
+}
+
+// CANDIDATES
+function filterCands(q){
+  renderCandidates(q?candidates.filter(c=>c.name.toLowerCase().includes(q.toLowerCase())||c.skills.some(s=>s.toLowerCase().includes(q.toLowerCase()))):candidates);
+}
+function filterCandsByJob(j){
+  renderCandidates(j?candidates.filter(c=>c.job===j):candidates);
+}
+function searchTalent(){renderTalentResults()}
+
+function openCand(name){
+  const c=candidates.find(x=>x.name===name);
+  if(!c)return;
+  document.getElementById('modal-cand-name').textContent=c.name;
+  document.getElementById('modal-cand-body').innerHTML=`
+    <div style="display:flex;gap:14px;align-items:flex-start;margin-bottom:20px">
+      <div style="width:56px;height:56px;border-radius:50%;background:var(--indigo-dim);color:var(--indigo);display:flex;align-items:center;justify-content:center;font-family:var(--font-head);font-size:18px;font-weight:800;flex-shrink:0">${initials(c.name)}</div>
+      <div style="flex:1">
+        <div style="font-family:var(--font-head);font-size:16px;font-weight:800">${c.name}</div>
+        <div style="color:var(--text2);font-size:13px;margin-bottom:8px">${c.title} · ${c.loc}</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <span class="badge b-indigo">ATS: ${c.ats}/100</span>
+          <span class="badge b-green">${c.match}% match</span>
+          <span class="badge b-gray">💰 ${c.ctc}</span>
+          <span class="badge b-gray">⏱ ${c.notice} notice</span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:8px">Skills</div>
+    <div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:16px">${c.skills.map(s=>`<span class="badge b-indigo">${s}</span>`).join('')}</div>
+    <div style="padding:14px;background:var(--indigo-dim);border-radius:var(--radius);border:1px solid rgba(79,70,229,0.15)">
+      <div style="font-size:11px;font-weight:700;color:var(--indigo);margin-bottom:6px">AI ASSESSMENT</div>
+      <div style="font-size:13px;color:var(--text2)">This candidate is a <strong>${c.match}% match</strong> for ${c.job}. ${c.match>=85?'Highly recommended — skills align well with requirements.':'Good candidate — a few required skills may need assessment.'}</div>
+    </div>`;
+  document.getElementById('cand-modal').classList.add('open');
+}
+
+function toggleJobStatus(i){myJobs[i].status=myJobs[i].status==='active'?'paused':'active';renderMyJobs();}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',e=>{if(e.target===m)m.classList.remove('open')}));
+
+// NAV
+const titles={dashboard:'Dashboard','post-job':'Post a Job','my-jobs':'My Jobs',candidates:'Candidates',pipeline:'Hiring Pipeline',search:'Search Talent',analytics:'Analytics',settings:'Settings'};
+function nav(page,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('page-title').textContent=titles[page]||page;
+}
+
+// INIT
+renderDashJobs();renderDashApplicants();renderMyJobs();
+renderCandidates();renderPipeline();renderFunnel();renderAnalytics();renderNotifSettings();
+</script>
+</body>
+</html>

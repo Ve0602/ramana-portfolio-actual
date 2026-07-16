@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin.html
 
-Sitemap: https://ramana.is-a.dev/sitemap.xml
+Sitemap: https://ramana-portfolio-actual.vercel.app/sitemap.xml

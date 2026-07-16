@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerFlow AI — Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0b0f;
+  --surface:#111318;
+  --surface2:#181c25;
+  --border:#1f2535;
+  --border2:#2a3045;
+  --accent:#00e5a0;
+  --accent2:#00b37d;
+  --accent-dim:rgba(0,229,160,0.08);
+  --accent-glow:rgba(0,229,160,0.15);
+  --text:#e8eaf0;
+  --text2:#8b90a4;
+  --text3:#565c72;
+  --red:#ff4d6d;
+  --red-dim:rgba(255,77,109,0.1);
+  --amber:#ffb347;
+  --amber-dim:rgba(255,179,71,0.1);
+  --blue:#4d9fff;
+  --blue-dim:rgba(77,159,255,0.1);
+  --font-head:'Syne',sans-serif;
+  --font-body:'DM Sans',sans-serif;
+  --font-mono:'DM Mono',monospace;
+  --radius:10px;
+  --radius-lg:16px;
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px;line-height:1.6}
+
+/* LAYOUT */
+.shell{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:230px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);display:flex;flex-direction:column;overflow-y:auto}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:12px;flex-shrink:0}
+.content{flex:1;overflow-y:auto;padding:28px 28px}
+
+/* SIDEBAR */
+.logo{padding:20px 20px 16px;border-bottom:1px solid var(--border)}
+.logo-text{font-family:var(--font-head);font-size:17px;font-weight:800;letter-spacing:-0.5px}
+.logo-text span{color:var(--accent)}
+.logo-sub{font-size:10px;color:var(--text3);font-family:var(--font-mono);margin-top:2px;letter-spacing:0.05em}
+.nav-section{padding:16px 12px 4px;font-size:9px;font-family:var(--font-mono);color:var(--text3);letter-spacing:0.12em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 16px;margin:1px 8px;border-radius:var(--radius);cursor:pointer;color:var(--text2);font-size:13px;transition:all 0.15s;position:relative}
+.nav-item:hover{background:var(--accent-dim);color:var(--text)}
+.nav-item.active{background:var(--accent-dim);color:var(--accent)}
+.nav-item.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:20px;background:var(--accent);border-radius:0 3px 3px 0}
+.nav-icon{font-size:16px;width:18px;text-align:center}
+.nav-badge{margin-left:auto;background:var(--red);color:#fff;font-size:9px;padding:1px 6px;border-radius:20px;font-family:var(--font-mono)}
+.sidebar-footer{margin-top:auto;padding:16px;border-top:1px solid var(--border)}
+.admin-chip{display:flex;align-items:center;gap:10px}
+.admin-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#00b37d);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#000}
+.admin-info{flex:1}
+.admin-name{font-size:12px;font-weight:500;color:var(--text)}
+.admin-role{font-size:10px;color:var(--accent);font-family:var(--font-mono)}
+
+/* TOPBAR */
+.page-title{font-family:var(--font-head);font-size:16px;font-weight:700;color:var(--text)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.notif-btn{width:34px;height:34px;border-radius:var(--radius);border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;transition:all 0.15s}
+.notif-btn:hover{border-color:var(--accent);color:var(--accent)}
+.notif-dot{position:absolute;top:7px;right:7px;width:6px;height:6px;background:var(--red);border-radius:50%}
+.status-pill{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:20px;border:1px solid rgba(0,229,160,0.3);background:var(--accent-dim);font-size:11px;color:var(--accent);font-family:var(--font-mono)}
+.pulse{width:6px;height:6px;background:var(--accent);border-radius:50%;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.3)}}
+
+/* CARDS */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px}
+.card-sm{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+
+/* STAT CARDS */
+.stat-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;position:relative;overflow:hidden;transition:border-color 0.2s}
+.stat-card:hover{border-color:var(--border2)}
+.stat-card::after{content:'';position:absolute;top:0;right:0;width:80px;height:80px;border-radius:50%;opacity:0.06;transform:translate(20px,-20px)}
+.stat-card.green::after{background:var(--accent)}
+.stat-card.red::after{background:var(--red)}
+.stat-card.blue::after{background:var(--blue)}
+.stat-card.amber::after{background:var(--amber)}
+.stat-label{font-size:11px;color:var(--text3);font-family:var(--font-mono);letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px}
+.stat-value{font-family:var(--font-head);font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat-value.green{color:var(--accent)}
+.stat-value.red{color:var(--red)}
+.stat-value.blue{color:var(--blue)}
+.stat-value.amber{color:var(--amber)}
+.stat-delta{margin-top:8px;font-size:11px;color:var(--text3);display:flex;align-items:center;gap:4px}
+.delta-up{color:var(--accent)}
+.delta-down{color:var(--red)}
+
+/* SECTION HEADERS */
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.section-title{font-family:var(--font-head);font-size:14px;font-weight:700;color:var(--text)}
+.section-sub{font-size:11px;color:var(--text3);margin-top:1px}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--radius-lg);border:1px solid var(--border)}
+table{width:100%;border-collapse:collapse}
+thead th{background:var(--surface2);padding:10px 14px;text-align:left;font-size:10px;font-family:var(--font-mono);color:var(--text3);letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap}
+tbody tr{border-top:1px solid var(--border);transition:background 0.1s}
+tbody tr:hover{background:var(--surface2)}
+tbody td{padding:11px 14px;font-size:13px;color:var(--text);white-space:nowrap}
+.avatar-sm{width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;background:var(--surface2);color:var(--accent);border:1px solid var(--border2);flex-shrink:0}
+.cell-user{display:flex;align-items:center;gap:10px}
+.cell-name{font-weight:500}
+.cell-email{font-size:11px;color:var(--text3)}
+
+/* BADGES */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:11px;font-family:var(--font-mono);font-weight:500}
+.badge-green{background:rgba(0,229,160,0.1);color:var(--accent);border:1px solid rgba(0,229,160,0.2)}
+.badge-red{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2)}
+.badge-amber{background:var(--amber-dim);color:var(--amber);border:1px solid rgba(255,179,71,0.2)}
+.badge-blue{background:var(--blue-dim);color:var(--blue);border:1px solid rgba(77,159,255,0.2)}
+.badge-gray{background:rgba(139,144,164,0.1);color:var(--text2);border:1px solid var(--border2)}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);font-size:12px;font-weight:500;cursor:pointer;border:none;transition:all 0.15s;font-family:var(--font-body)}
+.btn-primary{background:var(--accent);color:#000}
+.btn-primary:hover{background:var(--accent2)}
+.btn-ghost{background:transparent;color:var(--text2);border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--text3);color:var(--text)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:1px solid rgba(255,77,109,0.2)}
+.btn-danger:hover{background:rgba(255,77,109,0.2)}
+.btn-icon{width:30px;height:30px;padding:0;justify-content:center}
+
+/* SEARCH */
+.search-box{position:relative;flex:1;max-width:320px}
+.search-box input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:7px 12px 7px 34px;color:var(--text);font-size:13px;font-family:var(--font-body);outline:none;transition:border-color 0.15s}
+.search-box input:focus{border-color:var(--accent)}
+.search-box input::placeholder{color:var(--text3)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);font-size:14px}
+
+/* MINI CHART BARS */
+.mini-bar-wrap{display:flex;align-items:flex-end;gap:3px;height:40px}
+.mini-bar{flex:1;border-radius:3px 3px 0 0;min-height:4px;transition:all 0.3s}
+
+/* PROGRESS */
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.progress-label{font-size:12px;color:var(--text2);width:80px;flex-shrink:0}
+.progress-bar{flex:1;height:5px;background:var(--surface2);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.5s}
+.progress-pct{font-size:11px;color:var(--text3);width:32px;text-align:right;font-family:var(--font-mono)}
+
+/* TOGGLE */
+.toggle{width:36px;height:20px;border-radius:10px;background:var(--border2);border:none;cursor:pointer;position:relative;transition:background 0.2s;flex-shrink:0}
+.toggle.on{background:var(--accent)}
+.toggle::after{content:'';position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#fff;transition:transform 0.2s}
+.toggle.on::after{transform:translateX(16px)}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+
+/* ALERTS */
+.alert-item{display:flex;align-items:flex-start;gap:12px;padding:12px 16px;border-radius:var(--radius);border:1px solid var(--border);margin-bottom:8px;background:var(--surface)}
+.alert-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.alert-content{flex:1}
+.alert-title{font-size:13px;font-weight:500;color:var(--text)}
+.alert-time{font-size:11px;color:var(--text3);font-family:var(--font-mono)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:100;align-items:center;justify-content:center}
+.modal-overlay.open{display:flex}
+.modal{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:28px;width:480px;max-width:95vw}
+.modal-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.modal-title{font-family:var(--font-head);font-size:16px;font-weight:700}
+.form-group{margin-bottom:16px}
+.form-label{font-size:11px;font-family:var(--font-mono);color:var(--text3);text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;display:block}
+.form-input{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:9px 12px;color:var(--text);font-size:13px;font-family:var(--font-body);outline:none;transition:border-color 0.15s}
+.form-input:focus{border-color:var(--accent)}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%238b90a4'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center}
+
+/* SETTINGS ROWS */
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border)}
+.setting-row:last-child{border-bottom:none}
+.setting-info .setting-name{font-size:13px;font-weight:500;color:var(--text)}
+.setting-info .setting-desc{font-size:11px;color:var(--text3);margin-top:2px}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.page.active{animation:fadeIn 0.2s ease}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* CHART CANVAS AREA */
+.chart-area{height:120px;display:flex;align-items:flex-end;gap:2px;padding:8px 0 0}
+.chart-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
+.chart-bar-wrap{flex:1;display:flex;align-items:flex-end;width:100%}
+.chart-bar{width:100%;border-radius:3px 3px 0 0;transition:all 0.4s}
+.chart-lbl{font-size:9px;color:var(--text3);font-family:var(--font-mono)}
+
+/* ACTION MENU */
+.action-menu{position:relative;display:inline-block}
+.action-dropdown{display:none;position:absolute;right:0;top:calc(100% + 4px);background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius);overflow:hidden;z-index:50;min-width:140px}
+.action-dropdown.open{display:block}
+.action-item{display:block;width:100%;padding:9px 14px;font-size:12px;color:var(--text2);border:none;background:none;cursor:pointer;text-align:left;transition:background 0.1s}
+.action-item:hover{background:var(--border);color:var(--text)}
+.action-item.danger{color:var(--red)}
+</style>
+</head>
+<body>
+
+<div class="shell">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="logo">
+    <div class="logo-text">Career<span>Flow</span> AI</div>
+    <div class="logo-sub">ADMIN CONTROL CENTER</div>
+  </div>
+
+  <div class="nav-section">Overview</div>
+  <div class="nav-item active" onclick="nav('dashboard',this)"><span class="nav-icon">⬡</span> Dashboard</div>
+  <div class="nav-item" onclick="nav('analytics',this)"><span class="nav-icon">◈</span> Analytics</div>
+
+  <div class="nav-section">Users</div>
+  <div class="nav-item" onclick="nav('students',this)"><span class="nav-icon">◉</span> Students <span class="nav-badge">1.2k</span></div>
+  <div class="nav-item" onclick="nav('recruiters',this)"><span class="nav-icon">◈</span> Recruiters</div>
+  <div class="nav-item" onclick="nav('companies',this)"><span class="nav-icon">⬡</span> Companies</div>
+
+  <div class="nav-section">Content</div>
+  <div class="nav-item" onclick="nav('jobs',this)"><span class="nav-icon">◎</span> Jobs</div>
+  <div class="nav-item" onclick="nav('applications',this)"><span class="nav-icon">◇</span> Applications</div>
+
+  <div class="nav-section">Finance</div>
+  <div class="nav-item" onclick="nav('subscriptions',this)"><span class="nav-icon">◈</span> Subscriptions</div>
+  <div class="nav-item" onclick="nav('payments',this)"><span class="nav-icon">◉</span> Payments</div>
+  <div class="nav-item" onclick="nav('ads',this)"><span class="nav-icon">◇</span> Advertisements</div>
+
+  <div class="nav-section">System</div>
+  <div class="nav-item" onclick="nav('ai',this)"><span class="nav-icon">⬡</span> AI Agents</div>
+  <div class="nav-item" onclick="nav('logs',this)"><span class="nav-icon">◎</span> Activity Logs <span class="nav-badge" style="background:var(--amber)">!</span></div>
+  <div class="nav-item" onclick="nav('settings',this)"><span class="nav-icon">◈</span> Settings</div>
+
+  <div class="sidebar-footer">
+    <div class="admin-chip">
+      <div class="admin-avatar">SA</div>
+      <div class="admin-info">
+        <div class="admin-name">Super Admin</div>
+        <div class="admin-role">OWNER</div>
+      </div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div class="page-title" id="page-title">Dashboard</div>
+    <div class="topbar-right">
+      <div class="status-pill"><div class="pulse"></div> All systems live</div>
+      <button class="notif-btn" onclick="showModal('notif-modal')">🔔<div class="notif-dot"></div></button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ═══════════════ DASHBOARD ═══════════════ -->
+    <div class="page active" id="page-dashboard">
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="stat-card green">
+          <div class="stat-label">Total Users</div>
+          <div class="stat-value green" id="s-users">1,284</div>
+          <div class="stat-delta"><span class="delta-up">↑ 12%</span> vs last month</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Active Jobs</div>
+          <div class="stat-value blue">348</div>
+          <div class="stat-delta"><span class="delta-up">↑ 5%</span> vs last month</div>
+        </div>
+        <div class="stat-card amber">
+          <div class="stat-label">Applications</div>
+          <div class="stat-value amber">9,421</div>
+          <div class="stat-delta"><span class="delta-up">↑ 28%</span> vs last month</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Revenue (₹)</div>
+          <div class="stat-value red">84,750</div>
+          <div class="stat-delta"><span class="delta-up">↑ 41%</span> vs last month</div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <!-- Activity chart -->
+        <div class="card">
+          <div class="section-head">
+            <div><div class="section-title">User Signups — Last 7 days</div><div class="section-sub">Daily new registrations</div></div>
+          </div>
+          <div class="chart-area" id="signup-chart"></div>
+        </div>
+
+        <!-- Subscription breakdown -->
+        <div class="card">
+          <div class="section-head">
+            <div><div class="section-title">Subscription Breakdown</div><div class="section-sub">Active plan distribution</div></div>
+          </div>
+          <div style="margin-top:8px">
+            <div class="progress-row"><span class="progress-label">Free</span><div class="progress-bar"><div class="progress-fill" style="width:68%;background:var(--text3)"></div></div><span class="progress-pct">68%</span></div>
+            <div class="progress-row"><span class="progress-label">Premium</span><div class="progress-bar"><div class="progress-fill" style="width:22%;background:var(--accent)"></div></div><span class="progress-pct">22%</span></div>
+            <div class="progress-row"><span class="progress-label">Plus</span><div class="progress-bar"><div class="progress-fill" style="width:8%;background:var(--blue)"></div></div><span class="progress-pct">8%</span></div>
+            <div class="progress-row"><span class="progress-label">Enterprise</span><div class="progress-bar"><div class="progress-fill" style="width:2%;background:var(--amber)"></div></div><span class="progress-pct">2%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-bottom:20px">
+        <!-- Recent users -->
+        <div class="card" style="padding:0">
+          <div class="section-head" style="padding:18px 20px 0">
+            <div><div class="section-title">Recent Signups</div></div>
+            <button class="btn btn-ghost" onclick="nav('students',document.querySelector('[onclick*=students]'))">View all</button>
+          </div>
+          <div class="table-wrap" style="border:none;border-radius:0;margin-top:12px">
+            <table>
+              <thead><tr><th>User</th><th>Role</th><th>Plan</th><th>Status</th><th></th></tr></thead>
+              <tbody id="recent-users-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Alerts -->
+        <div class="card">
+          <div class="section-head">
+            <div><div class="section-title">System Alerts</div></div>
+            <span class="badge badge-red">3 new</span>
+          </div>
+          <div id="alerts-list"></div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="card">
+        <div class="section-head"><div class="section-title">Quick Actions</div></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="showModal('add-user-modal')">＋ Add User</button>
+          <button class="btn btn-ghost" onclick="nav('jobs',document.querySelector('[onclick*=jobs]'))">📋 Review Jobs</button>
+          <button class="btn btn-ghost" onclick="nav('recruiters',document.querySelector('[onclick*=recruiters]'))">✔ Verify Recruiters</button>
+          <button class="btn btn-ghost" onclick="nav('settings',document.querySelector('[onclick*=settings]'))">⚙ Platform Settings</button>
+          <button class="btn btn-danger" onclick="alert('Maintenance mode toggled')">🔒 Maintenance Mode</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ STUDENTS ═══════════════ -->
+    <div class="page" id="page-students">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+        <div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Search students..." oninput="filterTable(this,'students-body')"/></div>
+        <select class="btn btn-ghost form-select" style="height:34px" onchange="filterByPlan(this.value)">
+          <option value="">All Plans</option>
+          <option value="free">Free</option>
+          <option value="premium">Premium</option>
+          <option value="premium_plus">Premium Plus</option>
+        </select>
+        <button class="btn btn-primary" onclick="showModal('add-user-modal')">＋ Add Student</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Phone</th><th>Plan</th><th>ATS Score</th><th>Applications</th><th>Joined</th><th>Status</th><th>Actions</th></tr></thead>
+          <tbody id="students-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ RECRUITERS ═══════════════ -->
+    <div class="page" id="page-recruiters">
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Search recruiters..." oninput="filterTable(this,'recruiters-body')"/></div>
+        <button class="btn btn-primary" onclick="showModal('add-user-modal')">＋ Add Recruiter</button>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Recruiter</th><th>Company</th><th>Jobs Posted</th><th>Verified</th><th>Joined</th><th>Actions</th></tr></thead>
+          <tbody id="recruiters-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ COMPANIES ═══════════════ -->
+    <div class="page" id="page-companies">
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Search companies..."/></div>
+        <button class="btn btn-primary" onclick="showModal('add-company-modal')">＋ Add Company</button>
+      </div>
+      <div class="grid-3" id="companies-grid"></div>
+    </div>
+
+    <!-- ═══════════════ JOBS ═══════════════ -->
+    <div class="page" id="page-jobs">
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Search jobs..." oninput="filterTable(this,'jobs-body')"/></div>
+        <select class="btn btn-ghost form-select" style="height:34px">
+          <option>All Status</option><option>Active</option><option>Paused</option><option>Closed</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Job Title</th><th>Company</th><th>Type</th><th>Applications</th><th>Status</th><th>Posted</th><th>Actions</th></tr></thead>
+          <tbody id="jobs-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ APPLICATIONS ═══════════════ -->
+    <div class="page" id="page-applications">
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-label">Total Applied</div><div class="stat-value" style="color:var(--text)">9,421</div></div>
+        <div class="stat-card green"><div class="stat-label">Shortlisted</div><div class="stat-value green">842</div></div>
+        <div class="stat-card amber"><div class="stat-label">Interviews</div><div class="stat-value amber">214</div></div>
+        <div class="stat-card blue"><div class="stat-label">Offers</div><div class="stat-value blue">67</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Student</th><th>Job</th><th>Company</th><th>Match Score</th><th>Status</th><th>Applied</th></tr></thead>
+          <tbody id="applications-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SUBSCRIPTIONS ═══════════════ -->
+    <div class="page" id="page-subscriptions">
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="stat-card"><div class="stat-label">Free Users</div><div class="stat-value" style="color:var(--text3)">872</div></div>
+        <div class="stat-card green"><div class="stat-label">Premium (₹249)</div><div class="stat-value green">283</div></div>
+        <div class="stat-card blue"><div class="stat-label">Plus (₹499)</div><div class="stat-value blue">103</div></div>
+        <div class="stat-card amber"><div class="stat-label">Enterprise</div><div class="stat-value amber">26</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>User</th><th>Plan</th><th>Amount</th><th>Status</th><th>Renewal</th><th>Actions</th></tr></thead>
+          <tbody id="subs-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ PAYMENTS ═══════════════ -->
+    <div class="page" id="page-payments">
+      <div class="grid-3" style="margin-bottom:20px">
+        <div class="stat-card green"><div class="stat-label">This Month Revenue</div><div class="stat-value green">₹84,750</div></div>
+        <div class="stat-card amber"><div class="stat-label">Pending</div><div class="stat-value amber">₹3,200</div></div>
+        <div class="stat-card red"><div class="stat-label">Refunded</div><div class="stat-value red">₹1,490</div></div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Payment ID</th><th>User</th><th>Amount</th><th>Plan</th><th>Method</th><th>Status</th><th>Date</th></tr></thead>
+          <tbody id="payments-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ ADS ═══════════════ -->
+    <div class="page" id="page-ads">
+      <div style="display:flex;justify-content:space-between;margin-bottom:20px">
+        <div class="section-title">Advertisement Campaigns</div>
+        <button class="btn btn-primary">＋ New Campaign</button>
+      </div>
+      <div class="grid-3" id="ads-grid"></div>
+    </div>
+
+    <!-- ═══════════════ AI AGENTS ═══════════════ -->
+    <div class="page" id="page-ai">
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="section-head"><div class="section-title">AI Agent Controls</div></div>
+          <div id="ai-toggles"></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div class="section-title">Auto-Apply Stats (Today)</div></div>
+          <div class="grid-2" style="gap:12px;margin-top:8px">
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:14px">
+              <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">JOBS SCANNED</div>
+              <div style="font-size:24px;font-weight:800;font-family:var(--font-head);color:var(--accent);margin-top:4px">1,248</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:14px">
+              <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">AUTO APPLIED</div>
+              <div style="font-size:24px;font-weight:800;font-family:var(--font-head);color:var(--blue);margin-top:4px">342</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:14px">
+              <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">RESUMES OPT.</div>
+              <div style="font-size:24px;font-weight:800;font-family:var(--font-head);color:var(--amber);margin-top:4px">89</div>
+            </div>
+            <div style="background:var(--surface2);border-radius:var(--radius);padding:14px">
+              <div style="font-size:10px;color:var(--text3);font-family:var(--font-mono)">AVG MATCH %</div>
+              <div style="font-size:24px;font-weight:800;font-family:var(--font-head);color:var(--red);margin-top:4px">76%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="section-head"><div class="section-title">AI Usage Log</div></div>
+        <div class="table-wrap" style="border:none;margin-top:8px">
+          <table>
+            <thead><tr><th>Time</th><th>Agent</th><th>User</th><th>Action</th><th>Tokens</th><th>Status</th></tr></thead>
+            <tbody id="ai-log-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ LOGS ═══════════════ -->
+    <div class="page" id="page-logs">
+      <div style="display:flex;gap:12px;margin-bottom:20px">
+        <div class="search-box"><span class="search-icon">🔍</span><input type="text" placeholder="Search logs..."/></div>
+        <select class="btn btn-ghost form-select" style="height:34px">
+          <option>All Actions</option><option>Ban</option><option>Verify</option><option>Delete</option><option>Settings</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Time</th><th>Admin</th><th>Action</th><th>Target</th><th>IP</th><th>Details</th></tr></thead>
+          <tbody id="logs-body"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ═══════════════ ANALYTICS ═══════════════ -->
+    <div class="page" id="page-analytics">
+      <div class="grid-2" style="margin-bottom:20px">
+        <div class="card">
+          <div class="section-head"><div class="section-title">User Growth — 30 days</div></div>
+          <div class="chart-area" id="growth-chart" style="height:140px"></div>
+        </div>
+        <div class="card">
+          <div class="section-head"><div class="section-title">Revenue — 30 days</div></div>
+          <div class="chart-area" id="revenue-chart" style="height:140px"></div>
+        </div>
+      </div>
+      <div class="grid-3">
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Top Cities</div>
+          <div id="top-cities"></div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">Top Skills Searched</div>
+          <div id="top-skills"></div>
+        </div>
+        <div class="card">
+          <div class="section-title" style="margin-bottom:14px">App Funnel</div>
+          <div id="app-funnel"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══════════════ SETTINGS ═══════════════ -->
+    <div class="page" id="page-settings">
+      <div class="grid-2">
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:4px">Platform Controls</div>
+            <div style="font-size:11px;color:var(--text3);margin-bottom:16px">Global switches — changes take effect immediately</div>
+            <div id="platform-settings"></div>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px">Plan Limits</div>
+            <div class="form-group"><label class="form-label">Free plan — max applications/month</label><input class="form-input" type="number" value="20"/></div>
+            <div class="form-group"><label class="form-label">Recruiter free job post limit</label><input class="form-input" type="number" value="3"/></div>
+            <div class="form-group"><label class="form-label">Featured job price (₹)</label><input class="form-input" type="number" value="999"/></div>
+            <div class="form-group"><label class="form-label">Auto-apply daily limit (Premium)</label><input class="form-input" type="number" value="10"/></div>
+            <button class="btn btn-primary" onclick="alert('Settings saved!')">Save Changes</button>
+          </div>
+        </div>
+        <div>
+          <div class="card" style="margin-bottom:16px">
+            <div class="section-title" style="margin-bottom:16px">Admin Accounts</div>
+            <div class="table-wrap" style="border:none">
+              <table>
+                <thead><tr><th>Name</th><th>Role</th><th>Last Login</th></tr></thead>
+                <tbody>
+                  <tr><td><div class="cell-user"><div class="avatar-sm">SA</div><div><div class="cell-name">Super Admin</div></div></div></td><td><span class="badge badge-red">OWNER</span></td><td style="color:var(--text3)">Just now</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <button class="btn btn-ghost" style="margin-top:12px" onclick="showModal('add-user-modal')">＋ Add Admin</button>
+          </div>
+          <div class="card">
+            <div class="section-title" style="margin-bottom:16px">Gemini AI Config</div>
+            <div class="form-group"><label class="form-label">Gemini API Key</label><input class="form-input" type="password" value="AIzaSy••••••••••••••••"/></div>
+            <div class="form-group"><label class="form-label">Model</label><select class="form-input form-select"><option>gemini-1.5-flash (Free)</option><option>gemini-1.5-pro</option></select></div>
+            <div class="form-group"><label class="form-label">Max tokens per request</label><input class="form-input" type="number" value="1000"/></div>
+            <button class="btn btn-primary" onclick="alert('AI config saved!')">Save Config</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /shell -->
+
+<!-- MODAL: Add User -->
+<div class="modal-overlay" id="add-user-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Add New User</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('add-user-modal')">✕</button>
+    </div>
+    <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" type="text" placeholder="Rahul Sharma"/></div>
+    <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="rahul@example.com"/></div>
+    <div class="form-group"><label class="form-label">Role</label><select class="form-input form-select"><option value="student">Student</option><option value="recruiter">Recruiter</option><option value="admin">Admin</option></select></div>
+    <div class="form-group"><label class="form-label">Plan</label><select class="form-input form-select"><option>Free</option><option>Premium</option><option>Premium Plus</option><option>Enterprise</option></select></div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px">
+      <button class="btn btn-ghost" onclick="closeModal('add-user-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="addUser()">Create User</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Notifications -->
+<div class="modal-overlay" id="notif-modal">
+  <div class="modal">
+    <div class="modal-head">
+      <div class="modal-title">Notifications</div>
+      <button class="btn btn-ghost btn-icon" onclick="closeModal('notif-modal')">✕</button>
+    </div>
+    <div id="notif-list"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// DATA
+// ══════════════════════════════════
+const students = [
+  {name:'Priya Sharma',email:'priya@gmail.com',phone:'9876543210',plan:'premium',ats:82,apps:14,joined:'2 days ago',active:true},
+  {name:'Rahul Verma',email:'rahul@gmail.com',phone:'9812345678',plan:'free',ats:61,apps:3,joined:'5 days ago',active:true},
+  {name:'Sneha Patel',email:'sneha@gmail.com',phone:'9898765432',plan:'premium_plus',ats:91,apps:27,joined:'1 week ago',active:true},
+  {name:'Amit Kumar',email:'amit@gmail.com',phone:'9765432100',plan:'free',ats:44,apps:1,joined:'2 weeks ago',active:false},
+  {name:'Divya Nair',email:'divya@gmail.com',phone:'9654321098',plan:'premium',ats:74,apps:9,joined:'3 weeks ago',active:true},
+  {name:'Karan Singh',email:'karan@gmail.com',phone:'9543210987',plan:'free',ats:55,apps:6,joined:'1 month ago',active:true},
+];
+
+const recruiters = [
+  {name:'Meera Joshi',email:'meera@techco.com',company:'TechCorp India',jobs:12,verified:true,joined:'1 month ago'},
+  {name:'Rohan Das',email:'rohan@startup.io',company:'StartupXYZ',jobs:4,verified:false,joined:'3 days ago'},
+  {name:'Ananya Sen',email:'ananya@infosys.com',company:'Infosys Ltd',jobs:28,verified:true,joined:'3 months ago'},
+  {name:'Vikram Rao',email:'vikram@wipro.com',company:'Wipro Technologies',jobs:19,verified:true,joined:'2 months ago'},
+];
+
+const jobs = [
+  {title:'Senior React Developer',company:'TechCorp India',type:'Full Time',apps:47,status:'active',posted:'2 days ago'},
+  {title:'Data Scientist',company:'StartupXYZ',type:'Full Time',apps:23,status:'active',posted:'4 days ago'},
+  {title:'Backend Engineer (Go)',company:'Infosys Ltd',type:'Contract',apps:61,status:'active',posted:'1 week ago'},
+  {title:'Product Manager',company:'Wipro Technologies',type:'Full Time',apps:18,status:'paused',posted:'2 weeks ago'},
+  {title:'UI/UX Designer',company:'TechCorp India',type:'Internship',apps:94,status:'active',posted:'3 days ago'},
+  {title:'DevOps Engineer',company:'Infosys Ltd',type:'Full Time',apps:31,status:'closed',posted:'1 month ago'},
+];
+
+const applications = [
+  {student:'Priya Sharma',job:'Senior React Developer',company:'TechCorp India',match:89,status:'shortlisted',date:'2 days ago'},
+  {student:'Sneha Patel',job:'Data Scientist',company:'StartupXYZ',match:94,status:'interview',date:'3 days ago'},
+  {student:'Rahul Verma',job:'Backend Engineer (Go)',company:'Infosys Ltd',match:62,status:'applied',date:'4 days ago'},
+  {student:'Karan Singh',job:'UI/UX Designer',company:'TechCorp India',match:77,status:'applied',date:'5 days ago'},
+  {student:'Divya Nair',job:'Product Manager',company:'Wipro Technologies',match:85,status:'selected',date:'1 week ago'},
+];
+
+const subs = [
+  {user:'Priya Sharma',plan:'premium',amount:'₹249',status:'active',renewal:'15 Jul 2026'},
+  {user:'Sneha Patel',plan:'premium_plus',amount:'₹499',status:'active',renewal:'22 Jul 2026'},
+  {user:'Divya Nair',plan:'premium',amount:'₹249',status:'active',renewal:'3 Aug 2026'},
+  {user:'Karan Singh',plan:'premium',amount:'₹249',status:'failed',renewal:'—'},
+];
+
+const payments = [
+  {id:'pay_Qx8k2',user:'Priya Sharma',amount:'₹249',plan:'Premium',method:'UPI',status:'success',date:'15 Jun 2026'},
+  {id:'pay_Qx7m1',user:'Sneha Patel',amount:'₹499',plan:'Premium Plus',method:'Card',status:'success',date:'14 Jun 2026'},
+  {id:'pay_Qx6p0',user:'Karan Singh',amount:'₹249',plan:'Premium',method:'UPI',status:'failed',date:'13 Jun 2026'},
+  {id:'pay_Qx5n9',user:'Divya Nair',amount:'₹249',plan:'Premium',method:'PhonePe',status:'success',date:'10 Jun 2026'},
+];
+
+const companies_data = [
+  {name:'TechCorp India',industry:'Software',size:'500-1000',jobs:12,verified:true},
+  {name:'StartupXYZ',industry:'Fintech',size:'10-50',jobs:4,verified:false},
+  {name:'Infosys Ltd',industry:'IT Services',size:'10000+',jobs:28,verified:true},
+  {name:'Wipro Technologies',industry:'IT Services',size:'10000+',jobs:19,verified:true},
+  {name:'Zomato',industry:'Food Tech',size:'5000+',jobs:7,verified:true},
+  {name:'Razorpay',industry:'Fintech',size:'1000-5000',jobs:11,verified:false},
+];
+
+const aiAgents = [
+  {name:'Resume Analyzer',desc:'Scans uploaded resumes and generates ATS score',on:true},
+  {name:'Job Matcher',desc:'Matches student profiles to available jobs',on:true},
+  {name:'Auto Apply Agent',desc:'Automatically applies to matching jobs for Premium+ users',on:true},
+  {name:'Career Coach',desc:'AI chat assistant for career guidance',on:true},
+  {name:'Cover Letter Gen',desc:'Generates personalized cover letters',on:false},
+  {name:'Interview Prep AI',desc:'Generates interview questions based on job',on:true},
+];
+
+const platformSettings = [
+  {key:'Registration Open',desc:'Allow new user signups',on:true},
+  {key:'Auto Apply Enabled',desc:'Allow Premium+ users to use auto-apply',on:true},
+  {key:'Recruiter Job Posts',desc:'Allow recruiters to post new jobs',on:true},
+  {key:'Maintenance Mode',desc:'Show maintenance page to all users',on:false},
+  {key:'Email Notifications',desc:'Send system emails to users',on:true},
+];
+
+const aiLogs = [
+  {time:'2m ago',agent:'Resume Analyzer',user:'Priya Sharma',action:'ATS Score computed',tokens:412,status:'success'},
+  {time:'5m ago',agent:'Auto Apply',user:'Sneha Patel',action:'Applied to 3 jobs',tokens:890,status:'success'},
+  {time:'12m ago',agent:'Job Matcher',user:'Rahul Verma',action:'Found 14 matches',tokens:234,status:'success'},
+  {time:'18m ago',agent:'Cover Letter Gen',user:'Divya Nair',action:'Generated cover letter',tokens:650,status:'failed'},
+  {time:'25m ago',agent:'Career Coach',user:'Karan Singh',action:'Chat session (8 turns)',tokens:1240,status:'success'},
+];
+
+const adminLogs = [
+  {time:'Just now',admin:'Super Admin',action:'VERIFY',target:'Ananya Sen (Recruiter)',ip:'103.x.x.x',detail:'Recruiter verified'},
+  {time:'10m ago',admin:'Super Admin',action:'BAN',target:'Spam User #4821',ip:'103.x.x.x',detail:'Spam applications'},
+  {time:'1h ago',admin:'Super Admin',action:'SETTINGS',target:'Platform',ip:'103.x.x.x',detail:'Changed apply limit to 20'},
+  {time:'3h ago',admin:'Super Admin',action:'DELETE',target:'Job #382',ip:'103.x.x.x',detail:'Duplicate listing'},
+];
+
+const alerts = [
+  {color:'var(--red)',title:'Spam detected — 4 accounts flagged for mass applications',time:'10 min ago'},
+  {color:'var(--amber)',title:'Recruiter "StartupXYZ" pending verification for 3 days',time:'3 days ago'},
+  {color:'var(--blue)',title:'New company registration: Razorpay — awaiting approval',time:'5 hours ago'},
+];
+
+const notifs = [
+  {color:'var(--red)',title:'Payment failed for Karan Singh (Premium renewal)',time:'30m ago'},
+  {color:'var(--accent)',title:'1,000 users milestone reached 🎉',time:'2h ago'},
+  {color:'var(--amber)',title:'AI agent "Cover Letter Gen" had 3 failures',time:'5h ago'},
+  {color:'var(--blue)',title:'New company: Razorpay registered',time:'5h ago'},
+];
+
+// ══════════════════════════════════
+// RENDER HELPERS
+// ══════════════════════════════════
+function planBadge(p){
+  if(p==='premium_plus') return '<span class="badge badge-blue">Plus</span>';
+  if(p==='premium') return '<span class="badge badge-green">Premium</span>';
+  if(p==='enterprise') return '<span class="badge badge-amber">Enterprise</span>';
+  return '<span class="badge badge-gray">Free</span>';
+}
+function statusBadge(s){
+  const m={active:'green',shortlisted:'green',selected:'green',applied:'gray',viewed:'blue',interview:'blue',assessment:'amber',rejected:'red',failed:'red',paused:'amber',closed:'red',success:'green',pending:'amber'};
+  return `<span class="badge badge-${m[s]||'gray'}">${s}</span>`;
+}
+function initials(n){return n.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase()}
+
+function actionMenu(id,items){
+  return `<div class="action-menu">
+    <button class="btn btn-ghost btn-icon" onclick="toggleMenu('menu-${id}')">⋯</button>
+    <div class="action-dropdown" id="menu-${id}">${items.map(i=>`<button class="action-item${i.danger?' danger':''}" onclick="${i.fn}">${i.label}</button>`).join('')}</div>
+  </div>`;
+}
+
+// ══════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════
+function renderAll(){
+  renderStudents(); renderRecruiters(); renderJobs();
+  renderApplications(); renderSubs(); renderPayments();
+  renderCompanies(); renderAds(); renderAIAgents();
+  renderPlatformSettings(); renderLogs(); renderAILogs();
+  renderAlerts(); renderNotifs(); renderCharts();
+  renderAnalytics();
+}
+
+function renderStudents(){
+  const b=document.getElementById('students-body');
+  b.innerHTML=students.map((s,i)=>`<tr>
+    <td><div class="cell-user"><div class="avatar-sm">${initials(s.name)}</div><div><div class="cell-name">${s.name}</div><div class="cell-email">${s.email}</div></div></div></td>
+    <td style="color:var(--text3);font-family:var(--font-mono)">${s.phone}</td>
+    <td>${planBadge(s.plan)}</td>
+    <td><span style="color:${s.ats>=80?'var(--accent)':s.ats>=60?'var(--amber)':'var(--red)'};font-family:var(--font-mono);font-weight:600">${s.ats}</span></td>
+    <td style="color:var(--text2)">${s.apps}</td>
+    <td style="color:var(--text3)">${s.joined}</td>
+    <td>${s.active?'<span class="badge badge-green">Active</span>':'<span class="badge badge-red">Banned</span>'}</td>
+    <td>${actionMenu('s'+i,[
+      {label:'View Profile',fn:`alert('View profile: ${s.name}')`},
+      {label:'Change Plan',fn:`alert('Change plan: ${s.name}')`},
+      {label:s.active?'Ban User':'Unban',fn:`toggleBan(${i})`,danger:s.active}
+    ])}</td>
+  </tr>`).join('');
+}
+
+function renderRecruiters(){
+  const b=document.getElementById('recruiters-body');
+  b.innerHTML=recruiters.map((r,i)=>`<tr>
+    <td><div class="cell-user"><div class="avatar-sm">${initials(r.name)}</div><div><div class="cell-name">${r.name}</div><div class="cell-email">${r.email}</div></div></div></td>
+    <td style="color:var(--text2)">${r.company}</td>
+    <td><span style="font-family:var(--font-mono);color:var(--blue)">${r.jobs}</span></td>
+    <td>${r.verified?'<span class="badge badge-green">✓ Verified</span>':'<span class="badge badge-amber">Pending</span>'}</td>
+    <td style="color:var(--text3)">${r.joined}</td>
+    <td>${actionMenu('r'+i,[
+      {label:r.verified?'Unverify':'Verify',fn:`verifyRecruiter(${i})`},
+      {label:'View Jobs',fn:`alert('View jobs for ${r.name}')`},
+      {label:'Remove',fn:`alert('Remove recruiter')`,danger:true}
+    ])}</td>
+  </tr>`).join('');
+}
+
+function renderJobs(){
+  const b=document.getElementById('jobs-body');
+  b.innerHTML=jobs.map((j,i)=>`<tr>
+    <td style="font-weight:500">${j.title}</td>
+    <td style="color:var(--text2)">${j.company}</td>
+    <td><span class="badge badge-gray">${j.type}</span></td>
+    <td><span style="font-family:var(--font-mono);color:var(--blue)">${j.apps}</span></td>
+    <td>${statusBadge(j.status)}</td>
+    <td style="color:var(--text3)">${j.posted}</td>
+    <td>${actionMenu('j'+i,[
+      {label:'View Applicants',fn:`alert('View applicants for: ${j.title}')`},
+      {label:j.status==='active'?'Pause':'Activate',fn:`toggleJob(${i})`},
+      {label:'Feature Job',fn:`alert('Featured job!')`},
+      {label:'Remove',fn:`alert('Job removed')`,danger:true}
+    ])}</td>
+  </tr>`).join('');
+}
+
+function renderApplications(){
+  const b=document.getElementById('applications-body');
+  b.innerHTML=applications.map(a=>`<tr>
+    <td><div class="cell-user"><div class="avatar-sm">${initials(a.student)}</div><span style="margin-left:8px">${a.student}</span></div></td>
+    <td style="color:var(--text2)">${a.job}</td>
+    <td style="color:var(--text3)">${a.company}</td>
+    <td><span style="font-family:var(--font-mono);color:${a.match>=80?'var(--accent)':a.match>=60?'var(--amber)':'var(--red)'}">${a.match}%</span></td>
+    <td>${statusBadge(a.status)}</td>
+    <td style="color:var(--text3)">${a.date}</td>
+  </tr>`).join('');
+}
+
+function renderSubs(){
+  const b=document.getElementById('subs-body');
+  b.innerHTML=subs.map((s,i)=>`<tr>
+    <td><div class="cell-user"><div class="avatar-sm">${initials(s.user)}</div><span style="margin-left:8px">${s.user}</span></div></td>
+    <td>${planBadge(s.plan)}</td>
+    <td style="font-family:var(--font-mono);color:var(--accent)">${s.amount}</td>
+    <td>${statusBadge(s.status)}</td>
+    <td style="color:var(--text3);font-family:var(--font-mono)">${s.renewal}</td>
+    <td>${actionMenu('sub'+i,[
+      {label:'Extend Plan',fn:`alert('Extend plan for ${s.user}')`},
+      {label:'Cancel Plan',fn:`alert('Cancelled')`,danger:true}
+    ])}</td>
+  </tr>`).join('');
+}
+
+function renderPayments(){
+  const b=document.getElementById('payments-body');
+  b.innerHTML=payments.map(p=>`<tr>
+    <td style="font-family:var(--font-mono);color:var(--text3);font-size:11px">${p.id}</td>
+    <td>${p.user}</td>
+    <td style="font-family:var(--font-mono);color:var(--accent)">${p.amount}</td>
+    <td>${planBadge(p.plan.toLowerCase().replace(' ','_'))}</td>
+    <td><span class="badge badge-gray">${p.method}</span></td>
+    <td>${statusBadge(p.status)}</td>
+    <td style="color:var(--text3)">${p.date}</td>
+  </tr>`).join('');
+}
+
+function renderCompanies(){
+  const g=document.getElementById('companies-grid');
+  g.innerHTML=companies_data.map((c,i)=>`<div class="card-sm" style="cursor:pointer" onclick="alert('View ${c.name}')">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+      <div class="avatar-sm" style="width:40px;height:40px;font-size:14px;border-radius:10px">${initials(c.name)}</div>
+      ${c.verified?'<span class="badge badge-green">✓ Verified</span>':'<span class="badge badge-amber">Pending</span>'}
+    </div>
+    <div style="font-weight:600;font-size:14px;margin-bottom:2px">${c.name}</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">${c.industry} · ${c.size} employees</div>
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:12px;color:var(--text2)">${c.jobs} active jobs</span>
+      ${!c.verified?`<button class="btn btn-primary" style="padding:4px 10px;font-size:11px" onclick="event.stopPropagation();verifyCompany(${i})">Verify</button>`:''}
+    </div>
+  </div>`).join('');
+}
+
+function renderAds(){
+  const adData=[
+    {name:'Upskill Pro Banner',advertiser:'UpskillPro',placement:'Sidebar',impressions:'12,400',clicks:'342',ctr:'2.7%',active:true},
+    {name:'LearnX Course Promo',advertiser:'LearnX',placement:'Feed',impressions:'8,900',clicks:'201',ctr:'2.3%',active:true},
+    {name:'CertifyNow Ad',advertiser:'CertifyNow',placement:'Banner',impressions:'3,100',clicks:'44',ctr:'1.4%',active:false},
+  ];
+  document.getElementById('ads-grid').innerHTML=adData.map(a=>`<div class="card-sm">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px">
+      <span style="font-weight:600">${a.name}</span>
+      ${a.active?'<span class="badge badge-green">Live</span>':'<span class="badge badge-gray">Paused</span>'}
+    </div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:12px">${a.advertiser} · ${a.placement}</div>
+    <div class="grid-3" style="gap:8px;margin-bottom:12px">
+      <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:13px;color:var(--text)">${a.impressions}</div><div style="font-size:9px;color:var(--text3)">VIEWS</div></div>
+      <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:13px;color:var(--accent)">${a.clicks}</div><div style="font-size:9px;color:var(--text3)">CLICKS</div></div>
+      <div style="text-align:center"><div style="font-family:var(--font-mono);font-size:13px;color:var(--blue)">${a.ctr}</div><div style="font-size:9px;color:var(--text3)">CTR</div></div>
+    </div>
+    <button class="btn btn-ghost" style="width:100%;font-size:11px" onclick="alert('Toggle ad')">Toggle</button>
+  </div>`).join('');
+}
+
+function renderAIAgents(){
+  document.getElementById('ai-toggles').innerHTML=aiAgents.map((a,i)=>`<div class="setting-row">
+    <div class="setting-info"><div class="setting-name">${a.name}</div><div class="setting-desc">${a.desc}</div></div>
+    <button class="toggle ${a.on?'on':''}" id="ai-toggle-${i}" onclick="toggleAI(${i})"></button>
+  </div>`).join('');
+}
+
+function renderPlatformSettings(){
+  document.getElementById('platform-settings').innerHTML=platformSettings.map((s,i)=>`<div class="setting-row">
+    <div class="setting-info"><div class="setting-name">${s.key}</div><div class="setting-desc">${s.desc}</div></div>
+    <button class="toggle ${s.on?'on':''}" id="ps-toggle-${i}" onclick="togglePS(${i})"></button>
+  </div>`).join('');
+}
+
+function renderLogs(){
+  document.getElementById('logs-body').innerHTML=adminLogs.map(l=>`<tr>
+    <td style="color:var(--text3);font-family:var(--font-mono)">${l.time}</td>
+    <td>${l.admin}</td>
+    <td><span class="badge ${l.action==='BAN'||l.action==='DELETE'?'badge-red':l.action==='VERIFY'?'badge-green':'badge-amber'}">${l.action}</span></td>
+    <td style="color:var(--text2)">${l.target}</td>
+    <td style="font-family:var(--font-mono);font-size:11px;color:var(--text3)">${l.ip}</td>
+    <td style="color:var(--text3)">${l.detail}</td>
+  </tr>`).join('');
+}
+
+function renderAILogs(){
+  document.getElementById('ai-log-body').innerHTML=aiLogs.map(l=>`<tr>
+    <td style="color:var(--text3);font-family:var(--font-mono)">${l.time}</td>
+    <td><span class="badge badge-blue">${l.agent}</span></td>
+    <td style="color:var(--text2)">${l.user}</td>
+    <td style="color:var(--text)">${l.action}</td>
+    <td style="font-family:var(--font-mono);color:var(--text3)">${l.tokens}</td>
+    <td>${statusBadge(l.status)}</td>
+  </tr>`).join('');
+}
+
+function renderAlerts(){
+  document.getElementById('alerts-list').innerHTML=alerts.map(a=>`<div class="alert-item">
+    <div class="alert-dot" style="background:${a.color}"></div>
+    <div class="alert-content"><div class="alert-title">${a.title}</div><div class="alert-time">${a.time}</div></div>
+  </div>`).join('');
+}
+
+function renderNotifs(){
+  document.getElementById('notif-list').innerHTML=notifs.map(n=>`<div class="alert-item">
+    <div class="alert-dot" style="background:${n.color}"></div>
+    <div class="alert-content"><div class="alert-title">${n.title}</div><div class="alert-time">${n.time}</div></div>
+  </div>`).join('');
+}
+
+function renderRecentUsers(){
+  const b=document.getElementById('recent-users-body');
+  b.innerHTML=students.slice(0,5).map(s=>`<tr>
+    <td><div class="cell-user"><div class="avatar-sm">${initials(s.name)}</div><div><div class="cell-name">${s.name}</div></div></div></td>
+    <td><span class="badge badge-blue">Student</span></td>
+    <td>${planBadge(s.plan)}</td>
+    <td>${s.active?'<span class="badge badge-green">Active</span>':'<span class="badge badge-red">Banned</span>'}</td>
+    <td><button class="btn btn-ghost" style="padding:3px 10px;font-size:11px" onclick="alert('View ${s.name}')">View</button></td>
+  </tr>`).join('');
+  renderAlerts();
+}
+
+function renderCharts(){
+  const signupData=[34,52,28,71,45,89,63];
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const max=Math.max(...signupData);
+  document.getElementById('signup-chart').innerHTML=signupData.map((v,i)=>`<div class="chart-col">
+    <div class="chart-bar-wrap"><div class="chart-bar" style="height:${Math.round((v/max)*100)}%;background:${i===5?'var(--accent)':'var(--border2)'}"></div></div>
+    <div class="chart-lbl">${days[i]}</div>
+  </div>`).join('');
+}
+
+function renderAnalytics(){
+  const growthData=[12,19,14,28,32,41,38,55,49,62,58,71,66,80,74,88,82,95,90,104,98,112,108,120,114,128,122,135,130,142];
+  const revenueData=[2100,3400,2800,5200,4700,6800,6200,8400,7800,9600,9000,10800,10200,12000,11400,13200,12600,14400,13800,16200,15600,17400,16800,19200,18600,21000,20400,22800,22200,24000];
+  const mc=Math.max(...growthData), mr=Math.max(...revenueData);
+  document.getElementById('growth-chart').innerHTML=growthData.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <div style="flex:1;display:flex;align-items:flex-end;width:100%"><div style="width:100%;height:${Math.round((v/mc)*100)}%;background:var(--accent);border-radius:2px 2px 0 0;opacity:${0.4+0.6*(v/mc)}"></div></div>
+    ${i%5===0?`<div style="font-size:8px;color:var(--text3);font-family:var(--font-mono)">d${i+1}</div>`:'<div style="height:12px"></div>'}
+  </div>`).join('');
+  document.getElementById('revenue-chart').innerHTML=revenueData.map((v,i)=>`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px">
+    <div style="flex:1;display:flex;align-items:flex-end;width:100%"><div style="width:100%;height:${Math.round((v/mr)*100)}%;background:var(--red);border-radius:2px 2px 0 0;opacity:${0.4+0.6*(v/mr)}"></div></div>
+    ${i%5===0?`<div style="font-size:8px;color:var(--text3);font-family:var(--font-mono)">d${i+1}</div>`:'<div style="height:12px"></div>'}
+  </div>`).join('');
+
+  const cities=[{name:'Mumbai',pct:28},{name:'Bangalore',pct:24},{name:'Delhi',pct:19},{name:'Hyderabad',pct:14},{name:'Pune',pct:9},{name:'Chennai',pct:6}];
+  document.getElementById('top-cities').innerHTML=cities.map(c=>`<div class="progress-row"><span class="progress-label">${c.name}</span><div class="progress-bar"><div class="progress-fill" style="width:${c.pct*3}%;background:var(--accent)"></div></div><span class="progress-pct">${c.pct}%</span></div>`).join('');
+
+  const skills=[{name:'React',pct:82},{name:'Python',pct:74},{name:'Node.js',pct:61},{name:'Java',pct:55},{name:'SQL',pct:48}];
+  document.getElementById('top-skills').innerHTML=skills.map(s=>`<div class="progress-row"><span class="progress-label">${s.name}</span><div class="progress-bar"><div class="progress-fill" style="width:${s.pct}%;background:var(--blue)"></div></div><span class="progress-pct">${s.pct}%</span></div>`).join('');
+
+  const funnel=[{name:'Viewed',n:9421},{name:'Applied',n:7834},{name:'Shortlisted',n:842},{name:'Interview',n:214},{name:'Offer',n:67}];
+  document.getElementById('app-funnel').innerHTML=funnel.map((f,i)=>`<div style="margin-bottom:8px">
+    <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span style="color:var(--text2)">${f.name}</span><span style="font-family:var(--font-mono);color:var(--text)">${f.n.toLocaleString()}</span></div>
+    <div style="height:6px;background:var(--surface2);border-radius:3px"><div style="height:100%;width:${(f.n/9421*100).toFixed(0)}%;background:linear-gradient(90deg,var(--accent),var(--blue));border-radius:3px"></div></div>
+  </div>`).join('');
+}
+
+// ══════════════════════════════════
+// ACTIONS
+// ══════════════════════════════════
+function toggleBan(i){
+  students[i].active=!students[i].active;
+  renderStudents();
+  adminLogs.unshift({time:'Just now',admin:'Super Admin',action:students[i].active?'UNBAN':'BAN',target:students[i].name,ip:'103.x.x.x',detail:students[i].active?'Account restored':'Banned by admin'});
+  renderLogs();
+}
+function verifyRecruiter(i){
+  recruiters[i].verified=!recruiters[i].verified;
+  renderRecruiters();
+}
+function verifyCompany(i){
+  companies_data[i].verified=true;
+  renderCompanies();
+}
+function toggleJob(i){
+  jobs[i].status=jobs[i].status==='active'?'paused':'active';
+  renderJobs();
+}
+function toggleAI(i){
+  aiAgents[i].on=!aiAgents[i].on;
+  const t=document.getElementById('ai-toggle-'+i);
+  t.classList.toggle('on',aiAgents[i].on);
+}
+function togglePS(i){
+  platformSettings[i].on=!platformSettings[i].on;
+  const t=document.getElementById('ps-toggle-'+i);
+  t.classList.toggle('on',platformSettings[i].on);
+}
+function addUser(){
+  alert('User created! In production this calls Supabase Admin API.');
+  closeModal('add-user-modal');
+}
+function filterTable(input, tbodyId){
+  const q=input.value.toLowerCase();
+  document.getElementById(tbodyId).querySelectorAll('tr').forEach(r=>{
+    r.style.display=r.innerText.toLowerCase().includes(q)?'':'none';
+  });
+}
+function filterByPlan(plan){
+  document.getElementById('students-body').querySelectorAll('tr').forEach(r=>{
+    if(!plan){r.style.display='';return;}
+    r.style.display=r.innerText.toLowerCase().includes(plan.replace('_',' '))?'':'none';
+  });
+}
+
+// ══════════════════════════════════
+// NAV & MODALS
+// ══════════════════════════════════
+function nav(page, el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const titles={dashboard:'Dashboard',analytics:'Analytics',students:'Students',recruiters:'Recruiters',companies:'Companies',jobs:'Jobs',applications:'Applications',subscriptions:'Subscriptions',payments:'Payments',ads:'Advertisements',ai:'AI Agents',logs:'Activity Logs',settings:'Settings'};
+  document.getElementById('page-title').textContent=titles[page]||page;
+}
+function showModal(id){document.getElementById(id).classList.add('open')}
+function closeModal(id){document.getElementById(id).classList.remove('open')}
+document.querySelectorAll('.modal-overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open')}));
+function toggleMenu(id){
+  document.querySelectorAll('.action-dropdown').forEach(d=>{if(d.id!==id)d.classList.remove('open')});
+  document.getElementById(id).classList.toggle('open');
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.action-menu'))document.querySelectorAll('.action-dropdown').forEach(d=>d.classList.remove('open'))});
+
+// ══════════════════════════════════
+// INIT
+// ══════════════════════════════════
+renderAll();
+renderRecentUsers();
+
+// Simulate live counter tick
+setInterval(()=>{
+  const el=document.getElementById('s-users');
+  if(el&&Math.random()<0.3){
+    const cur=parseInt(el.textContent.replace(',',''));
+    el.textContent=(cur+1).toLocaleString();
+  }
+},8000);
+</script>
+</body>
+</html>

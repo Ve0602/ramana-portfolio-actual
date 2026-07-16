@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerFlow AI — Resume Builder & ATS Optimizer</title>
+<link href="https://fonts.googleapis.com/css2?family=Cabinet+Grotesk:wght@400;500;600;700;800&family=Satoshi:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#f5f4f0;--white:#fff;--surface:#eeecea;--border:#e2dfd6;--border2:#ccc9bc;
+  --dark:#0f172a;--dark2:#1e293b;--green:#059669;--green-dim:rgba(5,150,105,0.08);
+  --green-bright:#10b981;--red:#dc2626;--red-dim:rgba(220,38,38,0.08);
+  --amber:#d97706;--amber-dim:rgba(217,119,6,0.08);--blue:#2563eb;--blue-dim:rgba(37,99,235,0.08);
+  --purple:#7c3aed;--purple-dim:rgba(124,58,237,0.08);
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --font-head:'Cabinet Grotesk',sans-serif;--font-body:'Satoshi',sans-serif;--font-mono:'DM Mono',monospace;
+  --radius:10px;--radius-lg:16px;--shadow:0 1px 3px rgba(0,0,0,0.06),0 4px 16px rgba(0,0,0,0.05);
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.12);
+}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:14px}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* TOP NAV */
+.topnav{height:54px;background:var(--dark);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:30}
+.logo{font-family:var(--font-head);font-size:16px;font-weight:800;color:#fff;letter-spacing:-0.4px}
+.logo span{color:#6ee7b7}
+.nav-pills{display:flex;gap:4px;margin-left:16px}
+.npill{padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;color:rgba(255,255,255,0.5);transition:all 0.15s}
+.npill:hover{color:#fff;background:rgba(255,255,255,0.08)}
+.npill.active{background:rgba(255,255,255,0.12);color:#fff}
+.nav-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.ats-pill{display:flex;align-items:center;gap:6px;padding:5px 14px;border-radius:20px;background:rgba(16,185,129,0.15);border:1px solid rgba(16,185,129,0.3);font-size:12px;font-weight:700;color:#6ee7b7;font-family:var(--font-mono)}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer;border:none;transition:all 0.15s;font-family:var(--font-body)}
+.btn-white{background:#fff;color:var(--dark)}
+.btn-white:hover{background:#f0f0f0}
+.btn-outline{background:transparent;color:rgba(255,255,255,0.7);border:1px solid rgba(255,255,255,0.2)}
+.btn-outline:hover{background:rgba(255,255,255,0.08);color:#fff}
+.btn-green{background:var(--green-bright);color:#fff}
+.btn-green:hover{background:var(--green)}
+
+/* MAIN SHELL */
+.shell{display:flex;height:calc(100vh - 54px);overflow:hidden}
+
+/* LEFT PANEL — EDITOR */
+.editor-panel{width:380px;flex-shrink:0;background:var(--white);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.editor-tabs{display:flex;border-bottom:1px solid var(--border);background:var(--surface)}
+.etab{flex:1;padding:10px 8px;text-align:center;font-size:11px;font-weight:700;cursor:pointer;color:var(--text3);border-bottom:2px solid transparent;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.05em}
+.etab:hover{color:var(--text2)}
+.etab.active{color:var(--dark);border-bottom-color:var(--dark);background:var(--white)}
+.etab-body{display:none;padding:16px;flex:1}
+.etab-body.active{display:block;animation:fadeUp 0.2s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* EDITOR FORMS */
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:4px}
+.form-input{width:100%;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--radius);padding:9px 12px;color:var(--text);font-size:13px;font-family:var(--font-body);outline:none;transition:border-color 0.2s}
+.form-input:focus{border-color:var(--dark);background:var(--white)}
+.form-textarea{resize:vertical;min-height:80px;line-height:1.6}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%2394a3b8'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 10px center}
+.section-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;margin-top:4px}
+.section-title{font-family:var(--font-head);font-size:13px;font-weight:800;letter-spacing:-0.2px}
+.add-btn{font-size:11px;padding:4px 10px;border-radius:var(--radius);background:var(--dark);color:#fff;border:none;cursor:pointer;font-family:var(--font-body);font-weight:600}
+.item-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:12px;margin-bottom:8px;position:relative}
+.item-card-title{font-size:13px;font-weight:700;margin-bottom:1px}
+.item-card-sub{font-size:11px;color:var(--text3)}
+.item-del{position:absolute;top:10px;right:10px;background:none;border:none;color:var(--text3);cursor:pointer;font-size:14px;transition:color 0.15s}
+.item-del:hover{color:var(--red)}
+.skill-tag-wrap{display:flex;flex-wrap:wrap;gap:5px;padding:8px;border:1.5px solid var(--border);border-radius:var(--radius);background:var(--bg);min-height:44px;cursor:text}
+.skill-tag-wrap:focus-within{border-color:var(--dark);background:var(--white)}
+.stag{display:inline-flex;align-items:center;gap:3px;padding:3px 9px;background:var(--dark);color:#fff;border-radius:20px;font-size:11px;font-weight:600}
+.stag button{background:none;border:none;color:rgba(255,255,255,0.6);cursor:pointer;font-size:13px;line-height:1;padding:0}
+.stag button:hover{color:#fff}
+.stag-input{border:none;outline:none;background:transparent;font-size:12px;font-family:var(--font-body);color:var(--text);flex:1;min-width:70px}
+
+/* CENTER — RESUME PREVIEW */
+.preview-panel{flex:1;background:var(--surface);overflow-y:auto;display:flex;flex-direction:column;align-items:center;padding:28px 20px}
+.resume-sheet{width:680px;max-width:100%;background:#fff;border-radius:4px;box-shadow:var(--shadow-lg);overflow:hidden;font-family:'Satoshi',sans-serif;color:#1a1a1a;font-size:13px;line-height:1.6;position:relative}
+/* Resume header */
+.r-header{background:var(--dark);padding:28px 32px;color:#fff}
+.r-name{font-family:var(--font-head);font-size:28px;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px}
+.r-title{font-size:14px;color:rgba(255,255,255,0.7);margin-bottom:10px}
+.r-contacts{display:flex;gap:16px;flex-wrap:wrap}
+.r-contact{font-size:11px;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:4px}
+/* Resume body */
+.r-body{display:grid;grid-template-columns:1fr 280px;gap:0}
+.r-main{padding:24px 28px;border-right:1px solid #f0f0f0}
+.r-sidebar{padding:24px 20px;background:#fafafa}
+.r-section{margin-bottom:22px}
+.r-section-title{font-family:'Cabinet Grotesk',sans-serif;font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.1em;color:#666;border-bottom:2px solid #eee;padding-bottom:6px;margin-bottom:12px}
+.r-exp-item{margin-bottom:16px;position:relative;padding-left:14px}
+.r-exp-item::before{content:'';position:absolute;left:0;top:6px;width:6px;height:6px;border-radius:50%;background:var(--dark)}
+.r-exp-title{font-family:'Cabinet Grotesk',sans-serif;font-size:14px;font-weight:700;margin-bottom:1px}
+.r-exp-company{font-size:12px;color:#666;margin-bottom:4px;display:flex;justify-content:space-between}
+.r-exp-desc{font-size:12px;color:#444;line-height:1.7}
+.r-exp-desc li{margin-left:14px;margin-bottom:2px}
+.r-skill-section{margin-bottom:16px}
+.r-skill-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:#666;margin-bottom:6px}
+.r-skill-tags{display:flex;flex-wrap:wrap;gap:4px}
+.r-skill-tag{font-size:11px;padding:3px 9px;border-radius:20px;background:#f0f0f0;color:#333;font-weight:500}
+.r-edu-item{margin-bottom:12px}
+.r-edu-degree{font-weight:700;font-size:13px;margin-bottom:1px}
+.r-edu-school{font-size:12px;color:#666}
+.r-cert-item{font-size:12px;color:#444;margin-bottom:6px;padding-left:12px;position:relative}
+.r-cert-item::before{content:'✓';position:absolute;left:0;color:var(--green);font-weight:700}
+.r-project-item{margin-bottom:12px;padding:10px;background:#f8f8f8;border-radius:6px;border-left:3px solid var(--dark)}
+.r-project-name{font-weight:700;font-size:13px;margin-bottom:2px}
+.r-project-desc{font-size:11px;color:#666}
+.r-project-tech{display:flex;gap:3px;flex-wrap:wrap;margin-top:5px}
+.r-project-tech span{font-size:10px;padding:1px 7px;border-radius:20px;background:#e8e8e8;color:#555}
+/* ATS highlight overlay */
+.ats-highlight{background:rgba(220,38,38,0.1);border-bottom:2px solid var(--red);cursor:help;border-radius:2px}
+.ats-highlight.warn{background:rgba(217,119,6,0.1);border-bottom-color:var(--amber)}
+
+/* RIGHT PANEL — ATS SCORE */
+.score-panel{width:300px;flex-shrink:0;background:var(--white);border-left:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+.score-header{padding:18px 16px;border-bottom:1px solid var(--border)}
+.score-title{font-family:var(--font-head);font-size:13px;font-weight:800;margin-bottom:12px}
+.score-ring-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:14px}
+.score-ring{position:relative;width:110px;height:110px}
+.score-ring svg{transform:rotate(-90deg)}
+.score-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.score-num{font-family:var(--font-head);font-size:32px;font-weight:800;letter-spacing:-1px;line-height:1}
+.score-lbl{font-size:10px;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase}
+.score-verdict{text-align:center;font-size:12px;font-weight:700;margin-bottom:4px}
+.score-verdict-sub{text-align:center;font-size:11px;color:var(--text3)}
+.score-breakdown{padding:14px 16px;border-bottom:1px solid var(--border)}
+.breakdown-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px}
+.breakdown-row{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.breakdown-label{font-size:11px;color:var(--text2);flex:1}
+.breakdown-bar{width:60px;height:5px;background:var(--surface);border-radius:3px;overflow:hidden;flex-shrink:0}
+.breakdown-fill{height:100%;border-radius:3px;transition:width 0.6s}
+.breakdown-val{font-size:10px;font-family:var(--font-mono);color:var(--text3);width:24px;text-align:right}
+.issues-section{padding:14px 16px;flex:1}
+.issues-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:10px}
+.issue-item{display:flex;gap:8px;padding:9px 10px;border-radius:var(--radius);margin-bottom:6px;cursor:pointer;transition:all 0.15s;border:1px solid transparent}
+.issue-item:hover{border-color:var(--border2)}
+.issue-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.issue-text{font-size:12px;color:var(--text2);line-height:1.5}
+.issue-item.error{background:var(--red-dim)}
+.issue-item.warn{background:var(--amber-dim)}
+.issue-item.ok{background:var(--green-dim)}
+.issue-fix{font-size:11px;font-weight:600;margin-top:3px}
+.issue-fix.error{color:var(--red)}
+.issue-fix.warn{color:var(--amber)}
+.issue-fix.ok{color:var(--green)}
+.ai-fix-btn{width:100%;margin:0 16px 12px;width:calc(100% - 32px);padding:10px;background:linear-gradient(135deg,var(--dark),#2d3a5e);color:#fff;border:none;border-radius:var(--radius-lg);font-size:12px;font-weight:700;cursor:pointer;font-family:var(--font-body);display:flex;align-items:center;justify-content:center;gap:6px;transition:opacity 0.15s}
+.ai-fix-btn:hover{opacity:0.9}
+.keyword-section{padding:14px 16px;border-top:1px solid var(--border)}
+.keyword-cloud{display:flex;flex-wrap:wrap;gap:4px;margin-top:8px}
+.kw{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:600}
+.kw-miss{background:var(--red-dim);color:var(--red);border:1px solid rgba(220,38,38,0.2)}
+.kw-have{background:var(--green-dim);color:var(--green);border:1px solid rgba(5,150,105,0.2)}
+
+/* TEMPLATES */
+.template-page{display:none;flex:1;overflow-y:auto;padding:28px}
+.template-page.active{display:block}
+.templates-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;max-width:900px;margin:0 auto}
+.template-card{background:var(--white);border:2px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;cursor:pointer;transition:all 0.2s}
+.template-card:hover{border-color:var(--border2);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.template-card.selected{border-color:var(--dark)}
+.template-preview{height:180px;display:flex;align-items:center;justify-content:center;font-size:32px;position:relative;overflow:hidden}
+.template-info{padding:12px 14px;border-top:1px solid var(--border)}
+.template-name{font-family:var(--font-head);font-size:13px;font-weight:800;margin-bottom:2px}
+.template-desc{font-size:11px;color:var(--text3)}
+.template-badge{position:absolute;top:8px;right:8px;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px}
+
+/* VERSIONS */
+.version-page{display:none;flex:1;overflow-y:auto;padding:24px}
+.version-page.active{display:block}
+.version-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;max-width:900px;margin:0 auto}
+.version-card{background:var(--white);border:1.5px solid var(--border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:all 0.2s}
+.version-card:hover{box-shadow:var(--shadow);border-color:var(--border2)}
+.version-card.primary{border-color:var(--dark)}
+.version-score{font-family:var(--font-head);font-size:32px;font-weight:800;line-height:1;letter-spacing:-1px}
+.version-name{font-size:13px;font-weight:700;margin:6px 0 2px}
+.version-meta{font-size:11px;color:var(--text3)}
+.version-actions{display:flex;gap:6px;margin-top:10px}
+.v-btn{padding:5px 12px;border-radius:var(--radius);font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--white);color:var(--text2);font-family:var(--font-body)}
+.v-btn:hover{border-color:var(--dark);color:var(--dark)}
+.v-btn.primary{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+/* AI CHAT OVERLAY */
+.ai-chat-overlay{display:none;position:fixed;inset:0;background:rgba(15,23,42,0.7);z-index:50;align-items:flex-end;justify-content:center;padding-bottom:0}
+.ai-chat-overlay.open{display:flex}
+.ai-chat-box{background:var(--white);border-radius:20px 20px 0 0;width:680px;max-width:100vw;height:70vh;display:flex;flex-direction:column;box-shadow:var(--shadow-lg)}
+.ai-chat-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+.ai-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6ee7b7,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0}
+.ai-chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.amsg{display:flex;gap:8px;align-items:flex-end;max-width:85%}
+.amsg.user{align-self:flex-end;flex-direction:row-reverse}
+.amsg-bubble{padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.6}
+.amsg.ai .amsg-bubble{background:var(--surface);border:1px solid var(--border);border-bottom-left-radius:4px}
+.amsg.user .amsg-bubble{background:var(--dark);color:#fff;border-bottom-right-radius:4px}
+.ai-chat-input-wrap{padding:14px 16px;border-top:1px solid var(--border);display:flex;gap:8px}
+.ai-chat-input{flex:1;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;padding:9px 14px;font-size:13px;outline:none;font-family:var(--font-body);color:var(--text)}
+.ai-chat-input:focus{border-color:var(--dark)}
+.ai-send{background:var(--dark);color:#fff;border:none;border-radius:10px;width:38px;height:38px;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center}
+.typing span{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--text3);margin:0 1.5px;animation:bounce 1.2s infinite}
+.typing span:nth-child(2){animation-delay:.2s}
+.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bounce{0%,80%,100%{transform:translateY(0)}40%{transform:translateY(-5px)}}
+
+/* MISC */
+.badge{display:inline-flex;align-items:center;font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.b-green{background:var(--green-dim);color:var(--green)}
+.b-amber{background:var(--amber-dim);color:var(--amber)}
+.b-red{background:var(--red-dim);color:var(--red)}
+.b-dark{background:var(--dark);color:#fff}
+.b-blue{background:var(--blue-dim);color:var(--blue)}
+</style>
+</head>
+<body>
+
+<!-- TOP NAV -->
+<nav class="topnav">
+  <div class="logo">Career<span>Flow</span> AI</div>
+  <div class="nav-pills">
+    <div class="npill active" onclick="switchMode('editor',this)">✏️ Editor</div>
+    <div class="npill" onclick="switchMode('templates',this)">🎨 Templates</div>
+    <div class="npill" onclick="switchMode('versions',this)">📁 My Versions</div>
+  </div>
+  <div class="nav-right">
+    <div class="ats-pill" id="top-ats-score">ATS: 74 / 100</div>
+    <button class="btn btn-outline" onclick="openAIChat()">🤖 AI Coach</button>
+    <button class="btn btn-green" onclick="downloadResume()">⬇ Download PDF</button>
+    <button class="btn btn-white" onclick="saveVersion()">💾 Save Version</button>
+  </div>
+</nav>
+
+<!-- EDITOR MODE -->
+<div class="shell" id="mode-editor">
+
+  <!-- LEFT: EDITOR PANEL -->
+  <div class="editor-panel">
+    <div class="editor-tabs">
+      <div class="etab active" onclick="editorTab('basics',this)">Basics</div>
+      <div class="etab" onclick="editorTab('exp',this)">Work</div>
+      <div class="etab" onclick="editorTab('edu',this)">Edu</div>
+      <div class="etab" onclick="editorTab('skills',this)">Skills</div>
+      <div class="etab" onclick="editorTab('more',this)">More</div>
+    </div>
+
+    <!-- BASICS -->
+    <div class="etab-body active" id="etab-basics">
+      <div class="form-group"><label class="form-label">Full Name</label><input class="form-input" id="r-name" value="Priya Sharma" oninput="updateResume()"/></div>
+      <div class="form-group"><label class="form-label">Professional Title</label><input class="form-input" id="r-title" value="Full Stack Developer | React & Node.js" oninput="updateResume()"/></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" id="r-email" value="priya.sharma@gmail.com" oninput="updateResume()"/></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Phone</label><input class="form-input" id="r-phone" value="+91 98765 43210" oninput="updateResume()"/></div>
+        <div class="form-group"><label class="form-label">City</label><input class="form-input" id="r-city" value="Mumbai, India" oninput="updateResume()"/></div>
+      </div>
+      <div class="form-group"><label class="form-label">LinkedIn URL</label><input class="form-input" id="r-linkedin" value="linkedin.com/in/priyasharma" oninput="updateResume()"/></div>
+      <div class="form-group"><label class="form-label">GitHub URL</label><input class="form-input" id="r-github" value="github.com/priyasharma" oninput="updateResume()"/></div>
+      <div class="form-group"><label class="form-label">Professional Summary</label>
+        <textarea class="form-input form-textarea" id="r-summary" oninput="updateResume()">Passionate Full Stack Developer with 2+ years of experience building scalable web applications using React.js, Node.js, and modern cloud technologies. Proven ability to deliver clean, maintainable code in fast-paced environments.</textarea>
+      </div>
+    </div>
+
+    <!-- WORK EXPERIENCE -->
+    <div class="etab-body" id="etab-exp">
+      <div class="section-head"><div class="section-title">Work Experience</div><button class="add-btn" onclick="addExpItem()">+ Add</button></div>
+      <div id="exp-list">
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">Frontend Developer Intern</div>
+          <div class="item-card-sub">Infosys · Jun 2023 – Aug 2023</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Built React components, reduced bundle size by 30%</div>
+        </div>
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">Web Developer (Freelance)</div>
+          <div class="item-card-sub">Self-employed · Jan 2023 – Present</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Developed 5+ client websites using React & Node.js</div>
+        </div>
+      </div>
+      <div id="exp-form" style="display:none;margin-top:12px">
+        <div class="form-group"><label class="form-label">Job Title</label><input class="form-input" id="new-exp-title" placeholder="Software Engineer"/></div>
+        <div class="form-group"><label class="form-label">Company</label><input class="form-input" id="new-exp-company" placeholder="Google"/></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Start</label><input class="form-input" type="month" id="new-exp-start"/></div>
+          <div class="form-group"><label class="form-label">End</label><input class="form-input" type="month" id="new-exp-end"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Description (one point per line)</label><textarea class="form-input form-textarea" id="new-exp-desc" placeholder="• Built X that achieved Y&#10;• Led team of N engineers&#10;• Improved performance by Z%"></textarea></div>
+        <div style="display:flex;gap:8px">
+          <button style="flex:1;padding:9px;background:var(--dark);color:#fff;border:none;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer" onclick="saveExpItem()">Save</button>
+          <button style="padding:9px 14px;background:var(--surface);color:var(--text2);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer" onclick="document.getElementById('exp-form').style.display='none'">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="etab-body" id="etab-edu">
+      <div class="section-head"><div class="section-title">Education</div><button class="add-btn" onclick="addEduItem()">+ Add</button></div>
+      <div id="edu-list">
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">B.Tech — Computer Science</div>
+          <div class="item-card-sub">IIT Bombay · 2020–2024 · CGPA 8.4</div>
+        </div>
+      </div>
+      <div id="edu-form" style="display:none;margin-top:12px">
+        <div class="form-group"><label class="form-label">Degree</label><input class="form-input" id="new-edu-degree" placeholder="B.Tech Computer Science"/></div>
+        <div class="form-group"><label class="form-label">Institution</label><input class="form-input" id="new-edu-school" placeholder="IIT Bombay"/></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Year From</label><input class="form-input" type="number" id="new-edu-from" placeholder="2020"/></div>
+          <div class="form-group"><label class="form-label">Year To</label><input class="form-input" type="number" id="new-edu-to" placeholder="2024"/></div>
+        </div>
+        <div class="form-group"><label class="form-label">Grade / CGPA</label><input class="form-input" id="new-edu-grade" placeholder="8.5 / 10"/></div>
+        <div style="display:flex;gap:8px">
+          <button style="flex:1;padding:9px;background:var(--dark);color:#fff;border:none;border-radius:var(--radius);font-size:12px;font-weight:600;cursor:pointer" onclick="saveEduItem()">Save</button>
+          <button style="padding:9px 14px;background:var(--surface);color:var(--text2);border:1px solid var(--border);border-radius:var(--radius);font-size:12px;cursor:pointer" onclick="document.getElementById('edu-form').style.display='none'">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SKILLS -->
+    <div class="etab-body" id="etab-skills">
+      <div class="form-group">
+        <label class="form-label">Technical Skills (press Enter)</label>
+        <div class="skill-tag-wrap" id="skills-wrap" onclick="this.querySelector('input').focus()">
+          <span class="stag">React.js <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">Node.js <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">TypeScript <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">JavaScript <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">Python <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">SQL <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">MongoDB <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">Git <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">REST API <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <span class="stag">Tailwind CSS <button onclick="this.parentNode.remove();updateATS()">×</button></span>
+          <input class="stag-input" type="text" placeholder="Add skill..." onkeydown="addSkillTag(event)"/>
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:8px">
+        <label class="form-label">Soft Skills</label>
+        <div class="skill-tag-wrap" id="soft-wrap" onclick="this.querySelector('input').focus()">
+          <span class="stag" style="background:#475569">Team Leadership <button onclick="this.parentNode.remove()" style="color:rgba(255,255,255,0.6)">×</button></span>
+          <span class="stag" style="background:#475569">Problem Solving <button onclick="this.parentNode.remove()" style="color:rgba(255,255,255,0.6)">×</button></span>
+          <span class="stag" style="background:#475569">Communication <button onclick="this.parentNode.remove()" style="color:rgba(255,255,255,0.6)">×</button></span>
+          <input class="stag-input" type="text" placeholder="Add skill..." onkeydown="addSkillTag(event,'soft-wrap','#475569')"/>
+        </div>
+      </div>
+      <div style="margin-top:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Suggested Skills (click to add)</div>
+        <div style="display:flex;flex-wrap:wrap;gap:5px" id="suggested-skills"></div>
+      </div>
+    </div>
+
+    <!-- MORE (Projects, Certs) -->
+    <div class="etab-body" id="etab-more">
+      <div class="section-head"><div class="section-title">Projects</div><button class="add-btn" onclick="addProject()">+ Add</button></div>
+      <div id="projects-list">
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">E-Commerce Platform</div>
+          <div class="item-card-sub">React, Node.js, MongoDB, Stripe</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Full-stack e-commerce app with 500+ daily active users</div>
+        </div>
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">Real-Time Chat App</div>
+          <div class="item-card-sub">Socket.io, React, Node.js, Redis</div>
+          <div style="font-size:11px;color:var(--text3);margin-top:4px">Supports 1000 concurrent users with <50ms latency</div>
+        </div>
+      </div>
+
+      <div class="section-head" style="margin-top:16px"><div class="section-title">Certifications</div><button class="add-btn" onclick="addCert()">+ Add</button></div>
+      <div id="certs-list">
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">AWS Cloud Practitioner</div>
+          <div class="item-card-sub">Amazon Web Services · 2023</div>
+        </div>
+        <div class="item-card">
+          <button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+          <div class="item-card-title">Meta Front-End Developer</div>
+          <div class="item-card-sub">Coursera · Meta · 2022</div>
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:0.07em;margin-bottom:8px">Target Job (for ATS optimization)</div>
+        <input class="form-input" id="target-job" placeholder="e.g. Senior React Developer at Swiggy" oninput="updateATS()" value="Full Stack Developer"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- CENTER: RESUME PREVIEW -->
+  <div class="preview-panel">
+    <div style="display:flex;gap:10px;margin-bottom:16px;align-items:center">
+      <span style="font-size:12px;color:var(--text3)">Preview as ATS sees it</span>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;font-size:12px;color:var(--text2)">
+        <input type="checkbox" id="ats-view-toggle" onchange="toggleATSView(this.checked)" style="accent-color:var(--dark)"/> Show ATS issues
+      </label>
+    </div>
+    <div class="resume-sheet" id="resume-preview">
+      <!-- Dynamically rendered -->
+    </div>
+  </div>
+
+  <!-- RIGHT: ATS SCORE PANEL -->
+  <div class="score-panel">
+    <div class="score-header">
+      <div class="score-title">ATS Score</div>
+      <div class="score-ring-wrap">
+        <div class="score-ring">
+          <svg width="110" height="110" viewBox="0 0 110 110">
+            <circle cx="55" cy="55" r="46" fill="none" stroke="#f1f5f9" stroke-width="8"/>
+            <circle cx="55" cy="55" r="46" fill="none" stroke="#10b981" stroke-width="8"
+              stroke-dasharray="289" id="score-arc"
+              stroke-dashoffset="78" stroke-linecap="round"/>
+          </svg>
+          <div class="score-center">
+            <div class="score-num" id="score-display" style="color:#10b981">74</div>
+            <div class="score-lbl">/100</div>
+          </div>
+        </div>
+        <div class="score-verdict" id="score-verdict" style="color:#10b981">Good</div>
+        <div class="score-verdict-sub" id="score-verdict-sub">Needs some improvements</div>
+      </div>
+
+      <div class="breakdown-title">Score Breakdown</div>
+      <div class="breakdown-row"><span class="breakdown-label">Keywords</span><div class="breakdown-bar"><div class="breakdown-fill" id="bd-kw" style="width:65%;background:var(--amber)"></div></div><span class="breakdown-val" id="bd-kw-v">65</span></div>
+      <div class="breakdown-row"><span class="breakdown-label">Format</span><div class="breakdown-bar"><div class="breakdown-fill" id="bd-fmt" style="width:90%;background:var(--green-bright)"></div></div><span class="breakdown-val" id="bd-fmt-v">90</span></div>
+      <div class="breakdown-row"><span class="breakdown-label">Action Verbs</span><div class="breakdown-bar"><div class="breakdown-fill" id="bd-av" style="width:60%;background:var(--amber)"></div></div><span class="breakdown-val" id="bd-av-v">60</span></div>
+      <div class="breakdown-row"><span class="breakdown-label">Metrics</span><div class="breakdown-bar"><div class="breakdown-fill" id="bd-mt" style="width:70%;background:var(--amber)"></div></div><span class="breakdown-val" id="bd-mt-v">70</span></div>
+      <div class="breakdown-row"><span class="breakdown-label">Sections</span><div class="breakdown-bar"><div class="breakdown-fill" id="bd-sc" style="width:88%;background:var(--green-bright)"></div></div><span class="breakdown-val" id="bd-sc-v">88</span></div>
+    </div>
+
+    <button class="ai-fix-btn" onclick="autoFixResume()">✨ Auto-Fix with AI</button>
+
+    <div class="issues-section">
+      <div class="issues-title">Issues & Suggestions</div>
+      <div id="issues-list"></div>
+    </div>
+
+    <div class="keyword-section">
+      <div class="breakdown-title">Keyword Analysis</div>
+      <div class="keyword-cloud" id="keyword-cloud"></div>
+    </div>
+  </div>
+</div>
+
+<!-- TEMPLATES MODE -->
+<div class="template-page" id="mode-templates">
+  <div style="text-align:center;margin-bottom:24px">
+    <div style="font-family:var(--font-head);font-size:22px;font-weight:800;letter-spacing:-0.5px">Choose a Template</div>
+    <div style="color:var(--text3);margin-top:4px">All templates are ATS-optimized</div>
+  </div>
+  <div class="templates-grid" id="templates-grid"></div>
+</div>
+
+<!-- VERSIONS MODE -->
+<div class="version-page" id="mode-versions">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;max-width:900px;margin:0 auto 20px">
+    <div><div style="font-family:var(--font-head);font-size:20px;font-weight:800">Resume Versions</div><div style="color:var(--text3);font-size:13px;margin-top:2px">Manage multiple resume versions for different roles</div></div>
+    <button class="btn btn-green" onclick="saveVersion()">+ New Version</button>
+  </div>
+  <div class="version-grid" id="versions-grid"></div>
+</div>
+
+<!-- AI CHAT OVERLAY -->
+<div class="ai-chat-overlay" id="ai-chat-overlay">
+  <div class="ai-chat-box">
+    <div class="ai-chat-head">
+      <div class="ai-av">AI</div>
+      <div><div style="font-size:14px;font-weight:700">Resume AI Coach</div><div style="font-size:11px;color:var(--text3)">Powered by Gemini · Always improving your resume</div></div>
+      <button onclick="closeAIChat()" style="margin-left:auto;background:none;border:none;cursor:pointer;font-size:18px;color:var(--text3)">✕</button>
+    </div>
+    <div class="ai-chat-msgs" id="ai-msgs">
+      <div class="amsg ai">
+        <div class="ai-av" style="width:28px;height:28px;font-size:11px">AI</div>
+        <div class="amsg-bubble">Hi Priya! 👋 I've analyzed your resume. Your ATS score is <strong>74/100</strong>. Here's what I recommend:<br><br>
+        🔴 Add <strong>Docker</strong> and <strong>CI/CD</strong> to skills — 80% of target jobs require these<br>
+        🟡 Quantify more achievements — "reduced load time" should be "reduced load time by 40%"<br>
+        🟡 Use stronger action verbs — "built", "architected", "deployed", "optimized"<br><br>
+        Want me to auto-fix any of these?</div>
+      </div>
+    </div>
+    <div style="padding:8px 16px;display:flex;gap:6px;flex-wrap:wrap;border-top:1px solid var(--border)">
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--text2);background:var(--white)" onclick="aiSuggest(this)">Fix my summary</span>
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--text2);background:var(--white)" onclick="aiSuggest(this)">Add missing keywords</span>
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--text2);background:var(--white)" onclick="aiSuggest(this)">Improve action verbs</span>
+      <span style="font-size:11px;padding:5px 12px;border-radius:20px;border:1px solid var(--border);cursor:pointer;color:var(--text2);background:var(--white)" onclick="aiSuggest(this)">Write cover letter</span>
+    </div>
+    <div class="ai-chat-input-wrap">
+      <input class="ai-chat-input" id="ai-input" placeholder="Ask AI to improve your resume..." onkeydown="if(event.key==='Enter')sendAI()"/>
+      <button class="ai-send" onclick="sendAI()">➤</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════
+// DATA
+// ═══════════════════════════════════
+const issues = [
+  {type:'error',text:'Missing "Docker" — required in 78% of target jobs',fix:'Add Docker to skills'},
+  {type:'error',text:'Missing "CI/CD" — required in 65% of target jobs',fix:'Add CI/CD to skills'},
+  {type:'warn',text:'No quantified metrics in experience bullet 2',fix:'Add numbers (%, $, time)'},
+  {type:'warn',text:'Weak action verbs detected: "worked on", "helped with"',fix:'Replace with: Built, Led, Deployed'},
+  {type:'warn',text:'Summary is too generic — not tailored to role',fix:'Tailor to Full Stack Developer'},
+  {type:'ok',text:'Clean single-column format — ATS friendly','fix':''},
+  {type:'ok',text:'Contact information complete','fix':''},
+  {type:'ok',text:'All sections present (exp, edu, skills)','fix':''},
+];
+
+const keywords = {
+  have:['React.js','Node.js','TypeScript','JavaScript','MongoDB','SQL','Git','REST API'],
+  miss:['Docker','CI/CD','Kubernetes','AWS','Redis','GraphQL','Agile','Microservices']
+};
+
+const suggestedSkills = ['Docker','CI/CD','Kubernetes','AWS','Redis','GraphQL','PostgreSQL','Next.js','Express.js'];
+
+const templates = [
+  {name:'Executive',desc:'Clean & professional, dark header',bg:'linear-gradient(135deg,#0f172a 60%,#1e293b)',emoji:'👔',badge:'Popular',badgeColor:'#059669'},
+  {name:'Modern',desc:'Two-column, sidebar skills',bg:'linear-gradient(135deg,#2563eb 60%,#3b82f6)',emoji:'💼',badge:'Default',badgeColor:'#2563eb'},
+  {name:'Creative',desc:'Bold colors, unique layout',bg:'linear-gradient(135deg,#7c3aed 60%,#8b5cf6)',emoji:'🎨',badge:'',badgeColor:''},
+  {name:'Minimal',desc:'White space, typography-focused',bg:'linear-gradient(135deg,#374151 60%,#4b5563)',emoji:'⬜',badge:'ATS Best',badgeColor:'#059669'},
+  {name:'Tech',desc:'Code-inspired, dark mode',bg:'linear-gradient(135deg,#064e3b 60%,#065f46)',emoji:'💻',badge:'',badgeColor:''},
+  {name:'Startup',desc:'Vibrant, personality-forward',bg:'linear-gradient(135deg,#b45309 60%,#d97706)',emoji:'🚀',badge:'',badgeColor:''},
+];
+
+const versions = [
+  {name:'Priya_FullStack_v2.pdf',score:82,label:'Primary',date:'Updated 2 days ago',target:'Full Stack Developer',ai:true},
+  {name:'Priya_Frontend_v1.pdf',score:78,label:'',date:'Updated 1 week ago',target:'Frontend Engineer',ai:false},
+  {name:'Priya_Original.pdf',score:74,label:'',date:'Uploaded 2 weeks ago',target:'General',ai:false},
+];
+
+const aiResponses = {
+  'fix my summary': 'Here\'s an optimized summary for a Full Stack Developer role:\n\n<em>"Results-driven Full Stack Developer with 2+ years building high-performance web apps using React.js, Node.js, and MongoDB. Delivered 3 production applications serving 500+ daily users. Strong focus on clean architecture, performance optimization, and agile development practices."</em>\n\nThis version includes specific metrics and keywords that ATS systems scan for. Want me to apply it?',
+  'add missing keywords': '🔍 I\'ve found these high-value missing keywords for your target role:\n\n🔴 Critical: <strong>Docker</strong>, <strong>CI/CD</strong>, <strong>Agile</strong>\n🟡 Important: <strong>Microservices</strong>, <strong>AWS</strong>, <strong>Redis</strong>\n\nI can add Docker and CI/CD to your skills section and weave Agile into your work experience descriptions. Shall I do it?',
+  'improve action verbs': 'Here are your weak verbs and their stronger replacements:\n\n❌ "Worked on frontend" → ✅ <strong>Architected and built</strong> frontend\n❌ "Helped with API" → ✅ <strong>Designed and implemented</strong> RESTful API\n❌ "Was involved in" → ✅ <strong>Spearheaded</strong>\n❌ "Did testing" → ✅ <strong>Engineered comprehensive test suites</strong>\n\nWant me to auto-replace all weak verbs?',
+  'write cover letter': 'Here\'s a tailored cover letter for Full Stack Developer:\n\n<em>Dear Hiring Team,\n\nI\'m excited to apply for the Full Stack Developer position. With 2 years of experience building React/Node.js applications serving real users, I bring both technical depth and a product mindset to every project.\n\nAt Infosys, I reduced bundle size by 30% and improved load times significantly — the kind of measurable impact I aim to bring to your team.\n\nI\'d love to discuss how I can contribute.\n\nBest, Priya Sharma</em>',
+  'default': 'Great question! Based on your resume and current job market data, here\'s my recommendation:\n\nFocus on adding quantifiable achievements and the missing technical keywords (Docker, CI/CD) to push your ATS score from 74 to 85+. Would you like me to help with any specific section?'
+};
+
+// ═══════════════════════════════════
+// RESUME RENDERER
+// ═══════════════════════════════════
+function updateResume(){
+  const name = document.getElementById('r-name').value || 'Your Name';
+  const title = document.getElementById('r-title').value || 'Your Title';
+  const email = document.getElementById('r-email').value;
+  const phone = document.getElementById('r-phone').value;
+  const city = document.getElementById('r-city').value;
+  const linkedin = document.getElementById('r-linkedin').value;
+  const github = document.getElementById('r-github').value;
+  const summary = document.getElementById('r-summary').value;
+
+  document.getElementById('resume-preview').innerHTML = `
+    <div class="r-header">
+      <div class="r-name">${name}</div>
+      <div class="r-title">${title}</div>
+      <div class="r-contacts">
+        ${email?`<span class="r-contact">✉ ${email}</span>`:''}
+        ${phone?`<span class="r-contact">📱 ${phone}</span>`:''}
+        ${city?`<span class="r-contact">📍 ${city}</span>`:''}
+        ${linkedin?`<span class="r-contact">🔗 ${linkedin}</span>`:''}
+        ${github?`<span class="r-contact">💻 ${github}</span>`:''}
+      </div>
+    </div>
+    <div class="r-body">
+      <div class="r-main">
+        ${summary?`<div class="r-section">
+          <div class="r-section-title">Professional Summary</div>
+          <div style="font-size:12px;color:#444;line-height:1.8">${summary}</div>
+        </div>`:''}
+
+        <div class="r-section">
+          <div class="r-section-title">Work Experience</div>
+          <div class="r-exp-item">
+            <div class="r-exp-title">Frontend Developer Intern</div>
+            <div class="r-exp-company"><span>Infosys · Pune</span><span style="color:#999">Jun 2023 – Aug 2023</span></div>
+            <ul class="r-exp-desc">
+              <li>Built reusable React component library reducing development time by 40%</li>
+              <li>Optimised bundle size by 30% using code splitting and lazy loading</li>
+              <li>Collaborated with 5-person team using agile methodology</li>
+            </ul>
+          </div>
+          <div class="r-exp-item">
+            <div class="r-exp-title">Web Developer (Freelance)</div>
+            <div class="r-exp-company"><span>Self-employed</span><span style="color:#999">Jan 2023 – Present</span></div>
+            <ul class="r-exp-desc">
+              <li>Developed and deployed 5+ full-stack web applications for clients</li>
+              <li>Built e-commerce platform serving 500+ daily active users</li>
+              <li>Integrated payment gateways (Razorpay, Stripe) with 99.9% uptime</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="r-section">
+          <div class="r-section-title">Projects</div>
+          <div class="r-project-item">
+            <div class="r-project-name">E-Commerce Platform</div>
+            <div class="r-project-desc">Full-stack marketplace with 500+ daily users, real-time inventory, and Stripe payments</div>
+            <div class="r-project-tech"><span>React</span><span>Node.js</span><span>MongoDB</span><span>Stripe</span></div>
+          </div>
+          <div class="r-project-item">
+            <div class="r-project-name">Real-Time Chat App</div>
+            <div class="r-project-desc">Supports 1000 concurrent users with sub-50ms latency using WebSockets and Redis</div>
+            <div class="r-project-tech"><span>Socket.io</span><span>React</span><span>Redis</span><span>Node.js</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="r-sidebar">
+        <div class="r-skill-section">
+          <div class="r-section-title">Technical Skills</div>
+          <div class="r-skill-tags">
+            ${getSkillTags()}
+          </div>
+        </div>
+
+        <div class="r-skill-section" style="margin-top:16px">
+          <div class="r-section-title">Education</div>
+          <div class="r-edu-item">
+            <div class="r-edu-degree">B.Tech — Computer Science</div>
+            <div class="r-edu-school">IIT Bombay · 2020–2024</div>
+            <div style="font-size:11px;color:#999;margin-top:2px">CGPA: 8.4 / 10</div>
+          </div>
+        </div>
+
+        <div class="r-skill-section" style="margin-top:16px">
+          <div class="r-section-title">Certifications</div>
+          <div class="r-cert-item">AWS Cloud Practitioner</div>
+          <div class="r-cert-item">Meta Front-End Developer</div>
+        </div>
+
+        <div class="r-skill-section" style="margin-top:16px">
+          <div class="r-section-title">Soft Skills</div>
+          <div class="r-skill-tags">
+            <span class="r-skill-tag">Leadership</span>
+            <span class="r-skill-tag">Problem Solving</span>
+            <span class="r-skill-tag">Communication</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function getSkillTags(){
+  const tags = document.querySelectorAll('#skills-wrap .stag');
+  return Array.from(tags).map(t=>t.textContent.replace('×','').trim()).map(s=>`<span class="r-skill-tag">${s}</span>`).join('');
+}
+
+function toggleATSView(on){
+  if(on){
+    const summary = document.getElementById('r-summary');
+    if(summary){
+      // highlight weak phrases in preview
+      document.querySelectorAll('.r-exp-desc li').forEach(li=>{
+        if(li.textContent.includes('worked on')||li.textContent.includes('helped')){
+          li.innerHTML = `<span class="ats-highlight warn">${li.innerHTML}</span>`;
+        }
+      });
+    }
+  } else {
+    updateResume();
+  }
+}
+
+// ═══════════════════════════════════
+// ATS SCORE
+// ═══════════════════════════════════
+let currentScore = 74;
+function updateATS(){
+  const skillTags = document.querySelectorAll('#skills-wrap .stag').length;
+  const hasDocker = Array.from(document.querySelectorAll('#skills-wrap .stag')).some(t=>t.textContent.includes('Docker'));
+  const hasCI = Array.from(document.querySelectorAll('#skills-wrap .stag')).some(t=>t.textContent.includes('CI'));
+  let score = 60 + Math.min(skillTags * 2, 20);
+  if(hasDocker) score += 6;
+  if(hasCI) score += 5;
+  score = Math.min(score, 97);
+  currentScore = score;
+  document.getElementById('score-display').textContent = score;
+  document.getElementById('top-ats-score').textContent = `ATS: ${score} / 100`;
+  const arc = document.getElementById('score-arc');
+  const circumference = 289;
+  const offset = circumference - (score/100)*circumference;
+  arc.setAttribute('stroke-dashoffset', offset);
+  const color = score>=85?'#10b981':score>=65?'#d97706':'#dc2626';
+  arc.setAttribute('stroke',color);
+  document.getElementById('score-display').style.color=color;
+  const verdict = score>=85?'Excellent':score>=75?'Good':score>=60?'Fair':'Needs Work';
+  document.getElementById('score-verdict').textContent = verdict;
+  document.getElementById('score-verdict').style.color = color;
+  document.getElementById('score-verdict-sub').textContent = score>=85?'Ready to apply!':score>=75?'A few improvements will help':score>=60?'Several areas to improve':'Significant work needed';
+}
+
+function renderIssues(){
+  document.getElementById('issues-list').innerHTML = issues.map(i=>`
+    <div class="issue-item ${i.type}" onclick="this.style.opacity='0.5'">
+      <div class="issue-dot" style="background:${i.type==='error'?'var(--red)':i.type==='warn'?'var(--amber)':'var(--green)'}"></div>
+      <div>
+        <div class="issue-text">${i.text}</div>
+        ${i.fix?`<div class="issue-fix ${i.type}">→ ${i.fix}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function renderKeywords(){
+  const cloud = document.getElementById('keyword-cloud');
+  cloud.innerHTML =
+    keywords.have.map(k=>`<span class="kw kw-have">✓ ${k}</span>`).join('') +
+    keywords.miss.map(k=>`<span class="kw kw-miss">✗ ${k}</span>`).join('');
+}
+
+function renderSuggestedSkills(){
+  document.getElementById('suggested-skills').innerHTML = suggestedSkills.map(s=>`
+    <span style="font-size:11px;padding:4px 11px;border-radius:20px;background:var(--surface);border:1.5px dashed var(--border2);color:var(--text3);cursor:pointer;transition:all 0.15s" onclick="addSuggestedSkill('${s}',this)">${s} +</span>`
+  ).join('');
+}
+
+function addSuggestedSkill(name, el){
+  const wrap = document.getElementById('skills-wrap');
+  const inp = wrap.querySelector('input');
+  const span = document.createElement('span');
+  span.className = 'stag';
+  span.innerHTML = `${name} <button onclick="this.parentNode.remove();updateATS()">×</button>`;
+  wrap.insertBefore(span, inp);
+  el.style.opacity = '0.3';
+  el.style.pointerEvents = 'none';
+  updateATS();
+  updateResume();
+  keywords.miss = keywords.miss.filter(k=>k!==name);
+  keywords.have.push(name);
+  renderKeywords();
+}
+
+function addSkillTag(e, wrapId='skills-wrap', bg='#0f172a'){
+  if(e.key!=='Enter') return;
+  const v = e.target.value.trim();
+  if(!v) return;
+  const wrap = document.getElementById(wrapId);
+  const span = document.createElement('span');
+  span.className = 'stag';
+  span.style.background = bg;
+  span.innerHTML = `${v} <button onclick="this.parentNode.remove();updateATS()" style="color:rgba(255,255,255,0.6)">×</button>`;
+  wrap.insertBefore(span, e.target);
+  e.target.value = '';
+  updateATS();
+  updateResume();
+}
+
+// ═══════════════════════════════════
+// AUTO FIX
+// ═══════════════════════════════════
+function autoFixResume(){
+  ['Docker','CI/CD','Agile'].forEach(skill => {
+    const wrap = document.getElementById('skills-wrap');
+    const exists = Array.from(wrap.querySelectorAll('.stag')).some(t=>t.textContent.includes(skill));
+    if(!exists){
+      const span = document.createElement('span');
+      span.className = 'stag';
+      span.innerHTML = `${skill} <button onclick="this.parentNode.remove();updateATS()">×</button>`;
+      wrap.insertBefore(span, wrap.querySelector('input'));
+    }
+  });
+  // Update summary with AI version
+  document.getElementById('r-summary').value = 'Results-driven Full Stack Developer with 2+ years building high-performance web applications using React.js, Node.js, and MongoDB. Delivered 3 production applications serving 500+ daily users. Proficient in Docker, CI/CD pipelines, and Agile methodologies.';
+  updateResume();
+  updateATS();
+  keywords.miss = keywords.miss.filter(k=>!['Docker','CI/CD','Agile'].includes(k));
+  ['Docker','CI/CD','Agile'].forEach(k=>{ if(!keywords.have.includes(k)) keywords.have.push(k); });
+  renderKeywords();
+  alert('✅ AI Auto-Fix applied!\n\n• Added: Docker, CI/CD, Agile to skills\n• Improved summary with metrics\n• Your ATS score improved!');
+}
+
+// ═══════════════════════════════════
+// EXPERIENCE / EDUCATION ADD
+// ═══════════════════════════════════
+function addExpItem(){ document.getElementById('exp-form').style.display='block'; }
+function saveExpItem(){
+  const t=document.getElementById('new-exp-title').value;
+  const c=document.getElementById('new-exp-company').value;
+  const d=document.getElementById('new-exp-desc').value;
+  if(!t) return;
+  const card = document.createElement('div');
+  card.className = 'item-card';
+  card.innerHTML = `<button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+    <div class="item-card-title">${t}</div>
+    <div class="item-card-sub">${c}</div>
+    <div style="font-size:11px;color:var(--text3);margin-top:4px">${d.split('\n')[0]}</div>`;
+  document.getElementById('exp-list').appendChild(card);
+  document.getElementById('exp-form').style.display='none';
+  ['new-exp-title','new-exp-company','new-exp-desc'].forEach(id=>document.getElementById(id).value='');
+  updateResume();
+}
+function addEduItem(){ document.getElementById('edu-form').style.display='block'; }
+function saveEduItem(){
+  const d=document.getElementById('new-edu-degree').value;
+  const s=document.getElementById('new-edu-school').value;
+  const f=document.getElementById('new-edu-from').value;
+  const t=document.getElementById('new-edu-to').value;
+  const g=document.getElementById('new-edu-grade').value;
+  if(!d) return;
+  const card = document.createElement('div');
+  card.className = 'item-card';
+  card.innerHTML = `<button class="item-del" onclick="this.parentNode.remove();updateResume()">✕</button>
+    <div class="item-card-title">${d}</div>
+    <div class="item-card-sub">${s} · ${f}–${t}${g?' · '+g:''}</div>`;
+  document.getElementById('edu-list').appendChild(card);
+  document.getElementById('edu-form').style.display='none';
+  ['new-edu-degree','new-edu-school','new-edu-from','new-edu-to','new-edu-grade'].forEach(id=>document.getElementById(id).value='');
+  updateResume();
+}
+function addProject(){ alert('Add project form — same pattern as experience'); }
+function addCert(){ alert('Add certification form — same pattern as experience'); }
+
+// ═══════════════════════════════════
+// EDITOR TABS
+// ═══════════════════════════════════
+function editorTab(name, el){
+  document.querySelectorAll('.etab-body').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.etab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('etab-'+name).classList.add('active');
+  el.classList.add('active');
+}
+
+// ═══════════════════════════════════
+// MODE SWITCHING
+// ═══════════════════════════════════
+function switchMode(mode, el){
+  document.querySelectorAll('.npill').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('mode-editor').style.display = mode==='editor'?'flex':'none';
+  document.getElementById('mode-templates').classList.toggle('active', mode==='templates');
+  document.getElementById('mode-versions').classList.toggle('active', mode==='versions');
+}
+
+// ═══════════════════════════════════
+// TEMPLATES
+// ═══════════════════════════════════
+function renderTemplates(){
+  document.getElementById('templates-grid').innerHTML = templates.map((t,i)=>`
+    <div class="template-card ${i===0?'selected':''}" onclick="selectTemplate(${i},this)">
+      <div class="template-preview" style="background:${t.bg}">
+        <span style="font-size:48px">${t.emoji}</span>
+        ${t.badge?`<span class="template-badge" style="background:${t.badgeColor};color:#fff">${t.badge}</span>`:''}
+      </div>
+      <div class="template-info">
+        <div class="template-name">${t.name}</div>
+        <div class="template-desc">${t.desc}</div>
+      </div>
+    </div>`).join('');
+}
+
+function selectTemplate(i, el){
+  document.querySelectorAll('.template-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  alert(`"${templates[i].name}" template applied! Switch to Editor to see changes.`);
+  switchMode('editor', document.querySelector('.npill'));
+}
+
+// ═══════════════════════════════════
+// VERSIONS
+// ═══════════════════════════════════
+function renderVersions(){
+  document.getElementById('versions-grid').innerHTML = versions.map((v,i)=>`
+    <div class="version-card ${v.label==='Primary'?'primary':''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div class="version-score" style="color:${v.score>=80?'var(--green)':v.score>=65?'var(--amber)':'var(--red)'}">${v.score}</div>
+        <div style="display:flex;gap:4px">
+          ${v.label?`<span class="badge b-dark">${v.label}</span>`:''}
+          ${v.ai?`<span class="badge b-blue">AI</span>`:''}
+        </div>
+      </div>
+      <div class="version-name">${v.name}</div>
+      <div class="version-meta">${v.date}</div>
+      <div class="version-meta" style="margin-top:2px">Target: ${v.target}</div>
+      <div class="version-actions">
+        <button class="v-btn" onclick="alert('Opening ${v.name}')">Open</button>
+        <button class="v-btn" onclick="alert('Downloading ${v.name}')">Download</button>
+        ${v.label!=='Primary'?`<button class="v-btn" onclick="alert('Set as primary')">Set Primary</button>`:''}
+      </div>
+    </div>`).join('') +
+  `<div class="version-card" style="border-style:dashed;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;cursor:pointer;color:var(--text3);min-height:180px" onclick="saveVersion()">
+    <div style="font-size:28px">＋</div>
+    <div style="font-size:13px;font-weight:600">New Version</div>
+    <div style="font-size:11px">Tailored for a specific role</div>
+  </div>`;
+}
+
+function saveVersion(){
+  const name = prompt('Version name:', 'Priya_Resume_' + new Date().toISOString().slice(0,10));
+  if(!name) return;
+  versions.push({name:name+'.pdf', score:currentScore, label:'', date:'Just created', target:'General', ai:false});
+  renderVersions();
+  switchMode('versions', document.querySelectorAll('.npill')[2]);
+}
+
+// ═══════════════════════════════════
+// AI CHAT
+// ═══════════════════════════════════
+function openAIChat(){ document.getElementById('ai-chat-overlay').classList.add('open'); }
+function closeAIChat(){ document.getElementById('ai-chat-overlay').classList.remove('open'); }
+document.getElementById('ai-chat-overlay').addEventListener('click', e=>{ if(e.target===e.currentTarget) closeAIChat(); });
+
+function aiSuggest(el){ document.getElementById('ai-input').value=el.textContent; sendAI(); }
+
+function sendAI(){
+  const inp = document.getElementById('ai-input');
+  const msg = inp.value.trim();
+  if(!msg) return;
+  const msgs = document.getElementById('ai-msgs');
+  msgs.innerHTML += `<div class="amsg user"><div class="ai-av" style="width:28px;height:28px;font-size:10px;background:var(--dark)">PS</div><div class="amsg-bubble">${msg}</div></div>`;
+  inp.value = '';
+  const typing = document.createElement('div');
+  typing.className = 'amsg ai';
+  typing.innerHTML = `<div class="ai-av" style="width:28px;height:28px;font-size:11px">AI</div><div class="amsg-bubble"><div class="typing"><span></span><span></span><span></span></div></div>`;
+  msgs.appendChild(typing);
+  msgs.scrollTop = msgs.scrollHeight;
+  setTimeout(()=>{
+    const key = Object.keys(aiResponses).find(k=>msg.toLowerCase().includes(k));
+    const reply = (aiResponses[key]||aiResponses['default']);
+    typing.querySelector('.amsg-bubble').innerHTML = reply.replace(/\n/g,'<br>');
+    msgs.scrollTop = msgs.scrollHeight;
+  }, 1300);
+}
+
+function downloadResume(){ alert('📄 Downloading Resume PDF...\n\nIn production: uses Puppeteer or html2pdf to render and download the resume sheet as PDF.'); }
+
+// ═══════════════════════════════════
+// INIT
+// ═══════════════════════════════════
+updateResume();
+updateATS();
+renderIssues();
+renderKeywords();
+renderSuggestedSkills();
+renderTemplates();
+renderVersions();
+</script>
+</body>
+</html>

@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://ramana.is-a.dev/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
-  <url><loc>https://ramana.is-a.dev/blog.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://ramana.is-a.dev/blog-apple-llm.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://ramana.is-a.dev/blog-ml-projects.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ramana.is-a.dev/blog-ai-career.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
-  <url><loc>https://ramana.is-a.dev/project-guardian.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ramana.is-a.dev/project-heart.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ramana.is-a.dev/project-forest.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ramana.is-a.dev/project-mana.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ramana.is-a.dev/experience-apple.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
-  <url><loc>https://ramana.is-a.dev/experience-annotation.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ramana.is-a.dev/resume.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
-  <url><loc>https://ramana.is-a.dev/resume_ats.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/</loc><changefreq>weekly</changefreq><priority>1.0</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/blog.html</loc><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/blog-apple-llm.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/blog-ml-projects.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/blog-ai-career.html</loc><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/project-guardian.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/project-heart.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/project-forest.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/project-mana.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/experience-apple.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/experience-annotation.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/resume.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://ramana-portfolio-actual.vercel.app/resume_ats.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>
