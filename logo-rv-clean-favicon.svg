@@ -1,0 +1,15 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="blueGradClean" cx="50%" cy="35%" r="75%">
+      <stop offset="0%" stop-color="#2f6fd6"/>
+      <stop offset="100%" stop-color="#1a3a8f"/>
+    </radialGradient>
+  </defs>
+  <rect x="10" y="10" width="220" height="220" rx="44" fill="url(#blueGradClean)"/>
+  <g transform="translate(120,120) scale(0.85) translate(-120,-120)">
+    <path d="M85,190 L85,55 A 30,28 0 1 1 85,105 L125,190"
+          fill="none" stroke="#f5c542" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M125,190 L165,55"
+          fill="none" stroke="#f5c542" stroke-width="22" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>
