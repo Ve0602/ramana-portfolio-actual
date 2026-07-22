@@ -90,7 +90,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;height:64px;display:flex;ali
 
 .reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s;}.reveal.on{opacity:1;transform:none;}
 footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
-.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;}.foot-logo em{color:var(--or);font-style:normal;}
+.foot-logo{font-family:var(--fd);font-size:15px;font-weight:800;color:var(--tx);text-decoration:none;display:flex;align-items:center;gap:8px;}.foot-logo-icon{width:26px;height:auto;flex-shrink:0;object-fit:contain;}.foot-logo em{color:var(--or);font-style:normal;}
 .foot-copy{font-size:12px;color:var(--tx3);}
 @media(max-width:800px){.metrics-strip-inner,.video-grid,.ann-grid,.skills-grid{grid-template-columns:1fr 1fr;}.skills-grid{grid-template-columns:1fr 1fr;}}
 @media(max-width:500px){.metrics-strip-inner{grid-template-columns:1fr 1fr;}.video-grid,.ann-grid,.skills-grid{grid-template-columns:1fr;}}
@@ -404,7 +404,7 @@ footer{padding:36px 6%;border-top:1px solid var(--bd);display:flex;align-items:c
 </div>
 
 <footer>
-  <a href="index.html" class="foot-logo">Ramana<em>.vr</em></a>
+  <a href="index.html" class="foot-logo"><img src="logo-final.png" class="foot-logo-icon" alt="Ramana Vemunoori"></a>
   <div class="foot-copy">© 2025 Ramana Vemunoori</div>
   <a href="index.html#experience" class="nav-back" style="text-decoration:none">← Experience</a>
 </footer>
